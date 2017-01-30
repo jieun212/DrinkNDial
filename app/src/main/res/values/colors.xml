@@ -3,4 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!-- DrinknDial colors -->
+    <color name="drinkDarkBlue">#093F83</color>
+    <color name="drinkDarkGray">#404040</color>
+    <color name="drinkLightGray">#949398</color>
+    <color name="drinkWhite">#ffffff</color>
 </resources>
