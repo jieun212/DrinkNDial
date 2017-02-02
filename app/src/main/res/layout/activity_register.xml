@@ -51,17 +51,29 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
+
                 android:hint="@string/register_hint_firstName"
+
+                android:text="@string/register_hint_firstName"
+                android:textColor="@color/drinkLightGray"
+
                 android:textSize="16sp"/>
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
+
                 android:hint="@string/register_hint_lastName"
+
+                android:text="@string/register_hint_lastName"
+                android:textColor="@color/drinkLightGray"
+
                 android:textSize="16sp"/>
         </LinearLayout>
 
@@ -86,9 +98,15 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
+
             android:hint="@string/hint_email"
+
+            android:text="@string/hint_email"
+            android:textColor="@color/drinkLightGray"
+
             android:textSize="16sp"/>
     </LinearLayout>
 
@@ -101,7 +119,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:layout_marginStart="15dp"
+
+            android:layout_marginStart="0dp"
+
             android:layout_marginLeft="15dp"
             android:text="@string/pw"
             android:textColor="@color/drinkDarkBlue"
@@ -116,17 +138,29 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
+
                 android:hint="@string/hint_pw"
+
+                android:text="@string/hint_pw"
+                android:textColor="@color/drinkLightGray"
+
                 android:textSize="16sp"/>
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
+
                 android:hint="@string/hint_pwConfirm"
+
+                android:text="@string/hint_pwConfirm"
+                android:textColor="@color/drinkLightGray"
+
                 android:textSize="16sp"/>
         </LinearLayout>
     </LinearLayout>
@@ -140,7 +174,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:layout_marginStart="15dp"
+
+            android:layout_marginStart="0dp"
+
             android:layout_marginLeft="15dp"
             android:text="@string/phone"
             android:textColor="@color/drinkDarkBlue"
@@ -150,9 +188,15 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
+
             android:hint="@string/hint_phone"
+
+            android:text="@string/hint_phone"
+            android:textColor="@color/drinkLightGray"
+
             android:textSize="16sp"/>
     </LinearLayout>
 
