@@ -27,7 +27,9 @@
     <string name="hint_phone">Numbers only</string>
     <string name="Save">Save</string>
 
-
+    <!-- Log In -->
+    <string name="username">Enter username</string>
+    <string name="password">Enter password</string>
 
     <!-- Register -->
     <string name="register_title">Register</string>
@@ -61,6 +63,11 @@
     <string name="location_hint_zip">ex) 11111</string>
 
 
+    <!--Navigation Drawer Specific Strings-->
+    <string name="nav_settings">Settings</string>
+    <string name="nav_trips">Recent Trips</string>
+
+
 
 
 
@@ -68,6 +75,7 @@
     <string name="username">Jieun Lee</string>
     <string name="userphone">206-123-4567</string>
     <string name="useremail">email@email.com</string>
+
 
 
 </resources>
