@@ -46,7 +46,6 @@
                 android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/username"
                 android:textColor="@color/drinkWhite"
                 android:textStyle="bold"/>
 
@@ -54,14 +53,12 @@
                 android:id="@+id/user_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/userphone"
                 android:textColor="@color/drinkWhite" />
 
             <TextView
                 android:id="@+id/user_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/useremail"
                 android:textColor="@color/drinkWhite" />
 
         </LinearLayout>

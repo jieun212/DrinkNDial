@@ -12,4 +12,14 @@ public class LogInActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Used for buttons on log in screen
+     */
+    public void launch() {
+
+        if (true) {
+
+        }
+
+    }
 }
