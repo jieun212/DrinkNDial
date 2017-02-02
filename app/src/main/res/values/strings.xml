@@ -15,7 +15,7 @@
     <!-- DrinknDial strings (common)-->
     <string name="logoDesc">Logo</string>
     <string name="pressDesc">Press</string>
-    <string name="userPicture">User's picture</string>
+    <string name="userPicture">User picture</string>
     <string name="title">Drink n Dial</string>
     <string name="cancel">cancel</string>
     <string name="email">Email</string>
@@ -28,8 +28,8 @@
     <string name="Save">Save</string>
 
     <!-- Log In -->
-    <string name="username">Enter username</string>
-    <string name="password">Enter password</string>
+    <string name="username_hint">Enter username</string>
+    <string name="password_hint">Enter password</string>
 
     <!-- Register -->
     <string name="register_title">Register</string>
@@ -71,10 +71,6 @@
 
 
 
-    <!-- User's information Delete later-->
-    <string name="username">Jieun Lee</string>
-    <string name="userphone">206-123-4567</string>
-    <string name="useremail">email@email.com</string>
 
 
 

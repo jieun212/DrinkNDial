@@ -49,7 +49,7 @@
             android:layout_row="0"
             android:layout_width="275dp"
             android:layout_height="wrap_content"
-            android:hint="@string/username"
+            android:hint="@string/username_hint"
             android:inputType="text"/>
 
         <EditText
@@ -57,7 +57,7 @@
             android:layout_column="0"
             android:layout_width="275dp"
             android:layout_height="wrap_content"
-            android:hint="@string/password"
+            android:hint="@string/password_hint"
             android:inputType="textPassword"/>
 
         <Button
