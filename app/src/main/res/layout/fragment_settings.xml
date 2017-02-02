@@ -8,18 +8,20 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="15dp"
         android:text="@string/setting_title"
-        android:textSize="30dp"
+        android:textSize="30sp"
         android:textColor="@color/drinkDarkBlue"
         android:textStyle="bold"/>
 
     <!-- profile -->
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginTop="15dp"
         android:background="@color/drinkDarkBlue">
 
@@ -31,21 +33,20 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:background="@color/drinkWhite"
-            />
+            android:contentDescription="@string/userPicture"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_vertical|center_horizontal"
             android:orientation="vertical">
 
-            <!-- TODO: delete text later -->
+            <!-- TODO: delete text string later -->
             <TextView
                 android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Jieun Lee"
+                android:text="@string/username"
                 android:textColor="@color/drinkWhite"
                 android:textStyle="bold"/>
 
@@ -53,14 +54,14 @@
                 android:id="@+id/user_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="206-111-2222"
+                android:text="@string/userphone"
                 android:textColor="@color/drinkWhite" />
 
             <TextView
                 android:id="@+id/user_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="email@email.com"
+                android:text="@string/useremail"
                 android:textColor="@color/drinkWhite" />
 
         </LinearLayout>
@@ -68,48 +69,38 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/edit_icon_white"/>
+            android:layout_gravity="center_vertical|end"
+            android:src="@drawable/edit_icon_white"
+            android:contentDescription="@string/pressDesc"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="15dp"
         android:text="@string/setting_favorit_title"
         android:textStyle="bold"
-        android:textSize="20dp"/>
+        android:textSize="20sp"/>
 
     <!-- Favorites -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
                 android:layout_marginLeft="30dp"
-                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
                 android:text="@string/setting_add_home"
-                android:textSize="20dp"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/icon_edit_gray"/>
-
-        </RelativeLayout>
+                android:textSize="20sp"
+                android:drawableEnd="@drawable/icon_edit_gray"
+                android:drawableRight="@drawable/icon_edit_gray"/>
 
     </LinearLayout>
 
@@ -119,26 +110,16 @@
         android:orientation="vertical"
         android:layout_gravity="center_vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
                 android:layout_marginLeft="30dp"
-                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
                 android:text="@string/setting_add_location"
-                android:textSize="20dp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/icon_edit_gray"/>
-
-        </RelativeLayout>
+                android:textSize="20sp"
+                android:drawableEnd="@drawable/icon_edit_gray"
+                android:drawableRight="@drawable/icon_edit_gray"/>
 
     </LinearLayout>
 
@@ -148,12 +129,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="20dp"
         android:text="@string/setting_preference_title"
         android:textStyle="bold"
-        android:textSize="20dp"/>
-
+        android:textSize="20sp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -163,25 +144,27 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginLeft="30dp"
-            android:layout_centerVertical="true"
+            android:gravity="center"
             android:text="@string/setting_find_driver" />
 
         <EditText
             android:id="@+id/preference_miles"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginLeft="30dp"
-            android:layout_centerVertical="true"
-            android:text="@string/setting_hint_miles"
-            android:textColor="@color/drinkLightGray" />
+            android:gravity="center"
+            android:hint="@string/setting_hint_miles" />
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginLeft="30dp"
-            android:layout_centerVertical="true"
+            android:gravity="center"
             android:text="@string/setting_miles" />
 
 

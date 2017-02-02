@@ -13,6 +13,9 @@
 
 
     <!-- DrinknDial strings (common)-->
+    <string name="logoDesc">Logo</string>
+    <string name="pressDesc">Press</string>
+    <string name="userPicture">User's picture</string>
     <string name="title">Drink n Dial</string>
     <string name="cancel">cancel</string>
     <string name="email">Email</string>
@@ -56,5 +59,15 @@
     <string name="location_hint_City">city</string>
     <string name="location_hint_State">ex) WA</string>
     <string name="location_hint_zip">ex) 11111</string>
+
+
+
+
+
+    <!-- User's information Delete later-->
+    <string name="username">Jieun Lee</string>
+    <string name="userphone">206-123-4567</string>
+    <string name="useremail">email@email.com</string>
+
 
 </resources>

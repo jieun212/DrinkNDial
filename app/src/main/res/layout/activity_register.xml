@@ -11,20 +11,17 @@
         android:gravity="center_horizontal"
         android:layout_marginTop="15dp">
 
-        <ImageView
-            android:id="@+id/register_logo_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/logo_small"/>
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
+            android:drawableStart="@drawable/logo_small"
+            android:drawableLeft="@drawable/logo_small"
             android:text="@string/title"
             android:textColor="@color/drinkDarkBlue"
-            android:textSize="40dp"
+            android:textSize="40sp"
             android:textStyle="bold"/>
 
     </LinearLayout>
@@ -37,11 +34,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
             android:text="@string/register_name"
             android:textColor="@color/drinkDarkBlue"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textStyle="bold"/>
 
         <LinearLayout
@@ -54,19 +52,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:layout_marginright="15dp"
-                android:text="@string/register_hint_firstName"
-                android:textColor="@color/drinkLightGray"
-                android:textSize="16dp"/>
+                android:layout_marginRight="15dp"
+                android:hint="@string/register_hint_firstName"
+                android:textSize="16sp"/>
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:layout_marginright="15dp"
-                android:text="@string/register_hint_lastName"
-                android:textColor="@color/drinkLightGray"
-                android:textSize="16dp"/>
+                android:layout_marginRight="15dp"
+                android:hint="@string/register_hint_lastName"
+                android:textSize="16sp"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -80,20 +76,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
             android:text="@string/email"
             android:textColor="@color/drinkDarkBlue"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textStyle="bold"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:layout_marginright="15dp"
-            android:text="@string/hint_email"
-            android:textColor="@color/drinkLightGray"
-            android:textSize="16dp"/>
+            android:layout_marginRight="15dp"
+            android:hint="@string/hint_email"
+            android:textSize="16sp"/>
     </LinearLayout>
 
     <!-- pw -->
@@ -105,10 +101,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
             android:text="@string/pw"
             android:textColor="@color/drinkDarkBlue"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textStyle="bold"/>
 
         <LinearLayout
@@ -120,19 +117,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:layout_marginright="15dp"
-                android:text="@string/hint_pw"
-                android:textColor="@color/drinkLightGray"
-                android:textSize="16dp"/>
+                android:layout_marginRight="15dp"
+                android:hint="@string/hint_pw"
+                android:textSize="16sp"/>
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:layout_marginright="15dp"
-                android:text="@string/hint_pwConfirm"
-                android:textColor="@color/drinkLightGray"
-                android:textSize="16dp"/>
+                android:layout_marginRight="15dp"
+                android:hint="@string/hint_pwConfirm"
+                android:textSize="16sp"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -145,20 +140,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
             android:text="@string/phone"
             android:textColor="@color/drinkDarkBlue"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textStyle="bold"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:layout_marginright="15dp"
-            android:text="@string/hint_phone"
-            android:textColor="@color/drinkLightGray"
-            android:textSize="16dp"/>
+            android:layout_marginRight="15dp"
+            android:hint="@string/hint_phone"
+            android:textSize="16sp"/>
     </LinearLayout>
 
 
@@ -176,6 +171,7 @@
             android:text="@string/register"
             android:background="@color/drinkDarkBlue"
             android:textColor="@color/drinkWhite"
+            android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:onClick="doRegister"/>
