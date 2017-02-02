@@ -122,7 +122,6 @@
 
             android:layout_marginStart="15dp"
 
-            android:layout_marginStart="0dp"
 
             android:layout_marginLeft="15dp"
             android:text="@string/pw"
@@ -177,7 +176,6 @@
 
             android:layout_marginStart="15dp"
 
-            android:layout_marginStart="0dp"
 
             android:layout_marginLeft="15dp"
             android:text="@string/phone"
