@@ -124,7 +124,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Sign up"
-            android:onClick="launch"
+            android:onClick="showRegister"
             android:background="@color/drinkDarkBlue"
             android:textColor="@color/drinkWhite" />
 
