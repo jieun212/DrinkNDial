@@ -1,7 +1,9 @@
 package edu.uw.tacoma.team8.drinkndial;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 public class LogInActivity extends AppCompatActivity {
 
@@ -23,4 +25,11 @@ public class LogInActivity extends AppCompatActivity {
         }
 
     }
+
+    public void showRegister(View view) {
+        // when click register, show register activity
+
+    }
+
+
 }
