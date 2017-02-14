@@ -22,9 +22,8 @@ import edu.uw.tacoma.team8.drinkndial.location.LocationContent;
  */
 public class RecentLocationsFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
+
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
@@ -35,15 +34,6 @@ public class RecentLocationsFragment extends Fragment {
     public RecentLocationsFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static RecentLocationsFragment newInstance(int columnCount) {
-        RecentLocationsFragment fragment = new RecentLocationsFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,7 +93,6 @@ public class RecentLocationsFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteraction(LocationContent.LocationItem item);
     }
 }

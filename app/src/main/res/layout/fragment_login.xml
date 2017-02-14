@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="edu.uw.tacoma.team8.drinkndial.LogInActivity">
+
+    <!-- Title -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="15dp">
+
+        <ImageView
+            android:id="@+id/register_logo_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo_small"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:text="@string/title"
+            android:textColor="@color/drinkDarkBlue"
+            android:textSize="40sp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+
+    <!-- ID + PW-->
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:columnCount="2"
+        android:rowCount="2"
+        android:orientation="horizontal"
+        android:layout_marginTop="30dp" >
+
+        <EditText
+            android:id="@+id/userid_edit"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/username_hint"
+            android:inputType="text"/>
+
+        <EditText
+            android:id="@+id/pwd_edit"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/password_hint"
+            android:inputType="textPassword"/>
+
+        <Button
+            android:id="@+id/login_button"
+            android:layout_column="1"
+            android:layout_row="0"
+            android:layout_rowSpan="2"
+            android:layout_gravity="fill"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="Log In"
+            android:onClick="launch"
+            android:background="@color/drinkDarkBlue"
+            android:textColor="@color/drinkWhite"/>
+
+
+    </GridLayout>
+
+    <!-- 2 Sign in + Sign Up Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/facebook_signin_button"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sign in with FaceBook"
+            android:onClick="launch"
+            android:background="@color/drinkDarkBlue"
+            android:textColor="@color/drinkWhite"/>
+
+        <Button
+            android:id="@+id/google_signin_button"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sign In with Google"
+            android:onClick="launch"
+            android:background="@color/drinkDarkBlue"
+            android:textColor="@color/drinkWhite"/>
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Don't have an account? Sign up now!"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/signup_button"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sign up"
+            android:background="@color/drinkDarkBlue"
+            android:textColor="@color/drinkWhite" />
+
+
+
+    </LinearLayout>
+
+</LinearLayout>
