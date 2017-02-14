@@ -1,7 +1,6 @@
 package edu.uw.tacoma.team8.drinkndial;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -16,60 +15,115 @@ import java.net.URLEncoder;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * It is a simple {@link Fragment} subclass for registering a user.
  * Activities that contain this fragment must implement the
- * {@link RegisterFragment.OnFragmentInteractionListener} interface
+ * {@link RegisterFragment.UserAddListener} interface
  * to handle interaction events.
+ *
+ * @version 02/14/2017
+ * @author  Jieun Lee (jieun212@uw.edu)
  */
 public class RegisterFragment extends Fragment {
 
 
+    /**
+     * An URL for adding a user
+     */
     private final static String ADD_USER_URL
-            = "http://cssgate.insttech.washington.edu/~jieun212/adduser.php?";
+            = "http://cssgate.insttech.washington.edu/~jieun212/Android/register.php?";
 
+    /** Edittext for first name of user.*/
     private EditText mFnameEditText;
+
+    /** Edittext for last name of user.*/
     private EditText mLnameEditText;
+
+    /** Edittext for email address of user.*/
     private EditText mEmailEditText;
+
+    /** Edittext for password of user.*/
     private EditText mPwEditText;
+
+    /** Edittext for confirmed password of user.*/
+    private EditText mPwConfirmEditText;
+
+    /** Edittext for phone number of user.*/
     private EditText mPhoneEditText;
 
+    /** Listenr for adding a user.*/
     private UserAddListener mListener;
 
 
-    public RegisterFragment() {
-        // Required empty public constructor
+    /**
+     * Required empty public constructor
+     */
+    public RegisterFragment() {}
+
+    /**
+     * Creates a RegisterFragment
+     * @param savedInstanceState
+     */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Starts the RegisterFragment
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    /**
+     * Returns a created view
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     *
+     * @return Register fragment view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_register, container, false);
+        View v = (View) inflater.inflate(R.layout.fragment_register, container, false);
 
         mFnameEditText = (EditText) v.findViewById(R.id.add_user_fname);
         mLnameEditText = (EditText) v.findViewById(R.id.add_user_lname);
         mEmailEditText = (EditText) v.findViewById(R.id.add_user_email);
         mPwEditText = (EditText) v.findViewById(R.id.add_user_pw);
         mPhoneEditText = (EditText) v.findViewById(R.id.add_user_phone);
-        EditText pwConfirmEditText = (EditText) v.findViewById(R.id.add_user_pwconfirm);
+        mPwConfirmEditText = (EditText) v.findViewById(R.id.add_user_pwconfirm);
 
-        if (mPwEditText != pwConfirmEditText) {
-            // TODO : show error message
-        } else {
-            // call the buildURL
-            Button registerButton = (Button) v.findViewById(R.id.register_button);
-            registerButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String url = buildCourseURL(v);
-                    mListener.addUser(url);
-                }
-            });
-        }
+        // call the buildURL
+        Button registerButton = (Button) v.findViewById(R.id.register_register_button);
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            if (mPwEditText.equals(mPwConfirmEditText)) {
+                Toast.makeText(v.getContext(), "Confirmed password does not match"
+                        , Toast.LENGTH_SHORT)
+                        .show();
+                mPwEditText.requestFocus();
+                return;
+            } else {
+                String url = buildUserURL(v);
+                mListener.addUser(url);
+            }
+            }
+        });
+
         return v;
     }
 
 
+    /**
+     * Attaches
+     * @param context
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -81,6 +135,9 @@ public class RegisterFragment extends Fragment {
         }
     }
 
+    /**
+     * Deattaches
+     */
     @Override
     public void onDetach() {
         super.onDetach();
@@ -93,26 +150,28 @@ public class RegisterFragment extends Fragment {
      * to the activity and potentially other fragments contained in that
      * activity.
      * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
-
-
     public interface UserAddListener {
         public void addUser(String url);
     }
 
-    private String buildCourseURL(View v) {
+    /**
+     * Build user URL with given information of user.
+     * It returns message how it built.
+     * It catches execption and shows a dialog with error message
+     * @param v View
+     * @return Message
+     */
+    private String buildUserURL(View v) {
 
         StringBuilder sb = new StringBuilder(ADD_USER_URL);
 
         try {
+
+            // email
+            String userEmail = mEmailEditText.getText().toString();
+            sb.append("&email=");
+            sb.append(URLEncoder.encode(userEmail, "UTF-8"));
 
             // fist name
             String userFname = mFnameEditText.getText().toString();
@@ -125,15 +184,12 @@ public class RegisterFragment extends Fragment {
             sb.append("&lanme=");
             sb.append(URLEncoder.encode(userLname, "UTF-8"));
 
-            // email
-            String userEmail = mEmailEditText.getText().toString();
-            sb.append("&email=");
-            sb.append(URLEncoder.encode(userEmail, "UTF-8"));
 
             // password
             String userPw = mPwEditText.getText().toString();
             sb.append("&pw=");
             sb.append(URLEncoder.encode(userPw, "UTF-8"));
+
 
             // phone
             String userPhone = mPhoneEditText.getText().toString();
@@ -146,6 +202,7 @@ public class RegisterFragment extends Fragment {
             Toast.makeText(v.getContext(), "Something wrong with the url" + e.getMessage(),
                     Toast.LENGTH_LONG)
                     .show();
+            Log.e("Catch", e.getMessage());
         }
         return sb.toString();
     }
