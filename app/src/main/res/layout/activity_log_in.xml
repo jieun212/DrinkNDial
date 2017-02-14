@@ -69,7 +69,6 @@
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
             android:text="Log In"
-            android:onClick="launch"
             android:background="@color/drinkDarkBlue"
             android:textColor="@color/drinkWhite"/>
 
@@ -91,7 +90,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Sign in with FaceBook"
-            android:onClick="launch"
             android:background="@color/drinkDarkBlue"
             android:textColor="@color/drinkWhite"/>
 
@@ -103,7 +101,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Sign In with Google"
-            android:onClick="launch"
             android:background="@color/drinkDarkBlue"
             android:textColor="@color/drinkWhite"/>
 
