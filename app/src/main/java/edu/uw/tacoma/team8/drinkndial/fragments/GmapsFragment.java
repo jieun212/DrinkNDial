@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,29 +24,29 @@ import edu.uw.tacoma.team8.drinkndial.R;
 public class GmapsFragment extends Fragment implements OnMapReadyCallback {
 
 
+
+    private GoogleMap mGoogleMap;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_gmaps, container, false);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_gmaps, container, false);
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        final SupportMapFragment mf = (SupportMapFragment)fm.findFragmentById(R.id.map);
+        SupportMapFragment mf = (SupportMapFragment) fm.findFragmentById(R.id.map);
         mf.getMapAsync(this);
+        return v;
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-        LatLng marker = new LatLng(47.2446, 122.4376);
 
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker, 13));
-
-        googleMap.addMarker(new MarkerOptions().title("You're at UWT!").position(marker));
     }
 
     /**
@@ -59,7 +60,6 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }
