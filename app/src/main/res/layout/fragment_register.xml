@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activity_register"
+    android:id="@+id/fragment_register"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -118,25 +118,10 @@
 
 
     <!-- Register button -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="15dp">
-
-        <Button
-            style="@style/SaveButtonStyle"
-            android:id="@+id/register_button"
-            android:text="@string/register"
-            android:onClick="doRegister"/>
-
-        <Button
-            android:id="@+id/cancel_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/cancel"
-            android:textColor="@color/drinkDarkGray"
-            android:onClick="doCancel"/>
-    </LinearLayout>
+    <Button
+        style="@style/SaveButtonStyle"
+        android:id="@+id/register_register_button"
+        android:text="@string/register"
+        android:onClick="addUser"/>
 
 </LinearLayout>
