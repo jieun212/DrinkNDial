@@ -50,8 +50,7 @@ public class SignInActivity extends AppCompatActivity implements
      */
     public void login(String userId, String pwd) {
 
-        // TODO go to navigation!!!!
-        Intent i = new Intent(this, SettingActivity.class);
+        Intent i = new Intent(this, NavigationActivity.class);
         startActivity(i);
         finish();
     }
