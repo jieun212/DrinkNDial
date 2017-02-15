@@ -36,6 +36,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import edu.uw.tacoma.team8.drinkndial.fragments.SettingsFragment;
 import edu.uw.tacoma.team8.drinkndial.fragments.TripsFragment;
 
+/**
+ * This activity initializes a navigation drawer that has
+ * a map as the main fragment, as well as a settings and trips button
+ * within the navigation drawer.
+ */
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -46,8 +51,16 @@ public class NavigationActivity extends AppCompatActivity
     Location mLastLocation;
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
+    //static variable to
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
-
+    /**
+     * Initializes a drawer, action bar and sets the map
+     * in order to be able to navigate through links with the
+     * navigation drawer as well as immediately see the map as the main
+     * fragment.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +93,9 @@ public class NavigationActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Determines the behavior of the navigation drawer
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -90,6 +106,11 @@ public class NavigationActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * creates an options menu, subject to change
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -97,6 +118,12 @@ public class NavigationActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Determines the behavior of what happens when the menu items
+     * are selected from the menu.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -113,6 +140,12 @@ public class NavigationActivity extends AppCompatActivity
     }
 
 
+    /**
+     * This method determines what will happen when you click on these items
+     * in the navigation drawer. The drawer closes upon clicking an item.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
@@ -202,6 +235,11 @@ public class NavigationActivity extends AppCompatActivity
         //if removed completely as it is an implemented interface
     }
 
+    /**
+     * When the location is changed, or when maps opens up,
+     * it will place a marker at the current location
+     * @param location
+     */
     @Override
     public void onLocationChanged(Location location) {
 
@@ -229,12 +267,21 @@ public class NavigationActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Empty due to being an unnecessary implemented method
+     * @param connectionResult
+     */
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
+        //empty
     }
 
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
+    /**
+     * Checks permissions, needed in order to use ACESS_FINE_LOCATION
+     * from the Google API.
+     * @return boolean
+     */
     public boolean checkLocationPermission(){
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -266,6 +313,13 @@ public class NavigationActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Based on the result after checking permissions, set the location to true
+     * and build the google api client in order to view location on map.
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -292,11 +346,7 @@ public class NavigationActivity extends AppCompatActivity
                     // Permission denied, Disable the functionality that depends on this permission.
                     Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
                 }
-                return;
             }
-
-            // other 'case' lines to check for other permissions this app might request.
-            // You can add here other case statements according to your requirement.
         }
     }
 
