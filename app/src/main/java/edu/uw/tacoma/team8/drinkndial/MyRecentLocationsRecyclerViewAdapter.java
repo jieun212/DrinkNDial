@@ -6,15 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 import edu.uw.tacoma.team8.drinkndial.fragments.RecentLocationsFragment.OnListFragmentInteractionListener;
 import edu.uw.tacoma.team8.drinkndial.location.LocationContent;
 import edu.uw.tacoma.team8.drinkndial.location.LocationContent.LocationItem;
 
-import java.util.List;
-
-/**
- * 
- */
 public class MyRecentLocationsRecyclerViewAdapter extends RecyclerView.Adapter<MyRecentLocationsRecyclerViewAdapter.ViewHolder> {
 
     private final List<LocationItem> mValues;

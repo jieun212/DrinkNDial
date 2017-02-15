@@ -3,11 +3,7 @@ package edu.uw.tacoma.team8.drinkndial;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -19,58 +15,77 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class LogInActivity extends AppCompatActivity implements RegisterFragment.UserAddListener {
+/**
+ * This class is a base activity of LoginFragment and RegisterFragment.
+ * It logs into Navigation activity after loging in with user email and password.
+ * It registers a user with email, name, phone and password.
+ *
+ * @version 02/14/2017
+ * @author  Jieun Lee (jieun212@uw.edu)
+ */
+public class SignInActivity extends AppCompatActivity implements
 
+        LoginFragment.LoginInteractionListener,
+        RegisterFragment.UserAddListener{
 
-    private Button logInButton;
-
+    /**
+     * It creates a SigninActivity
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
-        logInButton = (Button) findViewById(R.id.login_button);
-
-        logInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), NavigationActivity.class);
-                startActivity(intent);
-            }
-        });
-
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, new LoginFragment())
+                .commit();
     }
 
 
     /**
-     * Used for buttons on log in screen
+     * It start new Navigation activity when pressing Log in button.
+     * @param userId The input user email address
+     * @param pwd The input user password
      */
-    public void checkLogIn(final String email, final String password) {
+    public void login(String userId, String pwd) {
 
-
+        Intent i = new Intent(this, NavigationActivity.class);
+        startActivity(i);
+        finish();
     }
 
-    public void showRegister(View view) {
 
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm
-                .beginTransaction()
-                .replace(R.id.activity_log_in, new RegisterFragment())
-                .addToBackStack(null);
-
-        ft.commit();
-
-
-    }
-
+    /**
+     * It adds user's information to web service.
+     *
+     * @param url Register.php
+     */
     @Override
     public void addUser(String url) {
-        AddUserTask addUserTask = new AddUserTask();
-        addUserTask.execute(new String[]{url.toString()});
+        UserAddAsyncTask  task = new UserAddAsyncTask();
+        task.execute(new String[]{url.toString()});
+
+        // Takes you back to the previous fragment by popping the current fragment out.
+        getSupportFragmentManager().popBackStackImmediate();
     }
 
-    private class AddUserTask extends AsyncTask<String, Void, String> {
+    /**
+     * When press 'Register' button, signup() is called.
+     * It replace fragment_continer(SignInActivity) to new RegisterFragment.
+     */
+    public void signup() {
+        RegisterFragment registerFragment = new RegisterFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, registerFragment)
+                .addToBackStack(null)
+                .commit();
+    }
 
+    /**
+     * Inner class for Adding user (Register) task
+     */
+    private class UserAddAsyncTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected void onPreExecute() {
@@ -105,6 +120,13 @@ public class LogInActivity extends AppCompatActivity implements RegisterFragment
             return response;
         }
 
+        /**
+         * It checks to see if there was a problem with the URL(Network) which is when an
+         * exception is caught. It tries to call the parse Method and checks to see if it was successful.
+         * If not, it displays the exception.
+         *
+         * @param result
+         */
         @Override
         protected void onPostExecute(String result) {
             // Something wrong with the network or the URL.
@@ -126,8 +148,6 @@ public class LogInActivity extends AppCompatActivity implements RegisterFragment
                         e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
-
     }
-
 
 }
