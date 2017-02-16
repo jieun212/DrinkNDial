@@ -8,9 +8,6 @@
 
     <string name="action_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
 
     <!-- DrinknDial strings (common)-->
     <string name="logoDesc">Logo</string>
@@ -71,7 +68,6 @@
     <string name="LOGGEDIN">loggedin</string>
 
 
-    <!-- TODO: delete later -->
     <string name="username">Jieun Lee</string>
     <string name="userphone">Jieun Lee</string>
     <string name="useremail">email@email.com</string>
