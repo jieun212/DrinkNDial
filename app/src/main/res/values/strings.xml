@@ -9,6 +9,11 @@
     <string name="action_settings">Settings</string>
 
 
+    <string name="logout_confirmation">Are you sure you want to logout?</string>
+    <string name="logout_yes_button">Yes</string>
+    <string name="logout_no_button">Cancel</string>
+    <string name="logout_button">Log Out</string>
+
     <!-- DrinknDial strings (common)-->
     <string name="logoDesc">Logo</string>
     <string name="pressDesc">Press</string>
