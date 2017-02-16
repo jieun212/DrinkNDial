@@ -1,4 +1,4 @@
-package edu.uw.tacoma.team8.drinkndial.fragments;
+package edu.uw.tacoma.team8.drinkndial.setting;
 
 import android.content.Context;
 import android.os.Bundle;

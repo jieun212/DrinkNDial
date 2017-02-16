@@ -1,4 +1,4 @@
-package edu.uw.tacoma.team8.drinkndial.location;
+package edu.uw.tacoma.team8.drinkndial.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;

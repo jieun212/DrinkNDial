@@ -1,4 +1,4 @@
-package edu.uw.tacoma.team8.drinkndial;
+package edu.uw.tacoma.team8.drinkndial.authenticate;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.net.URLEncoder;
+
+import edu.uw.tacoma.team8.drinkndial.R;
 
 
 /**
@@ -98,14 +100,15 @@ public class RegisterFragment extends Fragment {
         mPhoneEditText = (EditText) v.findViewById(R.id.add_user_phone);
         mPwConfirmEditText = (EditText) v.findViewById(R.id.add_user_pwconfirm);
 
+
         // call the buildURL
         Button registerButton = (Button) v.findViewById(R.id.register_register_button);
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            if (mPwEditText.equals(mPwConfirmEditText)) {
+            if (!(mPwEditText.getText().toString()).equals(mPwConfirmEditText.getText().toString())) {
                 Toast.makeText(v.getContext(), "Confirmed password does not match"
-                        , Toast.LENGTH_SHORT)
+                        ,Toast.LENGTH_SHORT)
                         .show();
                 mPwEditText.requestFocus();
                 return;
