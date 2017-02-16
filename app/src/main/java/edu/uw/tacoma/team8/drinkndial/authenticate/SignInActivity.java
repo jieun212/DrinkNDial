@@ -1,4 +1,4 @@
-package edu.uw.tacoma.team8.drinkndial;
+package edu.uw.tacoma.team8.drinkndial.authenticate;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -15,6 +15,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import edu.uw.tacoma.team8.drinkndial.navigation.NavigationActivity;
+import edu.uw.tacoma.team8.drinkndial.R;
+
 /**
  * This class is a base activity of LoginFragment and RegisterFragment.
  * It logs into Navigation activity after loging in with user email and password.
@@ -26,7 +29,7 @@ import java.net.URL;
 public class SignInActivity extends AppCompatActivity implements
 
         LoginFragment.LoginInteractionListener,
-        RegisterFragment.UserAddListener{
+        RegisterFragment.UserAddListener {
 
     /**
      * It creates a SigninActivity

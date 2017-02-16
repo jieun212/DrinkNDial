@@ -1,7 +1,9 @@
-package edu.uw.tacoma.team8.drinkndial;
+package edu.uw.tacoma.team8.drinkndial.setting;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import edu.uw.tacoma.team8.drinkndial.R;
 
 /**
  * This class is base activity for SettingFragment and SettingFavoriteLocation fragment.
