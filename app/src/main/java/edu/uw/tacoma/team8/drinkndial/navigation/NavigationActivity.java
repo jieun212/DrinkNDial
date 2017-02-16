@@ -48,10 +48,19 @@ public class NavigationActivity extends AppCompatActivity
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
 
+    //Class instance of the google map
     private GoogleMap mMap;
+
+    //Class instance of the client
     private GoogleApiClient mGoogleApiClient;
+
+    //Last known location to the program
     private Location mLastLocation;
+
+    //Current location marker
     private Marker mCurrLocationMarker;
+
+    //Location Request
     private LocationRequest mLocationRequest;
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
@@ -209,6 +218,10 @@ public class NavigationActivity extends AppCompatActivity
         mGoogleApiClient.connect();
     }
 
+    /**
+     * Requests location updates once it is connected to the location services.
+     * @param bundle bundle
+     */
     @Override
     public void onConnected(Bundle bundle) {
 
@@ -224,6 +237,10 @@ public class NavigationActivity extends AppCompatActivity
 
     }
 
+    /**
+     * empty
+     * @param i int
+     */
     @Override
     public void onConnectionSuspended(int i) {
         //empty, not needed but will produce error
@@ -263,12 +280,12 @@ public class NavigationActivity extends AppCompatActivity
     }
 
     /**
-     * Empty due to being an unnecessary implemented method
+     * Empty
      * @param connectionResult empty
      */
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        //empty
+        //empty, required through implemented methods
     }
 
 

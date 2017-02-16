@@ -50,7 +50,6 @@
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:orientation="vertical">
 
-                <!-- TODO: delete text string later -->
                 <TextView
                     android:id="@+id/user_name"
                     android:text="@string/username"
