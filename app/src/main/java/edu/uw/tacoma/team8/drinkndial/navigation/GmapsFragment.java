@@ -16,6 +16,8 @@ import edu.uw.tacoma.team8.drinkndial.R;
 
 /**
  *
+ * @version 2/15/2017
+ * @author Lovejit Hari
  */
 public class GmapsFragment extends Fragment implements OnMapReadyCallback {
 
