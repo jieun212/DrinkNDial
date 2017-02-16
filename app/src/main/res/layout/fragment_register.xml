@@ -88,13 +88,15 @@
                 android:id="@+id/add_user_pw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_pw"/>
+                android:hint="@string/hint_pw"
+                android:inputType="textPassword"/>
 
             <EditText
                 android:id="@+id/add_user_pwconfirm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_pwConfirm"/>
+                android:hint="@string/hint_pwConfirm"
+                android:inputType="textPassword"/>
         </LinearLayout>
     </LinearLayout>
 
