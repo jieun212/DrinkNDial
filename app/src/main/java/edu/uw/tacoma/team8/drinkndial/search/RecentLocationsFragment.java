@@ -1,4 +1,4 @@
-package edu.uw.tacoma.team8.drinkndial.fragments;
+package edu.uw.tacoma.team8.drinkndial.search;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import edu.uw.tacoma.team8.drinkndial.MyRecentLocationsRecyclerViewAdapter;
 import edu.uw.tacoma.team8.drinkndial.R;
 import edu.uw.tacoma.team8.drinkndial.location.LocationContent;
 

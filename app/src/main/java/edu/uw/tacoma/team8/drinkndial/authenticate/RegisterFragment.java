@@ -1,4 +1,4 @@
-package edu.uw.tacoma.team8.drinkndial;
+package edu.uw.tacoma.team8.drinkndial.authenticate;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.net.URLEncoder;
+
+import edu.uw.tacoma.team8.drinkndial.R;
 
 
 /**

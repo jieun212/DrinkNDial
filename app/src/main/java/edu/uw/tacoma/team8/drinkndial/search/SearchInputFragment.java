@@ -1,4 +1,4 @@
-package edu.uw.tacoma.team8.drinkndial.fragments;
+package edu.uw.tacoma.team8.drinkndial.search;
 
 import android.content.Context;
 import android.net.Uri;
@@ -10,32 +10,33 @@ import android.view.ViewGroup;
 
 import edu.uw.tacoma.team8.drinkndial.R;
 
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SettingsFragment.OnFragmentInteractionListener} interface
+ * {@link SearchInputFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class TripsFragment extends Fragment {
+public class SearchInputFragment extends Fragment {
 
 
-    public TripsFragment() {
+    private OnFragmentInteractionListener mListener;
+
+    public SearchInputFragment() {
         // Required empty public constructor
     }
-
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_trips, container, false);
+        return inflater.inflate(R.layout.fragment_search_input, container, false);
     }
 
 
@@ -43,7 +44,7 @@ public class TripsFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
+            mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -53,7 +54,7 @@ public class TripsFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-//        mListener = null;
+        mListener = null;
     }
 
     /**
