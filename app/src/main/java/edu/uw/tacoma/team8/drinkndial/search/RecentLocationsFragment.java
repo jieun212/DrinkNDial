@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import edu.uw.tacoma.team8.drinkndial.R;
-import edu.uw.tacoma.team8.drinkndial.location.LocationContent;
+import edu.uw.tacoma.team8.drinkndial.model.LocationContent;
 
 /**
  * A fragment representing a list of Items.

@@ -39,6 +39,9 @@ import edu.uw.tacoma.team8.drinkndial.setting.SettingsFragment;
  * This activity initializes a navigation drawer that has
  * a map as the main fragment, as well as a settings and trips button
  * within the navigation drawer.
+ *
+ * @version 2/15/2017
+ * @author Lovejit Hari
  */
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
@@ -46,11 +49,11 @@ public class NavigationActivity extends AppCompatActivity
 
 
     private GoogleMap mMap;
-    GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
-    Marker mCurrLocationMarker;
-    LocationRequest mLocationRequest;
-    //static variable to
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
+    private Marker mCurrLocationMarker;
+    private LocationRequest mLocationRequest;
+
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     /**
@@ -58,7 +61,7 @@ public class NavigationActivity extends AppCompatActivity
      * in order to be able to navigate through links with the
      * navigation drawer as well as immediately see the map as the main
      * fragment.
-     * @param savedInstanceState
+     * @param savedInstanceState savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,20 +83,13 @@ public class NavigationActivity extends AppCompatActivity
         FragmentManager fm = getSupportFragmentManager();
 
         SupportMapFragment mf = (SupportMapFragment) fm.findFragmentById(R.id.map);
-
         mf.getMapAsync(this);
-
-        // FragmentTransaction ft = fm.beginTransaction()
-
-        //    .add(R.id.nav_frag_container, new GmapsFragment());
-
-        //ft.commit();
-
+        checkLocationPermission();
 
     }
 
     /**
-     * Determines the behavior of the navigation drawer
+     * Determines the behavior of the navigation drawer when back is pressed
      */
     @Override
     public void onBackPressed() {
@@ -107,8 +103,8 @@ public class NavigationActivity extends AppCompatActivity
 
     /**
      * creates an options menu, subject to change
-     * @param menu
-     * @return
+     * @param menu menu
+     * @return boolean
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -120,8 +116,8 @@ public class NavigationActivity extends AppCompatActivity
     /**
      * Determines the behavior of what happens when the menu items
      * are selected from the menu.
-     * @param item
-     * @return
+     * @param item in the menu button
+     * @return boolean
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -142,8 +138,8 @@ public class NavigationActivity extends AppCompatActivity
     /**
      * This method determines what will happen when you click on these items
      * in the navigation drawer. The drawer closes upon clicking an item.
-     * @param item
-     * @return
+     * @param item item in the navigation drawer
+     * @return boolean
      */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -187,7 +183,7 @@ public class NavigationActivity extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -237,7 +233,7 @@ public class NavigationActivity extends AppCompatActivity
     /**
      * When the location is changed, or when maps opens up,
      * it will place a marker at the current location
-     * @param location
+     * @param location location
      */
     @Override
     public void onLocationChanged(Location location) {
@@ -252,7 +248,7 @@ public class NavigationActivity extends AppCompatActivity
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         markerOptions.title("Current Position");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 
         //move map camera
@@ -268,7 +264,7 @@ public class NavigationActivity extends AppCompatActivity
 
     /**
      * Empty due to being an unnecessary implemented method
-     * @param connectionResult
+     * @param connectionResult empty
      */
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
@@ -278,7 +274,8 @@ public class NavigationActivity extends AppCompatActivity
 
     /**
      * Checks permissions, needed in order to use ACESS_FINE_LOCATION
-     * from the Google API.
+     * from the Google API. It prompts the user with a dialog when the map
+     * first shows up.
      * @return boolean
      */
     public boolean checkLocationPermission(){
@@ -315,9 +312,9 @@ public class NavigationActivity extends AppCompatActivity
     /**
      * Based on the result after checking permissions, set the location to true
      * and build the google api client in order to view location on map.
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
+     * @param requestCode request
+     * @param permissions permissions
+     * @param grantResults results
      */
     @Override
     public void onRequestPermissionsResult(int requestCode,
