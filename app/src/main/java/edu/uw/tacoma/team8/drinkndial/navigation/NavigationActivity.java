@@ -1,12 +1,12 @@
-package edu.uw.tacoma.team8.drinkndial;
+package edu.uw.tacoma.team8.drinkndial.navigation;
 
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -17,7 +17,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -33,8 +32,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import edu.uw.tacoma.team8.drinkndial.fragments.SettingsFragment;
-import edu.uw.tacoma.team8.drinkndial.fragments.TripsFragment;
+import edu.uw.tacoma.team8.drinkndial.R;
+import edu.uw.tacoma.team8.drinkndial.setting.SettingsFragment;
 
 /**
  * This activity initializes a navigation drawer that has
