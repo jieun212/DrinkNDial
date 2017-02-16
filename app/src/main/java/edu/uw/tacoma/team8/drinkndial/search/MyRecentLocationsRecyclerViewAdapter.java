@@ -10,8 +10,8 @@ import java.util.List;
 
 import edu.uw.tacoma.team8.drinkndial.R;
 import edu.uw.tacoma.team8.drinkndial.search.RecentLocationsFragment.OnListFragmentInteractionListener;
-import edu.uw.tacoma.team8.drinkndial.location.LocationContent;
-import edu.uw.tacoma.team8.drinkndial.location.LocationContent.LocationItem;
+import edu.uw.tacoma.team8.drinkndial.model.LocationContent;
+import edu.uw.tacoma.team8.drinkndial.model.LocationContent.LocationItem;
 
 public class MyRecentLocationsRecyclerViewAdapter extends RecyclerView.Adapter<MyRecentLocationsRecyclerViewAdapter.ViewHolder> {
 
