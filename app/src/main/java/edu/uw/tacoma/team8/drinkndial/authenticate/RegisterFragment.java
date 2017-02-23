@@ -184,7 +184,7 @@ public class RegisterFragment extends Fragment {
 
             // last name
             String userLname = mLnameEditText.getText().toString();
-            sb.append("&lanme=");
+            sb.append("&lname=");
             sb.append(URLEncoder.encode(userLname, "UTF-8"));
 
 
