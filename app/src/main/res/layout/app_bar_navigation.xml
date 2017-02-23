@@ -18,6 +18,9 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@android:color/transparent"/>
 
+
     </android.support.design.widget.AppBarLayout>
+
+
 
 </android.support.design.widget.CoordinatorLayout>

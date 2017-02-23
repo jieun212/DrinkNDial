@@ -1,129 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_register"
+<FrameLayout android:id="@+id/fragment_register"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_marginStart="15dp"
-    android:layout_marginLeft="15dp"
-    android:layout_marginTop="15dp"
-    android:layout_marginEnd="15dp">
+    android:background="@color/drinkWhite"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- logo -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:drawableStart="@drawable/logo_small"
-        android:drawableLeft="@drawable/logo_small"
-        android:text="@string/title"
-        android:textColor="@color/drinkDarkBlue"
-        android:textSize="40sp"
-        android:textStyle="bold"/>
-
-
-    <!-- name -->
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="15dp">
-        <TextView
-            style="@style/SettingItemTextStyle"
-            android:text="@string/register_name" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:background="@color/drinkWhite"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp">
 
+        <!-- logo -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableStart="@drawable/logo_small"
+            android:drawableLeft="@drawable/logo_small"
+            android:text="@string/title"
+            android:textColor="@color/drinkDarkBlue"
+            android:textSize="40sp"
+            android:textStyle="bold"/>
+
+
+        <!-- name -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp">
+            <TextView
+                style="@style/SettingItemTextStyle"
+                android:text="@string/register_name" />
 
-            <EditText
-                android:id="@+id/add_user_fname"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/register_hint_firstName"/>
+                android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/add_user_lname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/register_hint_lastName"/>
+                <EditText
+                    android:id="@+id/add_user_fname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/register_hint_firstName"/>
+
+                <EditText
+                    android:id="@+id/add_user_lname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/register_hint_lastName"/>
+            </LinearLayout>
+
         </LinearLayout>
 
-    </LinearLayout>
 
-
-    <!-- email -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp">
-        <TextView
-            style="@style/SettingItemTextStyle"
-            android:text="@string/email"/>
-
-        <EditText
-            android:id="@+id/add_user_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_email"/>
-    </LinearLayout>
-
-    <!-- pw -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="15dp">
-        <TextView
-            style="@style/SettingItemTextStyle"
-            android:text="@string/pw"/>
-
+        <!-- email -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginTop="15dp">
+            <TextView
+                style="@style/SettingItemTextStyle"
+                android:text="@string/email"/>
 
             <EditText
-                android:id="@+id/add_user_pw"
+                android:id="@+id/add_user_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_pw"
-                android:inputType="textPassword"/>
-
-            <EditText
-                android:id="@+id/add_user_pwconfirm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_pwConfirm"
-                android:inputType="textPassword"/>
+                android:hint="@string/hint_email"/>
         </LinearLayout>
-    </LinearLayout>
 
-
-    <!-- phone -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="15dp">
-        <TextView
-            style="@style/SettingItemTextStyle"
-            android:text="@string/phone"/>
-
-        <EditText
-            android:id="@+id/add_user_phone"
+        <!-- pw -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_phone"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp">
+            <TextView
+                style="@style/SettingItemTextStyle"
+                android:text="@string/pw"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/add_user_pw"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_pw"
+                    android:inputType="textPassword"/>
+
+                <EditText
+                    android:id="@+id/add_user_pwconfirm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_pwConfirm"
+                    android:inputType="textPassword"/>
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <!-- phone -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp">
+            <TextView
+                style="@style/SettingItemTextStyle"
+                android:text="@string/phone"/>
+
+            <EditText
+                android:id="@+id/add_user_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_phone"/>
+        </LinearLayout>
+
+
+        <!-- Register button -->
+        <Button
+            style="@style/SaveButtonStyle"
+            android:id="@+id/register_register_button"
+            android:text="@string/register"
+            android:onClick="addUser"/>
+
     </LinearLayout>
+</FrameLayout>
 
-
-    <!-- Register button -->
-    <Button
-        style="@style/SaveButtonStyle"
-        android:id="@+id/register_register_button"
-        android:text="@string/register"
-        android:onClick="addUser"/>
-
-</LinearLayout>

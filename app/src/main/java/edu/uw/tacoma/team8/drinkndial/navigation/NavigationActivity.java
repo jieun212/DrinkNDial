@@ -54,7 +54,6 @@ import java.net.URLEncoder;
 import edu.uw.tacoma.team8.drinkndial.R;
 
 import edu.uw.tacoma.team8.drinkndial.authenticate.LogOutFragment;
-import edu.uw.tacoma.team8.drinkndial.setting.SettingsFragment;
 
 /**
  *
@@ -62,43 +61,18 @@ import edu.uw.tacoma.team8.drinkndial.setting.SettingsFragment;
  * @author Lovejit Hari
  */
 
-public class NavigationActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
 
 public class NavigationActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        SettingsFragment.OnFragmentInteractionListener,
-        OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        SettingsFragment.OnFragmentInteractionListener {
 
     private static final String USER_GET_URL
             = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndlist.php?cmd=dnd_user";
-
-    //Class instance of the google map
-    private GoogleMap mMap;
-
-    //Class instance of the client
-    private GoogleApiClient mGoogleApiClient;
-
-    //Last known location to the program
-    private Location mLastLocation;
-
-    //Current location marker
-    private Marker mCurrLocationMarker;
-
-    //Location Request
-    private LocationRequest mLocationRequest;
 
     private TextView mUserName;
     private TextView mUserEmail;
     private TextView mUserPhone;
     private String mGetEmail;
-
-
-
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     /**
      * Initializes a drawer, action bar and sets the map
@@ -150,12 +124,10 @@ public class NavigationActivity extends AppCompatActivity implements
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.drawer_layout, new GmapsDisplay())
+                .add(R.id.drawer_layout, new GmapsDisplay())
                 .commit();
 
     }
@@ -227,22 +199,25 @@ public class NavigationActivity extends AppCompatActivity implements
         if (id == R.id.nav_settings) {
 
             FragmentTransaction ft = fm.beginTransaction()
-                    .replace(R.id.map, new SettingsFragment())
+                    .replace(R.id.fragment_bucket, new SettingsFragment())
                     .addToBackStack(null);
 
             ft.commit();
 
         } else if (id == R.id.nav_trips) {
             FragmentTransaction ft = fm.beginTransaction()
-                    .replace(R.id.map, new TripsFragment())
+                    .replace(R.id.fragment_bucket, new TripsFragment())
                     .addToBackStack(null);
 
             ft.commit();
+
         } else if(id == R.id.map) {
             FragmentTransaction ft = fm.beginTransaction()
-                    .replace(R.id.map, new GmapsDisplay())
+                    .replace(R.id.fragment_bucket, new GmapsDisplay())
                     .addToBackStack(null);
+
             ft.commit();
+
         } else if(id == R.id.logout_menuitem) {
             dialogFragment = new LogOutFragment();
         }
