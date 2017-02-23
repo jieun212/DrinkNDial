@@ -76,6 +76,7 @@
     <string name="username">Jieun Lee</string>
     <string name="userphone">Jieun Lee</string>
     <string name="useremail">email@email.com</string>
+    <string name="title_activity_testing">Map</string>
 
 
 </resources>
