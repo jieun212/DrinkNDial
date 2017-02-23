@@ -1,7 +1,9 @@
 package edu.uw.tacoma.team8.drinkndial.navigation;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -14,8 +16,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -32,8 +37,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+
 import edu.uw.tacoma.team8.drinkndial.R;
-import edu.uw.tacoma.team8.drinkndial.setting.SettingsFragment;
 
 /**
  * This activity initializes a navigation drawer that has
@@ -43,10 +57,16 @@ import edu.uw.tacoma.team8.drinkndial.setting.SettingsFragment;
  * @version 2/15/2017
  * @author Lovejit Hari
  */
-public class NavigationActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class NavigationActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        SettingsFragment.OnFragmentInteractionListener,
+        OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
 
+    private static final String USER_GET_URL
+            = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndlist.php?cmd=dnd_user";
 
     //Class instance of the google map
     private GoogleMap mMap;
@@ -63,6 +83,13 @@ public class NavigationActivity extends AppCompatActivity
     //Location Request
     private LocationRequest mLocationRequest;
 
+    private TextView mUserName;
+    private TextView mUserEmail;
+    private TextView mUserPhone;
+    private String mGetEmail;
+
+
+
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     /**
@@ -76,9 +103,32 @@ public class NavigationActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View header = navigationView.getHeaderView(0);
+
+        // navigation header user information
+        mUserName = (TextView) header.findViewById(R.id.nav_user_name);
+        mUserEmail = (TextView) header.findViewById(R.id.nav_user_email);
+        mUserPhone = (TextView) header.findViewById(R.id.nav_user_phone);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Intent i = getIntent();
+        mGetEmail = i.getExtras().getString("email");
+
+        Log.e("user email: ", mGetEmail);
+
+        if (mUserEmail != null) {
+            mUserEmail.setText(mGetEmail);
+        }
+
+
+        // get user's info for navigation header
+        String userInfoUrl = buildUserInfoURL();
+        GetUserTask task = new GetUserTask();
+        task.execute(userInfoUrl);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -86,7 +136,6 @@ public class NavigationActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         FragmentManager fm = getSupportFragmentManager();
@@ -362,5 +411,125 @@ public class NavigationActivity extends AppCompatActivity
             }
         }
     }
+
+
+
+    /**
+     * When Add home button on SettingsFragment is pressed,
+     * it shows add home fragment.
+     */
+    public void addHome() {
+        Intent i = new Intent(this, HomeLocationActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+    /**
+     * When Add home button on SettingsFragment is pressed,
+     * it shows add favorite location fragment.
+     */
+    public void addLocation() {
+        Intent i = new Intent(this, FavoriteLocationActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+
+
+    /**
+     * onFragmentInteraction for SettingsFragment.
+     */
+    @Override
+    public void onFragmentInteraction() {
+
+    }
+
+
+    /********************************************************************************************************************
+     *                        FOR Retrieving User's email, name, phone
+     *******************************************************************************************************************/
+    private String buildUserInfoURL() {
+
+        StringBuilder sb = new StringBuilder(USER_GET_URL);
+
+        try {
+
+            // email
+//
+            sb.append("&email=");
+            sb.append(URLEncoder.encode(mGetEmail, "UTF-8"));
+
+            Log.i("Navi:UserInfo", sb.toString());
+
+        } catch(Exception e) {
+            Toast.makeText(this, "Something wrong with the url" + e.getMessage(),
+                    Toast.LENGTH_LONG)
+                    .show();
+            Log.e("Catch", e.getMessage());
+        }
+        return sb.toString();
+    }
+
+    private class GetUserTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String response = "";
+            HttpURLConnection urlConnection = null;
+            for (String url : urls) {
+                try {
+                    URL urlObject = new URL(url);
+                    urlConnection = (HttpURLConnection) urlObject.openConnection();
+                    InputStream content = urlConnection.getInputStream();
+                    BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
+                    String s = "";
+                    while ((s = buffer.readLine()) != null) {
+                        response += s;
+                    }
+                } catch (Exception e) {
+                    response = "Unable to get user, Reason: " + e.getMessage();
+                }
+                finally {
+                    if (urlConnection != null)  urlConnection.disconnect();
+                }
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i("Get user result: ", result);
+            // Something wrong with the network or the URL.
+            if (result.startsWith("Unable to")) {
+                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
+                        .show();
+                return;
+            }
+
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(result);
+                String fname = (String)jsonObject.get("fname");
+                String lname = (String)jsonObject.get("lname");
+                String phone = (String)jsonObject.get("phone");
+
+                Log.i("NAVI-name", fname + " " + lname);
+                Log.i("NAVI-phone", phone);
+
+
+                mUserName.setText(fname + " " + lname);
+                mUserPhone.setText(phone);
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+
+
+
 
 }

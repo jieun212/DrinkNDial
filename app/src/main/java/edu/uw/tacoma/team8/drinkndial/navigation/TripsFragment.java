@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import edu.uw.tacoma.team8.drinkndial.R;
-import edu.uw.tacoma.team8.drinkndial.setting.SettingsFragment;
 
 /**
  * A simple {@link Fragment} subclass.
