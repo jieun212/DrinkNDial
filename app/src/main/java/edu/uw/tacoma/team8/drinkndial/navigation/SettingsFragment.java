@@ -1,4 +1,4 @@
-package edu.uw.tacoma.team8.drinkndial.setting;
+package edu.uw.tacoma.team8.drinkndial.navigation;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import edu.uw.tacoma.team8.drinkndial.R;
 
@@ -20,7 +22,7 @@ import edu.uw.tacoma.team8.drinkndial.R;
  */
 public class SettingsFragment extends Fragment {
 
-
+    private final String DEFAULT_MILES = "1";
     private OnFragmentInteractionListener mListener;
 
     public SettingsFragment() {
@@ -37,7 +39,33 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings_user, container, false);
+        View v = inflater.inflate(R.layout.fragment_setting_main, container, false);
+
+
+        // add home button
+        Button addHomeBtn =(Button) v.findViewById(R.id.add_home_button);
+        addHomeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((NavigationActivity) getActivity()).addHome();
+            }
+        });
+
+        // add location button
+        Button addLocationBtn = (Button) v.findViewById(R.id.add_location_button);
+        addLocationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((NavigationActivity) getActivity()).addLocation();
+            }
+        });
+
+
+        // driver preference
+        EditText prefermile = (EditText) v.findViewById(R.id.preference_miles);
+        prefermile.setText(DEFAULT_MILES);
+
+        return v;
     }
 
     @Override
