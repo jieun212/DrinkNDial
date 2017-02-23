@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "846527645568",
+    "project_id": "firebase-drinkndial"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:846527645568:android:2d5c0dc83f74b931",
+        "android_client_info": {
+          "package_name": "edu.uw.tacoma.team8.drinkndial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "846527645568-18epdmf9r70o8h817jl2vmvv25np2cr0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.uw.tacoma.team8.drinkndial",
+            "certificate_hash": "a14d5a2f6fb40163f0062edad175a4f52b5e3173"
+          }
+        },
+        {
+          "client_id": "846527645568-b4cr0i8pohi2uf4s4ej18o6svqd7adn2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWNjm5Yo0yH7_ioyCnC0d4WMwoSAHf0z8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

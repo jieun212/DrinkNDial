@@ -79,4 +79,26 @@
     <string name="title_activity_testing">Map</string>
 
 
+    <string name="LOGIN_FILE"> edu.uw.tacoma.team8.drinkndial.LOGIN_FILE</string>
+
+
+    <!-- Facebook Login-->
+    <string name="facebook_app_id">775665282584719</string>
+
+    <!-- Google Login -->
+    <string name="loading">loading</string>
+    <string name="signed_out">signed_out</string>
+    <string name="signed_in_fmt">LoginTest</string>
+
+
+    <!-- For DB -->
+    <string name="CREATE_DND_USER_SQL">
+        CREATE TABLE IF NOT EXISTS dnd_user
+        (email TEXT PRIMARY KEY, fname TEXT, lname TEXT, pw TEXT, phone TEXT)
+    </string>
+
+    <string name="DROP_DND_USER_SQL">
+        DROP TABLE IF EXISTS dnd_user
+    </string>
+
 </resources>
