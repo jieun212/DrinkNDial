@@ -4,16 +4,16 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_settings"
-            android:icon="@mipmap/ic_settings"
             android:title="@string/nav_settings" />
         <item
             android:id="@+id/nav_trips"
-            android:icon="@mipmap/ic_profile"
             android:title="@string/nav_trips" />
-        <!--<item-->
-            <!--android:id="@+id/logout_menuitem"-->
-            <!--android:title="@string/logout_button"-->
-            <!--android:onClick="launchDialog"/>-->
+        <item
+            android:id="@+id/map_item"
+            android:title="@string/title_activity_maps"/>
+        <item
+            android:id="@+id/logout_menuitem"
+            android:title="@string/logout_button" />
 
     </group>
 

@@ -1,10 +1,9 @@
-package edu.uw.tacoma.team8.drinkndial.navigation;
+package edu.uw.tacoma.team8.drinkndial.authenticate;
+
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -16,23 +15,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import edu.uw.tacoma.team8.drinkndial.R;
-import edu.uw.tacoma.team8.drinkndial.authenticate.SignInActivity;
+import edu.uw.tacoma.team8.drinkndial.navigation.NavigationActivity;
 
 /**
- * This launches a yes/no dialog fragment that asks the user if they want to log out or not
- * if the user selects yes, a new intent is launched taking them back to the Sign In Activity
- * if they select no, then nothing happens and they are taken back to the screen.
+ * A simple {@link Fragment} subclass.
  */
-public class LogoutDialogFragment extends DialogFragment {
+public class LogOutFragment extends DialogFragment {
+
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
 
     private String mParam1;
     private String mParam2;
 
-    public LogoutDialogFragment() {
+
+    public LogOutFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,17 +52,19 @@ public class LogoutDialogFragment extends DialogFragment {
         builder.setMessage(R.string.logout_confirmation)
                 .setPositiveButton(R.string.logout_yes_button, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Intent i = new Intent(LogoutDialogFragment.this.getActivity(), SignInActivity.class);
+                        Intent i = new Intent(getActivity(), SignInActivity.class);
                         startActivity(i);
                     }
+
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.logout_no_button, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        //do nothing
+                        //do nothing, automagically closes dialog!
                     }
+
                 });
         // Create the AlertDialog object and return it
         return builder.create();
-
     }
+
 }
