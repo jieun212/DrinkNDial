@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="edu.uw.tacoma.team8.drinkndial.LogInActivity">
+    tools:context="edu.uw.tacoma.team8.drinkndial.authenticate.SignInActivity">
 
     <!-- Title -->
     <LinearLayout
@@ -86,28 +86,21 @@
         android:layout_marginTop="30dp"
         android:layout_gravity="center_horizontal">
 
-        <Button
+        <com.facebook.login.widget.LoginButton
             android:id="@+id/facebook_signin_button"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sign in with FaceBook"
-            android:onClick="launch"
-            android:background="@color/drinkDarkBlue"
-            android:textColor="@color/drinkWhite"/>
-
-        <Button
-            android:id="@+id/google_signin_button"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sign In with Google"
-            android:onClick="launch"
-            android:background="@color/drinkDarkBlue"
-            android:textColor="@color/drinkWhite"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/google_signin_button"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
 
         <TextView
             android:layout_marginLeft="10dp"
