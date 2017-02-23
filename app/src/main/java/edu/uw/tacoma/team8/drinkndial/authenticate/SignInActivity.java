@@ -27,7 +27,6 @@ import edu.uw.tacoma.team8.drinkndial.R;
  * @author  Jieun Lee (jieun212@uw.edu)
  */
 public class SignInActivity extends AppCompatActivity implements
-
         LoginFragment.LoginInteractionListener,
         RegisterFragment.UserAddListener {
 
