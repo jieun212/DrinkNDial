@@ -1,14 +1,15 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fragment_bucket">
+    android:id="@+id/nav_frag_container">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical">
+
 
         <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
             android:id="@+id/origin_location"
@@ -16,51 +17,53 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="55dp"
             android:hint="Where do you want to be picked up?"
-            app:pacv_googleMapsApiKey="AIzaSyAk7j-Ab4Va3CHHEWk46i4fxdiHg--CHoc"/>
+            app:pacv_googleMapsApiKey="AIzaSyAk7j-Ab4Va3CHHEWk46i4fxdiHg--CHoc" />
 
         <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
             android:id="@+id/destination_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Where do you want to go?"
-            app:pacv_googleMapsApiKey="AIzaSyAk7j-Ab4Va3CHHEWk46i4fxdiHg--CHoc"/>
+            app:pacv_googleMapsApiKey="AIzaSyAk7j-Ab4Va3CHHEWk46i4fxdiHg--CHoc" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <Button
+                android:id="@+id/btn_findride"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Find ride!"
-                android:id="@+id/btn_findride"/>
+                android:text="Find ride!" />
 
             <TextView
+                android:id="@+id/distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
                 android:layout_marginLeft="40dp"
-                android:text="0 km"
-                android:id="@+id/distance"/>
+                android:layout_marginStart="40dp"
+                android:text="0 km" />
 
             <TextView
+                android:id="@+id/duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
                 android:layout_marginLeft="40dp"
-                android:text="0 min"
-                android:id="@+id/duration"/>
+                android:layout_marginStart="40dp"
+                android:text="0 min" />
 
             <TextView
+                android:id="@+id/price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
                 android:layout_marginLeft="40dp"
-                android:text="$0.00"
-                android:id="@+id/price"/>
+                android:layout_marginStart="40dp"
+                android:text="$0.00" />
 
 
         </LinearLayout>
+
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
@@ -73,8 +76,6 @@
     </LinearLayout>
 
 </FrameLayout>
-
-
 
 
 
