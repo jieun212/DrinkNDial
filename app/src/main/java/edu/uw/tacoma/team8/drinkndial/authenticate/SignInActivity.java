@@ -87,11 +87,11 @@ public class SignInActivity extends AppCompatActivity implements
 
         mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS)
                 , Context.MODE_PRIVATE);
-        if (mSharedPreferences.getBoolean(getString(R.string.LOGGEDIN), false)) {
-            Intent i = new Intent(this, NavigationActivity.class);
-            startActivity(i);
-            finish();
-        }
+//        if (mSharedPreferences.getBoolean(getString(R.string.LOGGEDIN), false)) {
+//            Intent i = new Intent(this, NavigationActivity.class);
+//            startActivity(i);
+//            finish();
+//        }
 
         // facebook login
         mCallbackManager = CallbackManager.Factory.create();
@@ -160,8 +160,6 @@ public class SignInActivity extends AppCompatActivity implements
 
                 mUserEmail = userId;
                 Log.i("Signin:userEmail", mUserEmail);
-                // call login
-               login(userId, pwd);
 
             }
         });
@@ -444,6 +442,7 @@ public class SignInActivity extends AppCompatActivity implements
                     Toast.makeText(getApplicationContext(), "Successfully logged in!"
                             , Toast.LENGTH_LONG)
                             .show();
+                    login();
 
                 } else {
                     Toast.makeText(getApplicationContext(), "Failed to log in: "
