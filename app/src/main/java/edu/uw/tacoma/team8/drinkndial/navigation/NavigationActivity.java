@@ -54,7 +54,6 @@ import java.net.URLEncoder;
 import edu.uw.tacoma.team8.drinkndial.R;
 
 import edu.uw.tacoma.team8.drinkndial.authenticate.LogOutFragment;
-import edu.uw.tacoma.team8.drinkndial.setting.SettingsFragment;
 
 /**
  *
@@ -62,43 +61,18 @@ import edu.uw.tacoma.team8.drinkndial.setting.SettingsFragment;
  * @author Lovejit Hari
  */
 
-public class NavigationActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
 
 public class NavigationActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        SettingsFragment.OnFragmentInteractionListener,
-        OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        SettingsFragment.OnFragmentInteractionListener {
 
     private static final String USER_GET_URL
             = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndlist.php?cmd=dnd_user";
-
-    //Class instance of the google map
-    private GoogleMap mMap;
-
-    //Class instance of the client
-    private GoogleApiClient mGoogleApiClient;
-
-    //Last known location to the program
-    private Location mLastLocation;
-
-    //Current location marker
-    private Marker mCurrLocationMarker;
-
-    //Location Request
-    private LocationRequest mLocationRequest;
 
     private TextView mUserName;
     private TextView mUserEmail;
     private TextView mUserPhone;
     private String mGetEmail;
-
-
-
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     /**
      * Initializes a drawer, action bar and sets the map
@@ -114,15 +88,33 @@ public class NavigationActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_navigation);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this,
+                drawer,
+                toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+
+
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+
+
+
+        //************Jieun's addition*************
         View header = navigationView.getHeaderView(0);
 
         // navigation header user information
         mUserName = (TextView) header.findViewById(R.id.nav_user_name);
         mUserEmail = (TextView) header.findViewById(R.id.nav_user_email);
         mUserPhone = (TextView) header.findViewById(R.id.nav_user_phone);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         Intent i = getIntent();
         mGetEmail = i.getExtras().getString("email");
@@ -133,29 +125,13 @@ public class NavigationActivity extends AppCompatActivity implements
             mUserEmail.setText(mGetEmail);
         }
 
-
         // get user's info for navigation header
         String userInfoUrl = buildUserInfoURL();
         GetUserTask task = new GetUserTask();
         task.execute(userInfoUrl);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this,
-                drawer,
-                toolbar,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close);
-
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.drawer_layout, new GmapsDisplay())
+                .add(R.id.drawer_layout, new GmapsDisplay()).addToBackStack(null)
                 .commit();
 
     }
@@ -217,7 +193,7 @@ public class NavigationActivity extends AppCompatActivity implements
      * @return boolean
      */
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    public boolean onNavigationItemSelected(MenuItem item) {
 
         int id = item.getItemId();
 
@@ -227,22 +203,22 @@ public class NavigationActivity extends AppCompatActivity implements
         if (id == R.id.nav_settings) {
 
             FragmentTransaction ft = fm.beginTransaction()
-                    .replace(R.id.map, new SettingsFragment())
-                    .addToBackStack(null);
+                    .replace(R.id.nav_frag_container, new SettingsFragment());
 
             ft.commit();
 
         } else if (id == R.id.nav_trips) {
             FragmentTransaction ft = fm.beginTransaction()
-                    .replace(R.id.map, new TripsFragment())
-                    .addToBackStack(null);
+                    .replace(R.id.nav_frag_container, new TripsFragment());
 
             ft.commit();
-        } else if(id == R.id.map) {
+
+        } else if(id == R.id.map_item) {
             FragmentTransaction ft = fm.beginTransaction()
-                    .replace(R.id.map, new GmapsDisplay())
-                    .addToBackStack(null);
+                    .replace(R.id.nav_frag_container, new GmapsDisplay());
+
             ft.commit();
+
         } else if(id == R.id.logout_menuitem) {
             dialogFragment = new LogOutFragment();
         }
