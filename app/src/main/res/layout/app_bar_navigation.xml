@@ -10,16 +10,23 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/drinkDarkBlue">
+        android:background="@color/drinkDarkBlue" >
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/drinkDarkBlue"/>
-
+            android:background="@color/drinkDarkBlue"
+            android:title=""/>
 
     </android.support.design.widget.AppBarLayout>
 
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/nav_frag_container">
+
+    </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>
