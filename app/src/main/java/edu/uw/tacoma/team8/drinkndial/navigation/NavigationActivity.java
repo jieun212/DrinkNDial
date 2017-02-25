@@ -3,12 +3,8 @@ package edu.uw.tacoma.team8.drinkndial.navigation;
 
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -21,25 +17,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
-
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,7 +32,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 import edu.uw.tacoma.team8.drinkndial.R;
-
 import edu.uw.tacoma.team8.drinkndial.authenticate.LogOutFragment;
 
 /**
@@ -131,7 +110,8 @@ public class NavigationActivity extends AppCompatActivity implements
         task.execute(userInfoUrl);
 
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.drawer_layout, new GmapsDisplay()).addToBackStack(null)
+                .add(R.id.nav_frag_container, new GmapsDisplay())
+                .addToBackStack(null)
                 .commit();
 
     }
@@ -203,19 +183,19 @@ public class NavigationActivity extends AppCompatActivity implements
         if (id == R.id.nav_settings) {
 
             FragmentTransaction ft = fm.beginTransaction()
-                    .replace(R.id.nav_frag_container, new SettingsFragment());
+                    .replace(R.id.nav_frag_container, new SettingsFragment()).addToBackStack(null);
 
             ft.commit();
 
         } else if (id == R.id.nav_trips) {
             FragmentTransaction ft = fm.beginTransaction()
-                    .replace(R.id.nav_frag_container, new TripsFragment());
+                    .replace(R.id.nav_frag_container, new TripsFragment()).addToBackStack(null);
 
             ft.commit();
 
         } else if(id == R.id.map_item) {
             FragmentTransaction ft = fm.beginTransaction()
-                    .replace(R.id.nav_frag_container, new GmapsDisplay());
+                    .replace(R.id.nav_frag_container, new GmapsDisplay()).addToBackStack(null);
 
             ft.commit();
 
