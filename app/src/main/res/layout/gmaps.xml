@@ -1,81 +1,81 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/nav_frag_container">
+    android:orientation="vertical">
+
+
+    <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
+        android:id="@+id/origin_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="55dp"
+        android:hint="Where do you want to be picked up?"
+        app:pacv_googleMapsApiKey="AIzaSyAk7j-Ab4Va3CHHEWk46i4fxdiHg--CHoc" />
+
+    <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
+        android:id="@+id/destination_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Where do you want to go?"
+        app:pacv_googleMapsApiKey="AIzaSyAk7j-Ab4Va3CHHEWk46i4fxdiHg--CHoc" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-
-        <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
-            android:id="@+id/origin_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="55dp"
-            android:hint="Where do you want to be picked up?"
-            app:pacv_googleMapsApiKey="AIzaSyAk7j-Ab4Va3CHHEWk46i4fxdiHg--CHoc" />
-
-        <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
-            android:id="@+id/destination_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Where do you want to go?"
-            app:pacv_googleMapsApiKey="AIzaSyAk7j-Ab4Va3CHHEWk46i4fxdiHg--CHoc" />
-
-        <LinearLayout
+        <Button
+            android:id="@+id/btn_findride"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:text="Get estimate!" />
 
-            <Button
-                android:id="@+id/btn_findride"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Find ride!" />
+        <TextView
+            android:id="@+id/distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:text="0 km" />
 
-            <TextView
-                android:id="@+id/distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
-                android:layout_marginStart="40dp"
-                android:text="0 km" />
+        <TextView
+            android:id="@+id/duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:text="0 min" />
 
-            <TextView
-                android:id="@+id/duration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
-                android:layout_marginStart="40dp"
-                android:text="0 min" />
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:text="$0.00" />
 
-            <TextView
-                android:id="@+id/price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
-                android:layout_marginStart="40dp"
-                android:text="$0.00" />
-
-
-        </LinearLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/confirm_ride"
+            android:text="Find ride!"/>
 
 
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context="edu.uw.tacoma.team8.drinkndial.navigation.GmapsDisplay" />
 
     </LinearLayout>
 
-</FrameLayout>
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="edu.uw.tacoma.team8.drinkndial.navigation.GmapsDisplay" />
+
+</LinearLayout>
 
 
 
