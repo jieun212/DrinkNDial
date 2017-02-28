@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
         android:id="@+id/origin_location"
         android:layout_width="match_parent"
@@ -28,41 +27,39 @@
 
         <Button
             android:id="@+id/btn_findride"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Get estimate!" />
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Estimate" />
 
         <TextView
             android:id="@+id/distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:text="0 km" />
 
         <TextView
             android:id="@+id/duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:text="0 min" />
 
         <TextView
             android:id="@+id/price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:text="$0.00" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
             android:id="@+id/confirm_ride"
-            android:text="Find ride!"/>
-
-
+            android:text="Find ride!" />
 
     </LinearLayout>
 

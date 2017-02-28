@@ -8,6 +8,9 @@
 
     <string name="action_settings">Settings</string>
 
+    <string name="home_fav_dialog">Select one of your favorite locations!</string>
+    <string name="homeLocation">Home</string>
+    <string name="favLocation">Favorite Location</string>
 
     <string name="logout_confirmation">Are you sure you want to logout?</string>
     <string name="logout_yes_button">Yes</string>
@@ -100,5 +103,8 @@
     <string name="DROP_DND_USER_SQL">
         DROP TABLE IF EXISTS dnd_user
     </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

@@ -112,6 +112,8 @@ public class NavigationActivity extends AppCompatActivity implements
         mUserPhoneTextView.setText(phone);
 
 
+
+
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.nav_frag_container, new GmapsDisplay())
                 .addToBackStack(null)
@@ -198,7 +200,10 @@ public class NavigationActivity extends AppCompatActivity implements
 
             ft.commit();
 
+
+
         } else if (id == R.id.map_item) {
+
             FragmentTransaction ft = fm.beginTransaction()
                     .replace(R.id.nav_frag_container, new GmapsDisplay()).addToBackStack(null);
 
