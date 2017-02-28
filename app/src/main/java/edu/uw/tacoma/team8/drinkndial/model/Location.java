@@ -14,24 +14,31 @@ import java.util.List;
 public class Location implements Serializable {
 
     public static final String LOCATION_ID = "locationid",
-                                NAME = "location_name",
-                                LONGITUDE = "lognitude",
+                                LONGITUDE = "longitude",
                                 LATITUDE = "latitude",
+                                ADDRESS = "address",
+                                EMAIL = "email",
                                 MARK = "mark";
 
-    public String mId;
-    public String mName;
-    public String mLongitude;
-    public String mLatitude;
-    public String mMark;
+    private String mId;
+    private String mLongitude;
+    private String mLatitude;
+    private String mAddress;
+    private String mEmail;
+    private String mMark;
 
 
-    public Location(String id, String name, String longitude, String latitude, String mark) {
+    public Location(String id, String longitude, String latitude, String address, String email, String mark) {
         this.mId = id;
-        this.mName = name;
         this.mLongitude = longitude;
         this.mLatitude = latitude;
+        this.mEmail = email;
+        this.mAddress = address;
         this.mMark = mark;
+    }
+
+    public Location(String address) {
+        this.mAddress = address;
     }
 
 
@@ -41,14 +48,6 @@ public class Location implements Serializable {
 
     public void setId(String id) {
         this.mId = id;
-    }
-
-    public String getName() {
-        return mName;
-    }
-
-    public void setName(String name) {
-        this.mName = name;
     }
 
     public String getLongitude() {
@@ -67,31 +66,58 @@ public class Location implements Serializable {
         this.mLatitude = latitude;
     }
 
+    public String getUserEmail() {
+        return mEmail;
+    }
+
+    public void setUserEmail(String email) {
+        this.mEmail = email;
+    }
+
+    public String getMark() {
+        return mMark;
+    }
+
+    public void setMark(String mark) {
+        this.mMark = mark;
+    }
+
+
+    public String getAddress() {
+        return mAddress;
+    }
+
+    public void setAddress(String address) {
+        this.mAddress = address;
+    }
+
+    public String toString() {
+        return mAddress;
+    }
+
     /**
      * Parses the json string, returns an error message if unsuccessful.
      * Returns user list if success.
      * @param loccationJSON   @return reason or null if successful.
      */
-    public static String parseLocationJSON(String loccationJSON, List<Location> locationList) {
-        String reason = null;
+    public static List<Location> parseLocationJSON(String loccationJSON, List<Location> locationList) {
         if (loccationJSON != null) {
             try {
                 JSONArray arr = new JSONArray(loccationJSON);
                 for (int i = 0; i < arr.length(); i++) {
                     JSONObject obj = arr.getJSONObject(i);
                     Location location = new Location(obj.getString(Location.LOCATION_ID),
-                            obj.getString(Location.NAME),
                             obj.getString(Location.LONGITUDE),
                             obj.getString(Location.LATITUDE),
+                            obj.getString(Location.EMAIL),
+                            obj.getString(Location.ADDRESS),
                             obj.getString(Location.MARK));
                     locationList.add(location);
                 }
             } catch (JSONException e) {
-                reason =  "Unable to parse data, Reason: " + e.getMessage();
             }
         }
-        return reason;
+        return locationList;
     }
-
 
 }

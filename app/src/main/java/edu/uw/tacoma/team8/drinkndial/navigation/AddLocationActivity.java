@@ -2,72 +2,80 @@ package edu.uw.tacoma.team8.drinkndial.navigation;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.seatgeek.placesautocomplete.PlacesAutocompleteTextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.List;
 
 import edu.uw.tacoma.team8.drinkndial.R;
-import edu.uw.tacoma.team8.drinkndial.model.GeocodingLocation;
+import edu.uw.tacoma.team8.drinkndial.authenticate.SignInActivity;
 import edu.uw.tacoma.team8.drinkndial.model.Location;
 
-public class FavoriteLocationActivity extends Activity {
-
+public class AddLocationActivity extends Activity {
 
     /**
      * An URL
      */
     private final static String ADD_LOCATION_URL
-            = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndlocation.php?cmd=insert";
-
+            = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndAddLocation.php?";
 
     private Location mLocation;
     private Button mSaveButton;
-    private EditText mAddressEdit;
+    private PlacesAutocompleteTextView mAddressEdit;
     private String mAddress;
     private String mLongitude;
     private String mLatitude;
-
+    private String mUserEmail;
+    private String mUserName;
+    private String mUserPhone;
+    private String mUserMark;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favorite_location);
+        setContentView(R.layout.activity_home_location);
 
-        mAddressEdit = (EditText) findViewById(R.id.setting_favorite_location_edit);
-        mSaveButton = (Button) findViewById(R.id.setting_favorite_save_button);
+        mAddressEdit = (PlacesAutocompleteTextView) findViewById(R.id.setting_home_edit);
+        mSaveButton = (Button) findViewById(R.id.setting_home_save_button);
 
+        Intent i = getIntent();
+        mUserEmail = i.getExtras().getString("email");
+        mUserName = i.getExtras().getString("name");
+        mUserPhone = i.getExtras().getString("phone");
+        mUserMark = i.getExtras().getString("mark");
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                mAddressEdit = (EditText) findViewById(R.id.setting_favorite_location_edit);
-                String address = mAddressEdit.getText().toString();
+                mAddress = mAddressEdit.getText().toString();
 
-                GeocodingLocation locationAddress = new GeocodingLocation();
-                locationAddress.getAddressFromLocation(address,
-                        getApplicationContext(), new GeocoderHandler());
+                // get Address for getting longitude and latitude
+                Address address = getLocationFromAddress(mAddress);
 
-                mAddress = locationAddress.getAddress();
-
+                if (address != null) {
+                    mLongitude = String.valueOf(address.getLongitude());
+                    mLatitude = String.valueOf(address.getLatitude());
+                }
 
                 String url = buildAddLocationURL();
                 LocationAddAsyncTask task = new LocationAddAsyncTask();
@@ -82,50 +90,73 @@ public class FavoriteLocationActivity extends Activity {
     @Override
     public void onBackPressed() {
         Intent i = new Intent(this, NavigationActivity.class);
-        startActivity(i);
+        i.putExtra("email", mUserEmail);
+        i.putExtra("name", mUserName);
+        i.putExtra("phone", mUserPhone);
+        i.putExtra("address", mAddress);
+        i.putExtra("mark", mUserMark);
+        startActivityForResult(i, SignInActivity.USER_CODE);
         finish();
     }
 
     private void goNavigation() {
         Intent i = new Intent(this, NavigationActivity.class);
-        startActivity(i);
+        i.putExtra("email", mUserEmail);
+        i.putExtra("name", mUserName);
+        i.putExtra("phone", mUserPhone);
+        i.putExtra("address", mAddress);
+        i.putExtra("mark", mUserMark);
+        startActivityForResult(i, SignInActivity.USER_CODE);
         finish();
     }
 
-    private class GeocoderHandler extends Handler {
-        @Override
-        public void handleMessage(Message message) {
-            String locationAddress;
-            switch (message.what) {
-                case 1:
-                    Bundle bundle = message.getData();
-                    locationAddress = bundle.getString("address");
-                    break;
-                default:
-                    locationAddress = null;
-            }
-            Log.i("Location", locationAddress);
-            mLatitude = locationAddress.substring(0, locationAddress.indexOf(','));
-            mLongitude = locationAddress.substring(locationAddress.indexOf(',')+1, locationAddress.length());
-            Log.i("FAV: mLongitude: ", mLongitude);
-            Log.i("FAV: mLatitude: ", mLatitude);
+    /**
+     *
+     *
+     * (Resource: how to get longitude & latitude from string address
+     * http://stackoverflow.com/questions/17835426/get-latitude-longitude-from-address-in-android)
+     *
+     * @method getLocationFromAddress
+     * @param strAddress Address/Location String
+     * @desc Get searched location points from address and plot/update on map.
+     */
+    public Address getLocationFromAddress(String strAddress) {
 
+        //Create coder
+        Geocoder coder = new Geocoder(this);
+        List<Address> addresses;
+
+        try {
+            //Get latLng from String
+            addresses = coder.getFromLocationName(strAddress,5);
+
+            //check for null
+            if (addresses != null && addresses.size() > 0) {
+                return addresses.get(0);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return null;
+
     }
 
-    /**
-     * Build user URL with given information of user.
-     * It returns message how it built.
-     * It catches execption and shows a dialog with error message
-     * @return Message
-     */
+
+
+
+
+
+
+    /********************************************************************************************************************
+     *                        FOR Adding home location
+     *******************************************************************************************************************/
+
+
     private String buildAddLocationURL() {
 
         StringBuilder sb = new StringBuilder(ADD_LOCATION_URL);
-
         try {
-            Log.i("FAV: mLongitude: ", mLongitude);
-            Log.i("FAV: mLatitude: ", mLatitude);
 
             // longitude
             sb.append("&longitude=");
@@ -140,25 +171,31 @@ public class FavoriteLocationActivity extends Activity {
             sb.append(URLEncoder.encode(mAddress, "UTF-8"));
 
             // user email
-            TextView user_email = (TextView) findViewById(R.id.user_email);
-            String userEmail = user_email.toString();
-            sb.append("&user_email=");
-            sb.append(URLEncoder.encode(userEmail, "UTF-8"));
+            sb.append("&email=");
+            sb.append(URLEncoder.encode(mUserEmail, "UTF-8"));
 
-            Log.i("AddLocation", sb.toString());
+            sb.append("&mark=");
+            if (mUserMark.equals("home")) {
+                sb.append(URLEncoder.encode("home", "UTF-8"));
+            } else {
+                sb.append(URLEncoder.encode("favorite", "UTF-8"));
+            }
+
+            Log.i("AddLocationSet", sb.toString());
 
         } catch(Exception e) {
+            Log.e("Catch", e.getMessage());
             Toast.makeText(getApplicationContext(), "Something wrong with the url" + e.getMessage(),
                     Toast.LENGTH_LONG)
                     .show();
-            Log.e("Catch", e.getMessage());
+
         }
         return sb.toString();
     }
 
 
     /**
-     * Inner class for Adding user (Register) task
+     * Inner class for Adding Location task
      */
     private class LocationAddAsyncTask extends AsyncTask<String, Void, String> {
 
@@ -225,4 +262,7 @@ public class FavoriteLocationActivity extends Activity {
             }
         }
     }
+
+
+
 }
