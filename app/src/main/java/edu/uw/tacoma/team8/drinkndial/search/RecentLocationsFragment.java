@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import edu.uw.tacoma.team8.drinkndial.R;
-import edu.uw.tacoma.team8.drinkndial.model.LocationContent;
+import edu.uw.tacoma.team8.drinkndial.model.Location;
 
 /**
  * A fragment representing a list of Items.
@@ -57,7 +57,8 @@ public class RecentLocationsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyRecentLocationsRecyclerViewAdapter(LocationContent.ITEMS, mListener));
+//  TODO: get locations from DB
+//            recyclerView.setAdapter(new MyRecentLocationsRecyclerViewAdapter(LocationContent.ITEMS, mListener));
         }
         return view;
     }
@@ -92,6 +93,6 @@ public class RecentLocationsFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(LocationContent.LocationItem item);
+        void onListFragmentInteraction(Location location);
     }
 }
