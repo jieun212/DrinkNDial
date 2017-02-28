@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@color/drinkWhite"
     android:layout_marginStart="15dp"
@@ -21,12 +22,13 @@
         android:layout_marginTop="15dp"/>
 
 
-    <EditText
+    <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
         android:id="@+id/setting_home_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:hint="@string/location_hint_Street"/>
+        android:hint="@string/location_hint_Street"
+        app:pacv_googleMapsApiKey="AIzaSyAk7j-Ab4Va3CHHEWk46i4fxdiHg--CHoc" />
 
 
     <Button

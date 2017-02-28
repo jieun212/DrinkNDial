@@ -1,9 +1,10 @@
 package edu.uw.tacoma.team8.drinkndial.authenticate;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,7 +14,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -25,16 +25,17 @@ import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.List;
 
 import edu.uw.tacoma.team8.drinkndial.R;
 import edu.uw.tacoma.team8.drinkndial.data.UserDB;
@@ -56,23 +57,23 @@ public class SignInActivity extends AppCompatActivity implements
     private static final String LOGIN_URL
             = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndlogin.php?";
 
+    private static final String USER_GET_URL
+            = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndlist.php?cmd=dnd_user";
+
 
     private static final String TAG = "SignInActivity";
-    private static final int RC_SIGN_IN = 9001;
-    public static final int EMAIL_CODE = 1001;
+    public static final int USER_CODE = 1001;
 
-
-    private List<User> mUserList;
     private SharedPreferences mSharedPreferences;
     private EditText mUserIdText;
     private EditText mPwdText;
+    private User mUser;
     private LoginButton mFacebookButton;
     private CallbackManager mCallbackManager;
-    private GoogleApiClient mGoogleApiClient;
-    private TextView mStatusTextView;
-    private ProgressDialog mProgressDialog;
     private UserDB mUserDB;
     private String mUserEmail;
+    private String mUserPwd;
+
 
 
     /**
@@ -85,13 +86,26 @@ public class SignInActivity extends AppCompatActivity implements
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_log_in);
 
+
         mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS)
                 , Context.MODE_PRIVATE);
-//        if (mSharedPreferences.getBoolean(getString(R.string.LOGGEDIN), false)) {
-//            Intent i = new Intent(this, NavigationActivity.class);
-//            startActivity(i);
-//            finish();
-//        }
+        if (mSharedPreferences.getBoolean(getString(R.string.LOGGEDIN), false)) {
+
+            // Retrieve user's information from local database
+            if (mUserDB == null) {
+                mUserDB = new UserDB(getApplicationContext());
+            }
+            mUser = mUserDB.getUser();
+            mUserEmail = mUser.getEmail();
+
+            // Send user's data to the NavigationActivity to show user's info on navigation drawer
+            Intent i = new Intent(this, NavigationActivity.class);
+            i.putExtra("email", mUserEmail);
+            i.putExtra("name", (mUser.getFname() + " " + mUser.getLname()));
+            i.putExtra("phone", mUser.getPhone());
+            startActivityForResult(i, USER_CODE);
+            finish();
+        }
 
         // facebook login
         mCallbackManager = CallbackManager.Factory.create();
@@ -100,7 +114,7 @@ public class SignInActivity extends AppCompatActivity implements
         mFacebookButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-
+                // TODO: get user's info from facebook!!
                 login();
             }
 
@@ -120,16 +134,16 @@ public class SignInActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
 
-                String userId = mUserIdText.getText().toString();
-                String pwd = mPwdText.getText().toString();
-                if (TextUtils.isEmpty(userId)) {
+                mUserEmail = mUserIdText.getText().toString();
+                mUserPwd = mPwdText.getText().toString();
+                if (TextUtils.isEmpty(mUserEmail)) {
                     Toast.makeText(v.getContext(), "Enter userEmail"
                             , Toast.LENGTH_SHORT)
                             .show();
                     mUserIdText.requestFocus();
                     return;
                 }
-                if (!userId.contains("@")) {
+                if (!mUserEmail.contains("@")) {
                     Toast.makeText(v.getContext(), "Enter a valid email address"
                             , Toast.LENGTH_SHORT)
                             .show();
@@ -137,14 +151,14 @@ public class SignInActivity extends AppCompatActivity implements
                     return;
                 }
 
-                if (TextUtils.isEmpty(pwd)) {
+                if (TextUtils.isEmpty(mUserPwd)) {
                     Toast.makeText(v.getContext(), "Enter password"
                             , Toast.LENGTH_SHORT)
                             .show();
                     mPwdText.requestFocus();
                     return;
                 }
-                if (pwd.length() < 6) {
+                if (mUserPwd.length() < 6) {
                     Toast.makeText(v.getContext()
                             , "Enter password of at least 6 characters"
                             , Toast.LENGTH_SHORT)
@@ -153,13 +167,18 @@ public class SignInActivity extends AppCompatActivity implements
                     return;
                 }
 
+
+                // get User's information
+                String userUrl = buildUserInfoURL();
+                GetUserTask usertask = new GetUserTask();
+                usertask.execute(userUrl);
+
+                // verifying email and pwd are matching
                 String loginUrl = buildLoginURL(v);
-                LoginUserTask task = new LoginUserTask();
-                task.execute(loginUrl);
+                LoginUserTask logintask = new LoginUserTask();
+                logintask.execute(loginUrl);
 
 
-                mUserEmail = userId;
-                Log.i("Signin:userEmail", mUserEmail);
 
             }
         });
@@ -174,7 +193,9 @@ public class SignInActivity extends AppCompatActivity implements
             }
         });
 
+    }
 
+    public void logout() {
 
     }
 
@@ -192,67 +213,53 @@ public class SignInActivity extends AppCompatActivity implements
     }
 
     public void login () {
+
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            try {
+                // store user email and password in an internal file
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
+                        openFileOutput(getString(R.string.LOGIN_FILE)
+                                , Context.MODE_PRIVATE));
+                outputStreamWriter.write("email = " + mUserEmail + ";");
+                outputStreamWriter.write("password = " + mUserPwd);
+                outputStreamWriter.close();
+
+                Toast.makeText(this,"Stored in File Successfully!", Toast.LENGTH_LONG)
+                        .show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        else {
+            Toast.makeText(this, "No network connection available. Cannot authenticate user",
+                    Toast.LENGTH_SHORT) .show();
+            return;
+        }
+
         mSharedPreferences
                 .edit()
                 .putBoolean(getString(R.string.LOGGEDIN), true)
                 .commit();
+
         Intent i = new Intent(this, NavigationActivity.class);
         i.putExtra("email", mUserEmail);
-        startActivityForResult(i, EMAIL_CODE);
+        i.putExtra("name", (mUser.getFname() + " " + mUser.getLname()));
+        i.putExtra("phone", mUser.getPhone());
+        startActivityForResult(i, USER_CODE);
         finish();
 
     }
 
-    public void login (String userid, String pw) {
-
-        // TODO: before submitting!!!! check to see if the network exists
-//        ConnectivityManager connMgr = (ConnectivityManager)
-//                getSystemService(Context.CONNECTIVITY_SERVICE);
-//        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-//        if (networkInfo != null && networkInfo.isConnected()) {
-//            //Check if the login and password are valid
-//            //new LoginTask().execute(url);
-//
-//
-//            // store userid and password in an internal file
-//            try {
-//                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-//                        openFileOutput(getString(R.string.LOGIN_FILE)
-//                                , Context.MODE_PRIVATE));
-//                outputStreamWriter.write("email = " + userid + ";");
-//                outputStreamWriter.write("password = " + pw);
-//                outputStreamWriter.close();
-//                Toast.makeText(this,"Stored in File Successfully!", Toast.LENGTH_LONG)
-//                        .show();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//
-//        }
-//        else {
-//            Toast.makeText(this, "No network connection available. Cannot authenticate user",
-//                    Toast.LENGTH_SHORT) .show();
-//            return;
-//        }
-//        // store this information into the file using SharedPreferences API
-//        // When the user clicks, this information will be stored in the file.
-//        mSharedPreferences
-//                .edit()
-//                .putBoolean(getString(R.string.LOGGEDIN), true)
-//                .commit();
-
-
-        Intent i = new Intent(this, NavigationActivity.class);
-        i.putExtra("email", mUserEmail);
-        startActivityForResult(i, EMAIL_CODE);
-        finish();
-    }
 
 
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data)  {
         switch(requestCode) {
-            case EMAIL_CODE:
+            case USER_CODE:
                 if(resultCode == RESULT_OK) {
                     String email = data.getExtras().getString("email");
                 }
@@ -268,12 +275,7 @@ public class SignInActivity extends AppCompatActivity implements
     }
 
 
-    public String getUserEmail() {
-        return mUserEmail;
-    }
-    public void setUserEmail(String email) {
-        mUserEmail = email;
-    }
+
 
     /********************************************************************************************************************
      *                                                FOR "Register"
@@ -285,7 +287,8 @@ public class SignInActivity extends AppCompatActivity implements
      * @param url Register.php
      */
     @Override
-    public void addUser(String url) {
+    public void addUser(String url, User user) {
+        mUser = user;
         UserAddAsyncTask  task = new UserAddAsyncTask();
         task.execute(new String[]{url.toString()});
 
@@ -339,7 +342,6 @@ public class SignInActivity extends AppCompatActivity implements
          */
         @Override
         protected void onPostExecute(String result) {
-            Log.i("SigninActivity", result);
             // Something wrong with the network or the URL.
             try {
                 JSONObject jsonObject = new JSONObject(result);
@@ -348,6 +350,15 @@ public class SignInActivity extends AppCompatActivity implements
                     Toast.makeText(getApplicationContext(), "User successfully added!"
                             , Toast.LENGTH_LONG)
                             .show();
+
+                    if (mUserDB == null) {
+                        mUserDB = new UserDB(getApplicationContext());
+                    }
+
+
+                    mUserDB.deleteUser();
+                    mUserDB.insertUser(mUser);
+
                 } else {
                     Toast.makeText(getApplicationContext(), "Failed to add: "
                                     + jsonObject.get("error")
@@ -375,15 +386,13 @@ public class SignInActivity extends AppCompatActivity implements
         try {
 
             // email
-            String userEmail = mUserIdText.getText().toString();
             sb.append("&email=");
-            sb.append(URLEncoder.encode(userEmail, "UTF-8"));
+            sb.append(URLEncoder.encode(mUserEmail, "UTF-8"));
 
 
             // password
-            String userPw = mPwdText.getText().toString();
             sb.append("&pw=");
-            sb.append(URLEncoder.encode(userPw, "UTF-8"));
+            sb.append(URLEncoder.encode(mUserPwd, "UTF-8"));
 
             Log.i("SigninActivity", sb.toString());
 
@@ -442,6 +451,8 @@ public class SignInActivity extends AppCompatActivity implements
                     Toast.makeText(getApplicationContext(), "Successfully logged in!"
                             , Toast.LENGTH_LONG)
                             .show();
+
+                    // if email and pw are matched, try log in
                     login();
 
                 } else {
@@ -459,5 +470,87 @@ public class SignInActivity extends AppCompatActivity implements
         }
     }
 
+
+    /********************************************************************************************************************
+     *                        FOR Retrieving User's all information
+     *******************************************************************************************************************/
+    private String buildUserInfoURL() {
+
+        StringBuilder sb = new StringBuilder(USER_GET_URL);
+
+        try {
+
+            // email
+            sb.append("&email=");
+            sb.append(URLEncoder.encode(mUserEmail, "UTF-8"));
+
+        } catch(Exception e) {
+            Toast.makeText(getApplicationContext(), "Something wrong with the url" + e.getMessage(),
+                    Toast.LENGTH_LONG)
+                    .show();
+            Log.e("Catch", e.getMessage());
+        }
+        return sb.toString();
+    }
+
+    private class GetUserTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String response = "";
+            HttpURLConnection urlConnection = null;
+            for (String url : urls) {
+                try {
+                    URL urlObject = new URL(url);
+                    urlConnection = (HttpURLConnection) urlObject.openConnection();
+                    InputStream content = urlConnection.getInputStream();
+                    BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
+                    String s = "";
+                    while ((s = buffer.readLine()) != null) {
+                        response += s;
+                    }
+                } catch (Exception e) {
+                    response = "Unable to get user, Reason: " + e.getMessage();
+                } finally {
+                    if (urlConnection != null) urlConnection.disconnect();
+                }
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i("Get user result: ", result);
+            // Something wrong with the network or the URL.
+            if (result.startsWith("Unable to")) {
+                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
+                        .show();
+                return;
+            }
+
+            try {
+                JSONArray jsonArray = new JSONArray(result);
+
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+                String fname = (String) jsonObject.get("fname");
+                String lname = (String) jsonObject.get("lname");
+                String phone = (String) jsonObject.get("phone");
+
+                Log.i("Retrieving: ", fname);
+
+                mUser = new User (mUserEmail, fname, lname, mUserPwd, phone);
+
+                // store all user's information into local database using SQLite
+                if (mUserDB == null) {
+                    mUserDB = new UserDB(getApplicationContext());
+                }
+                mUserDB.deleteUser();
+                mUserDB.insertUser(mUser);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }
