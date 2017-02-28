@@ -14,6 +14,7 @@ import android.widget.Toast;
 import java.net.URLEncoder;
 
 import edu.uw.tacoma.team8.drinkndial.R;
+import edu.uw.tacoma.team8.drinkndial.model.User;
 
 
 /**
@@ -54,6 +55,9 @@ public class RegisterFragment extends Fragment {
 
     /** Listenr for adding a user.*/
     private UserAddListener mListener;
+
+    /** A user */
+    private User mUser;
 
 
     /**
@@ -114,7 +118,7 @@ public class RegisterFragment extends Fragment {
                 return;
             } else {
                 String url = buildUserURL(v);
-                mListener.addUser(url);
+                mListener.addUser(url, mUser);
             }
             }
         });
@@ -155,7 +159,7 @@ public class RegisterFragment extends Fragment {
      * <p>
      */
     public interface UserAddListener {
-        public void addUser(String url);
+        public void addUser(String url, User user);
     }
 
     /**
@@ -198,6 +202,11 @@ public class RegisterFragment extends Fragment {
             String userPhone = mPhoneEditText.getText().toString();
             sb.append("&phone=");
             sb.append(URLEncoder.encode(userPhone, "UTF-8"));
+
+            mUser = new User(mEmailEditText.getText().toString(),
+                    mFnameEditText.getText().toString(), mLnameEditText.getText().toString(),
+                    mPwEditText.getText().toString() ,mPhoneEditText.getText().toString());
+
 
             Log.i("RegisterFragment", sb.toString());
 
