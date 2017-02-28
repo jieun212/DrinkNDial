@@ -1,12 +1,10 @@
 package edu.uw.tacoma.team8.drinkndial.data;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import edu.uw.tacoma.team8.drinkndial.R;
 import edu.uw.tacoma.team8.drinkndial.model.User;
@@ -19,7 +17,7 @@ public class UserDB {
 
     public static final int DB_VERSION = 1;
     public static final String DB_NAME = "dnd_user.db";
-    private static final String COURSE_TABLE = "dnd_user";
+    private static final String USER_TABLE = "dnd_user";
 
     private UserDBHelper mUserDBHelper;
     private SQLiteDatabase mSQLiteDatabase;
@@ -31,39 +29,50 @@ public class UserDB {
     }
 
 
-    /**
-     * Returns a list of users from local User table
-     * @return
-     */
-    public List<User> getUser() {
 
-        String[] columns = {"fname", "lname", "email", "pw", "phone"};
+    public User getUser() {
 
-        Cursor c = mSQLiteDatabase.query(COURSE_TABLE, columns,
+        String[] columns = {"email", "fname", "lname", "pw", "phone"};
+
+        Cursor c = mSQLiteDatabase.query(USER_TABLE, columns,
                                             null, // where
                                             null, // value of where
                                             null, // don't group
                                             null, // dont' filter
                                             null); // order
         c.moveToFirst();
-        List<User> list = new ArrayList<User>();
 
-        for (int i = 0; i < c.getCount(); i++) {
-            String fname = c.getString(0);
-            String lname = c.getString(1);
-            String email = c.getString(2);
-            String pw = c.getString(3);
-            String phone = c.getString(4);
+        String email = c.getString(0);
+        String fname = c.getString(1);
+        String lname = c.getString(2);
+        String pw = c.getString(3);
+        String phone = c.getString(4);
 
-            User user = new User(fname, lname,email, pw, phone);
-            list.add(user);
-
-            c.moveToNext();
-        }
-
-        return list;
+        return new User(email, fname, lname,pw, phone);
     }
 
+
+
+    public boolean insertUser(User user) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("email", user.getEmail());
+        contentValues.put("fname", user.getFname());
+        contentValues.put("lname", user.getLname());
+        contentValues.put("pw", user.getPw());
+        contentValues.put("phone", user.getPhone());
+
+        long rowId = mSQLiteDatabase.insert("dnd_user", null, contentValues);
+        return rowId != -1;
+    }
+
+
+    public void deleteUser() {
+        mSQLiteDatabase.delete(USER_TABLE, null, null);
+    }
+
+    public void closeDB() {
+        mSQLiteDatabase.close();
+    }
 
     /**
      * Inner class

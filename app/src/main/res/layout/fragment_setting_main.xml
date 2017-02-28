@@ -6,6 +6,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/drinkWhite"
+    android:layout_marginStart="15dp"
+    android:layout_marginLeft="15dp"
+    android:layout_marginTop="50dp"
+    android:layout_marginEnd="15dp"
     tools:context="edu.uw.tacoma.team8.drinkndial.navigation.NavigationActivity">
 
     <TextView
@@ -31,60 +35,42 @@
         <ImageView
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:src="@mipmap/ic_profile"
-            android:contentDescription="@string/userPicture"/>
+            android:layout_marginTop="15dp"
+            android:contentDescription="@string/userPicture"
+            android:src="@mipmap/ic_profile" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center_horizontal"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/setting_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:orientation="vertical">
+                android:textColor="@color/drinkWhite"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/drinkWhite"
-                    android:textStyle="bold"
-                    android:textSize="20sp"/>
+            <TextView
+                android:id="@+id/setting_user_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/drinkWhite" />
 
-                <TextView
-                    android:id="@+id/user_phone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/drinkWhite" />
+            <TextView
+                android:id="@+id/setting_user_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/drinkWhite" />
 
-                <TextView
-                    android:id="@+id/user_email"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/drinkWhite" />
-
-            </LinearLayout>
-
-
-            <Button
-                android:id="@+id/edit_user"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:drawableEnd="@drawable/icon_edit_gray"
-                android:drawableRight="@drawable/icon_edit_gray"/>
-            
         </LinearLayout>
-    </LinearLayout>
 
+    </LinearLayout>
 
 
     <!-- Favorites -->
@@ -104,7 +90,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="@string/setting_add_home"
             android:drawableEnd="@drawable/icon_edit_gray"
             android:drawableRight="@drawable/icon_edit_gray"/>
 
@@ -121,7 +106,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="@string/setting_add_location"
             android:drawableEnd="@drawable/icon_edit_gray"
             android:drawableRight="@drawable/icon_edit_gray"/>
 

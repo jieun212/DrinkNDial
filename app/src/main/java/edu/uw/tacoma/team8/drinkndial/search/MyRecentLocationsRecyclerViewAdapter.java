@@ -9,16 +9,15 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.uw.tacoma.team8.drinkndial.R;
+import edu.uw.tacoma.team8.drinkndial.model.Location;
 import edu.uw.tacoma.team8.drinkndial.search.RecentLocationsFragment.OnListFragmentInteractionListener;
-import edu.uw.tacoma.team8.drinkndial.model.LocationContent;
-import edu.uw.tacoma.team8.drinkndial.model.LocationContent.LocationItem;
 
 public class MyRecentLocationsRecyclerViewAdapter extends RecyclerView.Adapter<MyRecentLocationsRecyclerViewAdapter.ViewHolder> {
 
-    private final List<LocationItem> mValues;
+    private final List<Location> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyRecentLocationsRecyclerViewAdapter(List<LocationContent.LocationItem> items, OnListFragmentInteractionListener listener) {
+    public MyRecentLocationsRecyclerViewAdapter(List<Location> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -32,20 +31,20 @@ public class MyRecentLocationsRecyclerViewAdapter extends RecyclerView.Adapter<M
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
-
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
-            }
-        });
+//        holder.mItem = mValues.get(position);
+//        holder.mIdView.setText(mValues.get(position).id);
+//        holder.mContentView.setText(mValues.get(position).content);
+//
+//        holder.mView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (null != mListener) {
+//                    // Notify the active callbacks interface (the activity, if the
+//                    // fragment is attached to one) that an item has been selected.
+//                    mListener.onListFragmentInteraction(holder.mItem);
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -57,7 +56,7 @@ public class MyRecentLocationsRecyclerViewAdapter extends RecyclerView.Adapter<M
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public LocationItem mItem;
+        public Location mItem;
 
         public ViewHolder(View view) {
             super(view);

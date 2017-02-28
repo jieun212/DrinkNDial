@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import edu.uw.tacoma.team8.drinkndial.R;
 
@@ -23,6 +24,12 @@ import edu.uw.tacoma.team8.drinkndial.R;
 public class SettingsFragment extends Fragment {
 
     private final String DEFAULT_MILES = "1";
+
+    private TextView mNameTextView;
+    private TextView mPhoneTextView;
+    private TextView mEmailTextView;
+
+
     private OnFragmentInteractionListener mListener;
 
     public SettingsFragment() {
@@ -41,10 +48,29 @@ public class SettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_setting_main, container, false);
 
+        mNameTextView = (TextView) v.findViewById(R.id.setting_user_name);
+        mPhoneTextView = (TextView) v.findViewById(R.id.setting_user_phone);
+        mEmailTextView = (TextView) v.findViewById(R.id.setting_user_email);
+
+
+        String homeAddress = getArguments().getString("homeaddress");
+        String favoriteAddress = getArguments().getString("favoriteaddress");
+
+        mNameTextView.setText(getArguments().getString("username"));
+        mPhoneTextView.setText(getArguments().getString("userphone"));
+        mEmailTextView.setText(getArguments().getString("useremail"));
+
 
         // add home button
         Button addHomeBtn =(Button) v.findViewById(R.id.add_home_button);
-        addHomeBtn.setOnClickListener(new View.OnClickListener() {
+        if (homeAddress != null && homeAddress.length() > 0) {
+            addHomeBtn.setText("HOME: " + homeAddress);
+        } else if (addHomeBtn.getText() == null || addHomeBtn.getText().toString().length() < 1) {
+            addHomeBtn.setText("Add Home");
+        }
+
+
+            addHomeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((NavigationActivity) getActivity()).addHome();
@@ -53,7 +79,13 @@ public class SettingsFragment extends Fragment {
 
         // add location button
         Button addLocationBtn = (Button) v.findViewById(R.id.add_location_button);
-        addLocationBtn.setOnClickListener(new View.OnClickListener() {
+        if (favoriteAddress != null && favoriteAddress.length() > 0) {
+            addLocationBtn.setText("FAVORITE: " + favoriteAddress);
+        } else if (addLocationBtn.getText() == null || addLocationBtn.getText().toString().length() < 1) {
+            addLocationBtn.setText("Add Favorite Location");
+        }
+
+            addLocationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((NavigationActivity) getActivity()).addLocation();
@@ -98,4 +130,5 @@ public class SettingsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction();
     }
+
 }
