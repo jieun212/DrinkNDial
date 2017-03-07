@@ -36,6 +36,7 @@ import java.util.List;
 import edu.uw.tacoma.team8.drinkndial.R;
 import edu.uw.tacoma.team8.drinkndial.authenticate.LogOutFragment;
 import edu.uw.tacoma.team8.drinkndial.authenticate.SignInActivity;
+import edu.uw.tacoma.team8.drinkndial.confirm.ConfirmationActivity;
 import edu.uw.tacoma.team8.drinkndial.model.Location;
 
 /**

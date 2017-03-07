@@ -1,6 +1,7 @@
 package edu.uw.tacoma.team8.drinkndial.navigation;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ public class SettingsFragment extends Fragment {
 
 
     private OnFragmentInteractionListener mListener;
+    private SharedPreferences mSharedPreferences;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -92,6 +94,13 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        mSharedPreferences = getContext().getSharedPreferences(getString(R.string.SETTINGS_PREFS),
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = mSharedPreferences.edit();
+        edit.clear();
+        edit.putString("home",homeAddress);
+        edit.putString("fave",favoriteAddress);
+        edit.commit();
 
         // driver preference
         EditText prefermile = (EditText) v.findViewById(R.id.preference_miles);
