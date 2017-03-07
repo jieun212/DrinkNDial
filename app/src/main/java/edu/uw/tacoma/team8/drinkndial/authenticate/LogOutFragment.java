@@ -28,8 +28,12 @@ public class LogOutFragment extends DialogFragment {
                 .setPositiveButton(R.string.logout_yes_button, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
+                        // remove login information
+                        ((SignInActivity) getActivity()).logout();
+
                         Intent i = new Intent(getActivity(), SignInActivity.class);
                         startActivity(i);
+
                     }
 
                 })
