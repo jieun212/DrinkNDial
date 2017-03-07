@@ -79,6 +79,7 @@
     <string name="LOGIN_PREFS">edu.uw.tacoma.team8.drinkndial.PREFS</string>
     <string name="LOGGEDIN">loggedin</string>
 
+    <string name="SETTINGS_PREFS">edu.uw.tacoma.team8.drinkndial.SETTINGSPREFS</string>
 
     <string name="username">Jieun Lee</string>
     <string name="userphone">Jieun Lee</string>
