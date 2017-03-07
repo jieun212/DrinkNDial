@@ -75,11 +75,6 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
     //Progress Dialog
     private ProgressDialog mProgressDialog;
 
-    //'Find Drivers' button
-    private Button mGetDriverButton;
-
-    private LatLng mCurrentLocation;
-
     //Autocomplete text used when the user wants to enter a location
     private PlacesAutocompleteTextView mEditOrigin;
     private PlacesAutocompleteTextView mEditDestination;
@@ -134,20 +129,12 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
             if(currPos.equals(mEditOrigin.getText().toString())) {
                 mCurrLocationMarker.remove();
             }
-            if (mDestLocationMarker != null) {
-                mDestLocationMarker.remove();
-            }
-            mGetDriverButton.setEnabled(true);
+            mDestLocationMarker.remove();
             new MapDirections(this, origin, destination).execute();
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
-
-    }
-
-    public void editTextFieldClicked(View v) {
 
 
     }
@@ -199,9 +186,7 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
         checkLocationPermission();
 
 
-        Button estimatebutton = (Button) v.findViewById(R.id.btn_findride);
-        mGetDriverButton = (Button) v.findViewById(R.id.confirm_ride);
-        mGetDriverButton.setEnabled(false);
+        Button button = (Button) v.findViewById(R.id.btn_estimate);
         mEditDestination = (PlacesAutocompleteTextView) v.findViewById(R.id.destination_location);
         mEditOrigin = (PlacesAutocompleteTextView) v.findViewById(R.id.origin_location);
 
@@ -232,24 +217,17 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
         });
 
         //retrieve request to create a path
-        estimatebutton.setOnClickListener(new View.OnClickListener() {
+        button.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 sendRequest();
-
-            }
-        });
-
-        mGetDriverButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((NavigationActivity)getActivity()).showDrivers(mCurrentLocation);
             }
         });
 
         return v;
     }
+
 
     /**
      * Manipulates the map once available.
@@ -348,9 +326,9 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
         }
 
         //Place current location marker
-        mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(mCurrentLocation);
+        markerOptions.position(latLng);
         markerOptions.title("Current Position");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
@@ -358,7 +336,7 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
         mEditOrigin.setText(position);
 
         //move map camera
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(mCurrentLocation));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
         //stop location updates
