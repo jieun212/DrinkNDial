@@ -35,6 +35,17 @@ public class RegisterFragment extends Fragment {
     private final static String ADD_USER_URL
             = "http://cssgate.insttech.washington.edu/~jieun212/Android/register.php?";
 
+    /**
+     * An URL for setting prefer mile to find drivers
+     */
+    private final static String ADD_PREFERENCE_URL
+            = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndPreference.php?cmd=add";
+
+
+    /** Default prefer mile to find driver */
+    public static final String DEFAULT_MILES = "1";
+
+
     /** Edittext for first name of user.*/
     private EditText mFnameEditText;
 
@@ -117,8 +128,9 @@ public class RegisterFragment extends Fragment {
                 mPwEditText.requestFocus();
                 return;
             } else {
-                String url = buildUserURL(v);
-                mListener.addUser(url, mUser);
+                String userUrl = buildUserURL(v);
+                String mileUrl = buildAddPreferenceURL(v);
+                mListener.addUser(userUrl, mileUrl, mUser);
             }
             }
         });
@@ -159,7 +171,7 @@ public class RegisterFragment extends Fragment {
      * <p>
      */
     public interface UserAddListener {
-        public void addUser(String url, User user);
+        public void addUser(String userUrl, String mileUrl, User user);
     }
 
     /**
@@ -218,4 +230,40 @@ public class RegisterFragment extends Fragment {
         }
         return sb.toString();
     }
+
+
+     /**
+     * Build user URL with given information of user.
+     * It returns message how it built.
+     * It catches exception and shows a dialog with error message
+     *
+     * @return Message
+     */
+    private String buildAddPreferenceURL(View view) {
+
+        StringBuilder sb = new StringBuilder(ADD_PREFERENCE_URL);
+
+        try {
+
+            // email
+            sb.append("&email=");
+            sb.append(URLEncoder.encode(mUser.getEmail(), "UTF-8"));
+
+            // mile
+            sb.append("&mile=");
+            sb.append(URLEncoder.encode(DEFAULT_MILES, "UTF-8"));
+
+
+        } catch (Exception e) {
+            Toast.makeText(view.getContext(), "Something wrong with the url" + e.getMessage(),
+                    Toast.LENGTH_LONG)
+                    .show();
+            Log.e("Catch", e.getMessage());
+        }
+        return sb.toString();
+    }
+
+
+
+
 }
