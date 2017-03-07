@@ -8,7 +8,6 @@ import java.io.Serializable;
 /**
  * Created by leejieun on 2/19/17.
  */
-
 public class User implements Serializable{
 
     public static final String EMAIL = "email", FNAME = "fname", LNAME = "lname", PW = "pw", PHONE = "phone";

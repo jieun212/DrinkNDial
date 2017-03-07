@@ -8,6 +8,9 @@
 
     <string name="action_settings">Settings</string>
 
+    <string name="home_fav_dialog">Select one of your favorite locations!</string>
+    <string name="homeLocation">Home</string>
+    <string name="favLocation">Favorite Location</string>
 
     <string name="logout_confirmation">Are you sure you want to logout?</string>
     <string name="logout_yes_button">Yes</string>
@@ -47,10 +50,14 @@
     <string name="setting_preference_title">Preference</string>
     <string name="setting_add_home">Add Home</string>
     <string name="setting_add_location">Add Location</string>
+    <string name="setting_home">Home</string>
+    <string name="setting_favorite">Favorite</string>
     <string name="setting_find_driver">Find drivers within</string>
     <string name="setting_miles">miles</string>
     <string name="setting_hint_miles">ex)0.5</string>
     <string name="setting_picture">Change picture</string>
+    <string name="setting_mile_save">Save</string>
+    <string name="setting_prefer_button">Edit</string>
 
     <string name="location_title">Add Location</string>
     <string name="location_name">Name</string>
@@ -100,5 +107,6 @@
     <string name="DROP_DND_USER_SQL">
         DROP TABLE IF EXISTS dnd_user
     </string>
+
 
 </resources>

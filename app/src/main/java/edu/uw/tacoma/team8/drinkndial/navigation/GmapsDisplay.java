@@ -1,9 +1,7 @@
 package edu.uw.tacoma.team8.drinkndial.navigation;
 
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -14,7 +12,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +54,12 @@ import edu.uw.tacoma.team8.drinkndial.navigation.mapinfo.MapRoute;
 public class GmapsDisplay extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, MapDirectionListener {
 
+
+    private static final String REMOVE_FROM_POSITION = "lat/lng: ";
+
+    private static final String REMOVE_PARAN = "[()]";
+
+
     //Class instance of the google map
     private GoogleMap mMap;
 
@@ -66,8 +69,16 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
     //Current location marker
     private Marker mCurrLocationMarker;
 
+    //Destination location marker
+    private Marker mDestLocationMarker;
+
     //Progress Dialog
     private ProgressDialog mProgressDialog;
+
+    //'Find Drivers' button
+    private Button mGetDriverButton;
+
+    private LatLng mCurrentLocation;
 
     //Autocomplete text used when the user wants to enter a location
     private PlacesAutocompleteTextView mEditOrigin;
@@ -104,8 +115,8 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
      * or input location
      */
     private void sendRequest() {
-        String origin = mEditOrigin.getText().toString();
-        String destination = mEditDestination.getText().toString();
+        final String origin = mEditOrigin.getText().toString();
+        final String destination = mEditDestination.getText().toString();
         if (origin.isEmpty()) {
             Toast.makeText(getContext(), "Please enter origin address!", Toast.LENGTH_SHORT).show();
             return;
@@ -115,30 +126,28 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
             return;
         }
 
-//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//        builder.setMessage(R.string.logout_confirmation);
-//        builder.setPositiveButton(R.string.logout_yes_button, new DialogInterface.OnClickListener(){
-//
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                try {
-//                    new MapDirections(this, origin, destination).execute();
-//                } catch (UnsupportedEncodingException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        })
-//        .setNegativeButton(R.string.logout_no_button, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        //do nothing, automagically closes dialog!
-//                    }
-//
-//                });
+        //if the curr location marker already exists, remove it.
+        //if the name of the position of the current location marker already exists
+        //remove the current location marker
         try {
+            String currPos = removeChars(mCurrLocationMarker.getPosition().toString());
+            if(currPos.equals(mEditOrigin.getText().toString())) {
+                mCurrLocationMarker.remove();
+            }
+            if (mDestLocationMarker != null) {
+                mDestLocationMarker.remove();
+            }
+            mGetDriverButton.setEnabled(true);
             new MapDirections(this, origin, destination).execute();
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+
+
+    }
+
+    public void editTextFieldClicked(View v) {
 
 
     }
@@ -184,15 +193,18 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.gmaps, container, false);
+
         SupportMapFragment mapFragment = (SupportMapFragment)this.getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
         checkLocationPermission();
 
-        Button button = (Button) v.findViewById(R.id.btn_findride);
 
+        Button estimatebutton = (Button) v.findViewById(R.id.btn_findride);
+        mGetDriverButton = (Button) v.findViewById(R.id.confirm_ride);
+        mGetDriverButton.setEnabled(false);
         mEditDestination = (PlacesAutocompleteTextView) v.findViewById(R.id.destination_location);
         mEditOrigin = (PlacesAutocompleteTextView) v.findViewById(R.id.origin_location);
+
 
         long max_radius = 100;
         mEditOrigin.setLocationBiasEnabled(true);
@@ -200,14 +212,42 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
         mEditDestination.setLocationBiasEnabled(true);
         mEditDestination.setRadiusMeters(max_radius);
 
+        mEditDestination.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment df = null;
+
+                if (v.getId() == R.id.destination_location) {
+                    if (mEditDestination.getText().toString().matches("")) {
+                        df = new HomeFavDialogFragment(mEditDestination);
+                    }
+
+                }
+
+                if (df != null)
+                    df.show(getChildFragmentManager(), "onClick");
+            }
+
+
+        });
+
         //retrieve request to create a path
-        button.setOnClickListener(new View.OnClickListener() {
+        estimatebutton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 sendRequest();
+
             }
         });
+
+        mGetDriverButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((NavigationActivity)getActivity()).showDrivers(mCurrentLocation);
+            }
+        });
+
         return v;
     }
 
@@ -240,6 +280,34 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
+
+
+        //On long click, set a destination marker
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+
+                //remove marker if already exists
+                if (mDestLocationMarker != null) { mDestLocationMarker.remove(); }
+
+                mDestLocationMarker = mMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title("Destination")
+                        .icon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                //"lat/lng:" needs to be removed before displaying the cursor on map
+                String position = removeChars(mDestLocationMarker.getPosition().toString());
+                mEditDestination.setText(position);
+            }
+        });
+    }
+
+    //Helper method to remove chars that prevent accurate direction gathering
+    private String removeChars(String theString) {
+        String latlng = theString.replaceAll(REMOVE_FROM_POSITION, "");
+
+        return latlng.replaceAll(REMOVE_PARAN, "");
     }
 
     /**
@@ -280,15 +348,17 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
         }
 
         //Place current location marker
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
+        markerOptions.position(mCurrentLocation);
         markerOptions.title("Current Position");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
+        String position = removeChars(mCurrLocationMarker.getPosition().toString());
+        mEditOrigin.setText(position);
 
         //move map camera
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(mCurrentLocation));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
         //stop location updates
@@ -348,7 +418,7 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
 
         for (MapRoute route : routes) {
             //move camera to start location
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.mStartLocation, 16));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.mStartLocation, 10.3f));
 
             //set the duration of the trip
             ((TextView) getView().findViewById(R.id.duration)).setText(route.mDuration.mText);
@@ -418,6 +488,7 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
             }
         }
     }
+
 //**********************************************EMPTY****************************************************
     /**
      * empty
@@ -437,6 +508,7 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
         //empty, required through implemented methods
     }
 
+//**********************************************EMPTY****************************************************
 
 
 }
