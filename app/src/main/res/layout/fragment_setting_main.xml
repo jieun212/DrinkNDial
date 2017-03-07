@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_setting"
+    android:id="@+id/fragment_setting_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="edu.uw.tacoma.team8.drinkndial.SettingActivity">
+    android:background="@color/drinkWhite"
+    android:layout_marginStart="15dp"
+    android:layout_marginLeft="15dp"
+    android:layout_marginTop="50dp"
+    android:layout_marginEnd="15dp"
+    tools:context="edu.uw.tacoma.team8.drinkndial.navigation.NavigationActivity">
 
     <TextView
         android:layout_width="match_parent"
@@ -30,67 +35,42 @@
         <ImageView
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:src="@mipmap/ic_profile"
-            android:contentDescription="@string/userPicture"/>
+            android:layout_marginTop="15dp"
+            android:contentDescription="@string/userPicture"
+            android:src="@mipmap/ic_profile" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center_horizontal"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/setting_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:orientation="vertical">
+                android:textColor="@color/drinkWhite"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-                <!-- TODO: delete text string later -->
-                <TextView
-                    android:id="@+id/user_name"
-                    android:text="@string/username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/drinkWhite"
-                    android:textStyle="bold"
-                    android:textSize="20sp"/>
+            <TextView
+                android:id="@+id/setting_user_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/drinkWhite" />
 
-                <TextView
-                    android:id="@+id/user_phone"
-                    android:text="@string/useremail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/drinkWhite" />
-
-                <TextView
-                    android:id="@+id/user_email"
-                    android:text="@string/userphone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/drinkWhite" />
-
-            </LinearLayout>
-
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:drawableEnd="@drawable/icon_edit_gray"
-                android:drawableRight="@drawable/icon_edit_gray"/>
-
+            <TextView
+                android:id="@+id/setting_user_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/drinkWhite" />
 
         </LinearLayout>
 
-
-
     </LinearLayout>
-
 
 
     <!-- Favorites -->
@@ -103,29 +83,52 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/setting_home"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="16sp"/>
 
         <Button
+            android:id="@+id/add_home_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="@string/setting_add_home"
+            android:layout_marginStart="35dp"
+            android:layout_marginLeft="35dp"
+            android:background="@color/drinkWhite"
             android:drawableEnd="@drawable/icon_edit_gray"
-            android:drawableRight="@drawable/icon_edit_gray"/>
+            android:drawableRight="@drawable/icon_edit_gray"
+             />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_gravity="center_vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/setting_favorite"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="16sp"/>
 
         <Button
+            android:id="@+id/add_location_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="@string/setting_add_location"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:background="@color/drinkWhite"
             android:drawableEnd="@drawable/icon_edit_gray"
             android:drawableRight="@drawable/icon_edit_gray"/>
 
@@ -136,44 +139,55 @@
 
     <TextView
         style="@style/SubTitleTextStyle"
-        android:text="@string/setting_preference_title"
         android:textColor="@color/drinkDarkBlue"
         android:gravity="start"
-        android:layout_marginTop="15dp"/>
+        android:layout_marginTop="15dp"
+        android:text="@string/setting_preference_title"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical">
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginLeft="30dp"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/setting_find_driver" />
 
-        <EditText
+        <TextView
             android:id="@+id/preference_miles"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:textStyle="bold"
             android:layout_marginStart="15dp"
-            android:layout_marginLeft="30dp"
-            android:gravity="center"
-            android:hint="@string/setting_hint_miles" />
-
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginEnd="15dp"
+            android:gravity="center"/>
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginLeft="30dp"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/setting_miles" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="end"
+            android:layout_gravity="center_vertical">
+            <Button
+                style="@style/SaveButtonStyle"
+                android:id="@+id/mile_edit_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="@string/setting_prefer_button"/>
+        </LinearLayout>
 
     </LinearLayout>
-
 
 </LinearLayout>

@@ -1,4 +1,4 @@
-package edu.uw.tacoma.team8.drinkndial.fragments;
+package edu.uw.tacoma.team8.drinkndial.navigation;
 
 import android.content.Context;
 import android.net.Uri;
@@ -10,33 +10,32 @@ import android.view.ViewGroup;
 
 import edu.uw.tacoma.team8.drinkndial.R;
 
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SearchInputFragment.OnFragmentInteractionListener} interface
+ * {@link SettingsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class SearchInputFragment extends Fragment {
+public class TripsFragment extends Fragment {
 
 
-    private OnFragmentInteractionListener mListener;
-
-    public SearchInputFragment() {
+    public TripsFragment() {
         // Required empty public constructor
     }
+
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search_input, container, false);
+        return inflater.inflate(R.layout.fragment_trips, container, false);
     }
 
 
@@ -44,7 +43,7 @@ public class SearchInputFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+//            mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -54,7 +53,7 @@ public class SearchInputFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+//        mListener = null;
     }
 
     /**

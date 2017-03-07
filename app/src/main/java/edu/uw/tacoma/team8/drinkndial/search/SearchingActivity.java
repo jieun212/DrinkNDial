@@ -1,7 +1,9 @@
-package edu.uw.tacoma.team8.drinkndial;
+package edu.uw.tacoma.team8.drinkndial.search;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import edu.uw.tacoma.team8.drinkndial.R;
 
 public class SearchingActivity extends AppCompatActivity {
 
