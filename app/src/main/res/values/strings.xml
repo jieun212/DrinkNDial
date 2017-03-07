@@ -50,10 +50,14 @@
     <string name="setting_preference_title">Preference</string>
     <string name="setting_add_home">Add Home</string>
     <string name="setting_add_location">Add Location</string>
+    <string name="setting_home">Home</string>
+    <string name="setting_favorite">Favorite</string>
     <string name="setting_find_driver">Find drivers within</string>
     <string name="setting_miles">miles</string>
     <string name="setting_hint_miles">ex)0.5</string>
     <string name="setting_picture">Change picture</string>
+    <string name="setting_mile_save">Save</string>
+    <string name="setting_prefer_button">Edit</string>
 
     <string name="location_title">Add Location</string>
     <string name="location_name">Name</string>
@@ -104,7 +108,5 @@
         DROP TABLE IF EXISTS dnd_user
     </string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
