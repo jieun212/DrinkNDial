@@ -27,6 +27,7 @@ public class SharedPreferenceEntry {
         return mIsLoggedIn;
     }
 
+
     public String getEmail() {
         return mEmail;
     }

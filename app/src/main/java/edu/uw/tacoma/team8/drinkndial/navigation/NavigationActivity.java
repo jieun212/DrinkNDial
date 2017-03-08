@@ -61,8 +61,16 @@ public class NavigationActivity extends AppCompatActivity implements
     /**
      * An URL for getting locations
      */
-    private final static String GET_SETTING_INFO_URL
+
+    private final static String GET_LOCATIONS_URL
             = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndGetLocation.php?";
+
+    private final static String GET_PREFER_MILE_URL
+            = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndGetPreference.php?";
+
+    public static final int MILE_CODE = 2001;
+
+
 
     public static final int MILE_CODE = 2001;
     private static final int USER_CODE = 4002;
@@ -70,9 +78,12 @@ public class NavigationActivity extends AppCompatActivity implements
 
     private TextView mUserNameTextView;
     private TextView mUserPhoneTextView;
-    private String mUserEamil;
+
+    private String mUserEmail;
     private String mPreferMile;
-    private LatLng mCurrentLocation;
+
+    private String mUserEamil;
+
     private Location mHomeLocation;
     private Location mFavoriteLocation;
     private GmapsDisplay mGmapFragment;
@@ -116,18 +127,24 @@ public class NavigationActivity extends AppCompatActivity implements
 
         // get user's information from SignInActivity
         Intent i = getIntent();
-        mUserEamil= i.getExtras().getString("email");
+        mUserEmail= i.getExtras().getString("email");
         String name = i.getExtras().getString("name");
         String phone = i.getExtras().getString("phone");
 
-        // get User's saved locations and preferred mile
+
+        // get User's saved locations
         String getLocationUrl = buildGetLocationURL();
         GetLocationTask getLocationTask = new GetLocationTask();
         getLocationTask.execute(getLocationUrl);
 
+        // get User's prefer mile
+        String getMileUrl = buildGetPreferMileURL();
+        GetPreferMileTask getPreferMileTask = new GetPreferMileTask();
+        getPreferMileTask.execute(getMileUrl);
+
         // set text for navigation header
         mUserNameTextView.setText(name);
-        mUserEmailTextView.setText(mUserEamil);
+        mUserEmailTextView.setText(mUserEmail);
         mUserPhoneTextView.setText(phone);
 
         // add Google map display fragment to navigation container fragment
@@ -212,16 +229,27 @@ public class NavigationActivity extends AppCompatActivity implements
             Bundle bundle = new Bundle();
             bundle.putString("username", mUserNameTextView.getText().toString());
             bundle.putString("userphone", mUserPhoneTextView.getText().toString());
-            bundle.putString("useremail", mUserEamil);
-            bundle.putString("homeaddress", mHomeLocation.getAddress());
-            bundle.putString("favoriteaddress", mFavoriteLocation.getAddress());
+
+            bundle.putString("useremail", mUserEmail);
+            if (mHomeLocation != null) {
+                bundle.putString("homeaddress", mHomeLocation.getAddress());
+            }
+            if (mFavoriteLocation != null) {
+                bundle.putString("favoriteaddress", mFavoriteLocation.getAddress());
+            }
             bundle.putString("mile", mPreferMile);
+
+            String url = buildGetLocationURL();
+            GetLocationTask task = new GetLocationTask();
+            task.execute(url);
+
 
             // replace the nav_frag_container to SettingFragment
             SettingsFragment settingsFragment = new SettingsFragment();
             settingsFragment.setArguments(bundle);
 
-            mGmapFragment.onStop();
+        } else if (id == R.id.nav_trips) {
+
             FragmentTransaction ft = fm.beginTransaction()
                     .replace(R.id.nav_frag_container, settingsFragment)
                     .addToBackStack(null);
@@ -240,7 +268,14 @@ public class NavigationActivity extends AppCompatActivity implements
             ft.commit();
 
         } else if (id == R.id.logout_menuitem) {
+            Bundle bundle = new Bundle();
+            if (mUserPhoneTextView.getText().length() < 1) {
+                bundle.putString("login", "fb");
+            } else {
+                bundle.putString("login", "custom");
+            }
             dialogFragment = new LogOutFragment();
+            dialogFragment.setArguments(bundle);
         }
 
         if (dialogFragment != null)
@@ -259,7 +294,7 @@ public class NavigationActivity extends AppCompatActivity implements
      */
     public void goAddHome() {
         Intent i = new Intent(this, AddLocationActivity.class);
-        i.putExtra("email", mUserEamil);
+        i.putExtra("email", mUserEmail);
         i.putExtra("name", mUserNameTextView.getText().toString());
         i.putExtra("phone", mUserPhoneTextView.getText().toString());
         i.putExtra("mark", "home");
@@ -273,7 +308,7 @@ public class NavigationActivity extends AppCompatActivity implements
      */
     public void goAddLocation() {
         Intent i = new Intent(this, AddLocationActivity.class);
-        i.putExtra("email", mUserEamil);
+        i.putExtra("email", mUserEmail);
         i.putExtra("name", mUserNameTextView.getText().toString());
         i.putExtra("phone", mUserPhoneTextView.getText().toString());
         i.putExtra("mark", "favorite");
@@ -285,9 +320,11 @@ public class NavigationActivity extends AppCompatActivity implements
      * When Edit preference button on SettingsFragment is pressed,
      * it starts edit preference activity.
      */
+
     public void goEditPreference() {
         Intent i = new Intent(this, UpdatePreferenceActivity.class);
-        i.putExtra("email", mUserEamil);
+        i.putExtra("email", mUserEmail);
+
         i.putExtra("name", mUserNameTextView.getText().toString());
         i.putExtra("phone", mUserPhoneTextView.getText().toString());
         i.putExtra("mile", mPreferMile);
@@ -295,7 +332,7 @@ public class NavigationActivity extends AppCompatActivity implements
         finish();
     }
 
-
+   @Override
     public void showDrivers(LatLng location) {
         Bundle bundle = new Bundle();
         bundle.putDouble("longitude", location.longitude);
@@ -314,8 +351,13 @@ public class NavigationActivity extends AppCompatActivity implements
         Bundle bundle = new Bundle();
     }
 
+    @Override
+    public void onListFragmentInteraction(Driver driver) {
+        //TODO : delete if it is not used
+    }
+
     /********************************************************************************************************************
-     *                             FOR "Retrieving Saved Locations & Preferred mile with given email"
+     *                                                FOR "Retrieving locations"
      *******************************************************************************************************************/
 
     /**
@@ -327,24 +369,27 @@ public class NavigationActivity extends AppCompatActivity implements
      */
     private String buildGetLocationURL() {
 
-        StringBuilder sb = new StringBuilder(GET_SETTING_INFO_URL);
+
+        StringBuilder sb = new StringBuilder(GET_LOCATIONS_URL);
+
 
         try {
 
             // email
             sb.append("&email=");
-            sb.append(URLEncoder.encode(mUserEamil, "UTF-8"));
+            sb.append(URLEncoder.encode(mUserEmail, "UTF-8"));
 
             Log.i("Navi-GetLocationURL", sb.toString());
 
         } catch (Exception e) {
-            Toast.makeText(this, "Something wrong with the url" + e.getMessage(),
+            Toast.makeText(this, "Something wrong with GET_LOCATIONS_URL url" + e.getMessage(),
                     Toast.LENGTH_LONG)
                     .show();
             Log.e("Catch", e.getMessage());
         }
         return sb.toString();
     }
+
 
     @Override
     public void onListFragmentInteraction(Driver driver) {
@@ -364,7 +409,6 @@ public class NavigationActivity extends AppCompatActivity implements
 
     }
 
-
     private class GetLocationTask extends AsyncTask<String, Void, String> {
 
         @Override
@@ -382,7 +426,7 @@ public class NavigationActivity extends AppCompatActivity implements
                         response += s;
                     }
                 } catch (Exception e) {
-                    response = "Unable to get user, Reason: " + e.getMessage();
+                    response = "Unable to get location, Reason: " + e.getMessage();
                 } finally {
                     if (urlConnection != null) urlConnection.disconnect();
                 }
@@ -392,7 +436,7 @@ public class NavigationActivity extends AppCompatActivity implements
 
         @Override
         protected void onPostExecute(String result) {
-            Log.i("Get user result: ", result);
+
             // Something wrong with the network or the URL.
             if (result.startsWith("Unable to")) {
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
@@ -400,21 +444,131 @@ public class NavigationActivity extends AppCompatActivity implements
                 return;
             }
 
-            List<Location>  locationList = new ArrayList<>();
 
             // parses location json and get the saved list
 
             try {
                 JSONArray arr = new JSONArray(result);
-                for (int i = 0; i < arr.length(); i++) {
-                    JSONObject obj = arr.getJSONObject(i);
-                    Location location = new Location(obj.getString(Location.LOCATION_ID),
-                            obj.getString(Location.LONGITUDE),
-                            obj.getString(Location.LATITUDE),
-                            obj.getString(Location.ADDRESS),
-                            obj.getString(Location.EMAIL),
-                            obj.getString(Location.MARK));
-                    locationList.add(location);
+
+                if (arr.length() > 0) {
+                    List<Location>  locationList = new ArrayList<>();
+
+            List<Location>  locationList = new ArrayList<Location>();
+
+            // parses location json and get the saved list
+            if (result != null) {
+                try {
+                    JSONArray arr = new JSONArray(result);
+
+                    for (int i = 0; i < arr.length(); i++) {
+                        JSONObject obj = arr.getJSONObject(i);
+                        Location location = new Location(obj.getString(Location.LOCATION_ID),
+                                obj.getString(Location.LONGITUDE),
+                                obj.getString(Location.LATITUDE),
+                                obj.getString(Location.ADDRESS),
+                                obj.getString(Location.EMAIL),
+                                obj.getString(Location.MARK));
+                        locationList.add(location);
+                    }
+
+
+                    // finds home location and favorite location
+                    for (int i = 0; i < locationList.size(); i++) {
+                        if (locationList.get(i).getMark().equals("home")) {
+                            mHomeLocation = locationList.get(i);
+                        } else if (locationList.get(i).getMark().equals("favorite")) {
+                            mFavoriteLocation = locationList.get(i);
+                        }
+                    }
+                }
+
+            } catch (JSONException e) {
+//                Toast.makeText(getApplicationContext(), "(GetLocationTask)Something wrong with the data" +
+//                        e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+
+
+        }
+    }
+
+
+    /********************************************************************************************************************
+     *                                                FOR "Retrieving prefer mile"
+     *******************************************************************************************************************/
+
+    private String buildGetPreferMileURL() {
+
+        StringBuilder sb = new StringBuilder(GET_PREFER_MILE_URL);
+
+        try {
+
+            // email
+            sb.append("&email=");
+            sb.append(URLEncoder.encode(mUserEmail, "UTF-8"));
+
+            Log.i("Navi-GetMileURL", sb.toString());
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Something wrong with GET_PREFER_MILE_URL url" + e.getMessage(),
+                    Toast.LENGTH_LONG)
+                    .show();
+            Log.e("Catch", e.getMessage());
+        }
+        return sb.toString();
+    }
+
+
+    private class GetPreferMileTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String response = "";
+            HttpURLConnection urlConnection = null;
+            for (String url : urls) {
+                try {
+                    URL urlObject = new URL(url);
+                    urlConnection = (HttpURLConnection) urlObject.openConnection();
+                    InputStream content = urlConnection.getInputStream();
+                    BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
+                    String s;
+                    while ((s = buffer.readLine()) != null) {
+                        response += s;
+                    }
+                } catch (Exception e) {
+                    response = "Unable to get prefer mile, Reason: " + e.getMessage();
+                } finally {
+                    if (urlConnection != null) urlConnection.disconnect();
+                }
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+            // Something wrong with the network or the URL.
+            if (result.startsWith("Unable to")) {
+                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
+                        .show();
+                return;
+            }
+
+            // parses location json and get the saved list
+
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                mPreferMile = (String) jsonObject.getString("mile");
+
+            } catch (JSONException e) {
+                Toast.makeText(getApplicationContext(), "(GetPreferMileTask)Something wrong with the data" +
+                        e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+
+        }
+    }
+
+                } catch (JSONException e) {
+
                 }
                 mPreferMile = arr.getJSONObject(0).getString("mile");
 
@@ -432,6 +586,22 @@ public class NavigationActivity extends AppCompatActivity implements
                     mFavoriteLocation = locationList.get(i);
                 }
             }
+
+
+
+            Log.i("list is empty? ", String.valueOf(locationList.size()));
+
+
+            // send user's information to setting fragment
+            Bundle bundle = new Bundle();
+            bundle.putString("username", mUserNameTextView.getText().toString());
+            bundle.putString("userphone", mUserPhoneTextView.getText().toString());
+            bundle.putString("useremail", mUserEamil);
+            bundle.putString("homeaddress", mHomeLocation.getAddress());
+            bundle.putString("favoriteaddress", mFavoriteLocation.getAddress());
+
+            goSettingFragment(bundle);
+
         }
     }
 
