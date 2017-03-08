@@ -61,7 +61,7 @@ public class SettingsFragment extends Fragment {
 
         // add home button
         Button addHomeBtn =(Button) v.findViewById(R.id.add_home_button);
-        if (homeAddress != null && homeAddress.length() > 0) {
+        if (homeAddress != null) {
             addHomeBtn.setText(homeAddress);
         } else if (addHomeBtn.getText() == null || addHomeBtn.getText().toString().length() < 1) {
             addHomeBtn.setText("Add Home");
