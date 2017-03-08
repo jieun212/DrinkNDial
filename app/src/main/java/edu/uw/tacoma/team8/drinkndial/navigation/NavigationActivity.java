@@ -20,8 +20,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,26 +36,23 @@ import java.util.List;
 import edu.uw.tacoma.team8.drinkndial.R;
 import edu.uw.tacoma.team8.drinkndial.authenticate.LogOutFragment;
 import edu.uw.tacoma.team8.drinkndial.authenticate.SignInActivity;
-import edu.uw.tacoma.team8.drinkndial.model.Driver;
+import edu.uw.tacoma.team8.drinkndial.confirm.ConfirmationActivity;
 import edu.uw.tacoma.team8.drinkndial.model.Location;
 
 /**
- * The NavigationActivity
- *
- *
  * @author Lovejit Hari
- * @author Jieun Lee
- * @version 3/5/2017
+ * @version 2/23/2017
  */
 
 
 public class NavigationActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        DriverListFragment.OnListFragmentInteractionListener{
+        SettingsFragment.OnFragmentInteractionListener {
 
     /**
      * An URL for getting locations
      */
+
     private final static String GET_LOCATIONS_URL
             = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndGetLocation.php?";
 
@@ -66,14 +61,21 @@ public class NavigationActivity extends AppCompatActivity implements
 
     public static final int MILE_CODE = 2001;
 
+    private final static String GET_LOCATION_URL
+            = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndGetLocation.php?";
+
 
     private TextView mUserNameTextView;
+    private TextView mUserEmailTextView;
     private TextView mUserPhoneTextView;
+
     private String mUserEmail;
     private String mPreferMile;
+
+    private String mUserEamil;
+
     private Location mHomeLocation;
     private Location mFavoriteLocation;
-    private GmapsDisplay mGmapFragment;
 
     /**
      * Initializes a drawer, action bar and sets the map
@@ -102,21 +104,24 @@ public class NavigationActivity extends AppCompatActivity implements
                 R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
 
+
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+
+        //************Jieun's addition*************
         View header = navigationView.getHeaderView(0);
 
         // navigation header user information
         mUserNameTextView = (TextView) header.findViewById(R.id.nav_user_name);
-        TextView mUserEmailTextView = (TextView) header.findViewById(R.id.nav_user_email);
+        mUserEmailTextView = (TextView) header.findViewById(R.id.nav_user_email);
         mUserPhoneTextView = (TextView) header.findViewById(R.id.nav_user_phone);
 
-        // get user's information from SignInActivity
         Intent i = getIntent();
         mUserEmail= i.getExtras().getString("email");
         String name = i.getExtras().getString("name");
         String phone = i.getExtras().getString("phone");
+
 
         // get User's saved locations
         String getLocationUrl = buildGetLocationURL();
@@ -129,21 +134,21 @@ public class NavigationActivity extends AppCompatActivity implements
         getPreferMileTask.execute(getMileUrl);
 
         // set text for navigation header
+
+
         mUserNameTextView.setText(name);
         mUserEmailTextView.setText(mUserEmail);
         mUserPhoneTextView.setText(phone);
 
-        // add Google map display fragment to navigation container fragment
 
-        mGmapFragment = new GmapsDisplay();
+
 
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.nav_frag_container, mGmapFragment)
+                .add(R.id.nav_frag_container, new GmapsDisplay())
                 .addToBackStack(null)
                 .commit();
 
     }
-
 
     /**
      * Determines the behavior of the navigation drawer when back is pressed
@@ -211,6 +216,7 @@ public class NavigationActivity extends AppCompatActivity implements
         DialogFragment dialogFragment = null;
         if (id == R.id.nav_settings) {
 
+
             // send user's information to setting fragment
             Bundle bundle = new Bundle();
             bundle.putString("username", mUserNameTextView.getText().toString());
@@ -224,26 +230,27 @@ public class NavigationActivity extends AppCompatActivity implements
             }
             bundle.putString("mile", mPreferMile);
 
-            // replace the nav_frag_container to SettingFragment
-            SettingsFragment settingsFragment = new SettingsFragment();
-            settingsFragment.setArguments(bundle);
+            String url = buildGetLocationURL();
+            GetLocationTask task = new GetLocationTask();
+            task.execute(url);
 
-            mGmapFragment.onStop();
-            FragmentTransaction ft = fm.beginTransaction()
-                    .replace(R.id.nav_frag_container, settingsFragment)
-                    .addToBackStack(null);
-            ft.commit();
+
+
+
 
         } else if (id == R.id.nav_trips) {
-
             FragmentTransaction ft = fm.beginTransaction()
                     .replace(R.id.nav_frag_container, new TripsFragment()).addToBackStack(null);
+
             ft.commit();
+
+
 
         } else if (id == R.id.map_item) {
 
             FragmentTransaction ft = fm.beginTransaction()
                     .replace(R.id.nav_frag_container, new GmapsDisplay()).addToBackStack(null);
+
             ft.commit();
 
         } else if (id == R.id.logout_menuitem) {
@@ -265,13 +272,24 @@ public class NavigationActivity extends AppCompatActivity implements
         return true;
     }
 
+    private void goSettingFragment(Bundle bundle) {
+
+        SettingsFragment settingsFragment = new SettingsFragment();
+        settingsFragment.setArguments(bundle);
+
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction()
+                .replace(R.id.nav_frag_container, settingsFragment)
+                .addToBackStack(null);
+        ft.commit();
+    }
 
 
     /**
      * When Add home button on SettingsFragment is pressed,
-     * it starts add home activity.
+     * it shows add home fragment.
      */
-    public void goAddHome() {
+    public void addHome() {
         Intent i = new Intent(this, AddLocationActivity.class);
         i.putExtra("email", mUserEmail);
         i.putExtra("name", mUserNameTextView.getText().toString());
@@ -282,10 +300,10 @@ public class NavigationActivity extends AppCompatActivity implements
     }
 
     /**
-     * When Add favorite button on SettingsFragment is pressed,
-     * it starts add favorite location activity.
+     * When Add home button on SettingsFragment is pressed,
+     * it shows add favorite location fragment.
      */
-    public void goAddLocation() {
+    public void addLocation() {
         Intent i = new Intent(this, AddLocationActivity.class);
         i.putExtra("email", mUserEmail);
         i.putExtra("name", mUserNameTextView.getText().toString());
@@ -295,10 +313,11 @@ public class NavigationActivity extends AppCompatActivity implements
         finish();
     }
 
+
     /**
-     * When Edit preference button on SettingsFragment is pressed,
-     * it starts edit preference activity.
+     * onFragmentInteraction for SettingsFragment.
      */
+
     public void goEditPreference() {
         Intent i = new Intent(this, UpdatePreferenceActivity.class);
         i.putExtra("email", mUserEmail);
@@ -308,24 +327,14 @@ public class NavigationActivity extends AppCompatActivity implements
         startActivityForResult(i, NavigationActivity.MILE_CODE);
         finish();
     }
+   @Override
+    public void onFragmentInteraction() {
 
 
-    public void showDrivers(LatLng location) {
-        Bundle bundle = new Bundle();
-        bundle.putDouble("longitude", location.longitude);
-        bundle.putDouble("latitude", location.latitude);
-        bundle.putDouble("prefer", Double.valueOf(mPreferMile));
-        DriverListFragment driverListFragment = new DriverListFragment();
-        driverListFragment.setArguments(bundle);
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction()
-                .replace(R.id.nav_frag_container, driverListFragment)
-                .addToBackStack(null);
-        ft.commit();
     }
 
     /********************************************************************************************************************
-     *                             FOR "Retrieving Saved Locations & Preferred mile with given email"
+     *                             FOR "Retrieving Locations with given email"
      *******************************************************************************************************************/
 
 
@@ -348,6 +357,7 @@ public class NavigationActivity extends AppCompatActivity implements
     private String buildGetLocationURL() {
 
         StringBuilder sb = new StringBuilder(GET_LOCATIONS_URL);
+
 
         try {
 
@@ -378,7 +388,7 @@ public class NavigationActivity extends AppCompatActivity implements
                     urlConnection = (HttpURLConnection) urlObject.openConnection();
                     InputStream content = urlConnection.getInputStream();
                     BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
-                    String s;
+                    String s = "";
                     while ((s = buffer.readLine()) != null) {
                         response += s;
                     }
@@ -401,6 +411,7 @@ public class NavigationActivity extends AppCompatActivity implements
                 return;
             }
 
+
             // parses location json and get the saved list
 
             try {
@@ -408,6 +419,14 @@ public class NavigationActivity extends AppCompatActivity implements
 
                 if (arr.length() > 0) {
                     List<Location>  locationList = new ArrayList<>();
+
+            List<Location>  locationList = new ArrayList<Location>();
+
+            // parses location json and get the saved list
+            if (result != null) {
+                try {
+                    JSONArray arr = new JSONArray(result);
+
                     for (int i = 0; i < arr.length(); i++) {
                         JSONObject obj = arr.getJSONObject(i);
                         Location location = new Location(obj.getString(Location.LOCATION_ID),
@@ -418,6 +437,7 @@ public class NavigationActivity extends AppCompatActivity implements
                                 obj.getString(Location.MARK));
                         locationList.add(location);
                     }
+
 
                     // finds home location and favorite location
                     for (int i = 0; i < locationList.size(); i++) {
@@ -514,5 +534,32 @@ public class NavigationActivity extends AppCompatActivity implements
         }
     }
 
+                } catch (JSONException e) {
+                }
+            }
 
+            // finds home location and favorite location
+            for (int i = 0; i < locationList.size(); i++) {
+                if (locationList.get(i).getMark().equals("home")) {
+                    mHomeLocation = locationList.get(i);
+                } else if (locationList.get(i).getMark().equals("favorite")) {
+                    mFavoriteLocation = locationList.get(i);
+                }
+            }
+
+
+            Log.i("list is empty? ", String.valueOf(locationList.size()));
+
+
+            // send user's information to setting fragment
+            Bundle bundle = new Bundle();
+            bundle.putString("username", mUserNameTextView.getText().toString());
+            bundle.putString("userphone", mUserPhoneTextView.getText().toString());
+            bundle.putString("useremail", mUserEamil);
+            bundle.putString("homeaddress", mHomeLocation.getAddress());
+            bundle.putString("favoriteaddress", mFavoriteLocation.getAddress());
+
+            goSettingFragment(bundle);
+        }
+    }
 }

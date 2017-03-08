@@ -113,8 +113,21 @@ public class SignInActivity extends AppCompatActivity implements
             mUser = mUserDB.getUser();
             mUserEmail = mUser.getEmail();
 
+
             if (mUser.getPw() != null) {
                 login(null, false);
+
+            Intent i = new Intent(this, NavigationActivity.class);
+            i.putExtra("email", mUserEmail);
+            i.putExtra("name", (mUser.getFname() + " " + mUser.getLname()));
+            i.putExtra("phone", mUser.getPhone());
+            startActivityForResult(i, USER_CODE);
+            finish();
+            SharedPreferences.Editor edit = mSharedPreferences.edit();
+            edit.putString("email", mUserEmail);
+            edit.commit();
+        }
+
 
             } else {
                 login(mUser.getFname(), true);

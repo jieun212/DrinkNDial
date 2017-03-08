@@ -11,14 +11,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="55dp"
         android:hint="Where do you want to be picked up?"
-        app:pacv_googleMapsApiKey="AIzaSyAk7j-Ab4Va3CHHEWk46i4fxdiHg--CHoc" />
+        app:pacv_googleMapsApiKey="@string/google_maps_key" />
 
     <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
         android:id="@+id/destination_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Where do you want to go?"
-        app:pacv_googleMapsApiKey="AIzaSyAk7j-Ab4Va3CHHEWk46i4fxdiHg--CHoc" />
+        app:pacv_googleMapsApiKey="@string/google_maps_key" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -26,7 +26,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btn_findride"
+            android:id="@+id/btn_estimate"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:text="Estimate" />
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
-            android:text="0 km" />
+            android:text="0 mi" />
 
         <TextView
             android:id="@+id/duration"
