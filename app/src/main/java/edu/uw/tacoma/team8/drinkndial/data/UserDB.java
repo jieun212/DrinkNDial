@@ -48,7 +48,7 @@ public class UserDB {
         String pw = c.getString(3);
         String phone = c.getString(4);
 
-        return new User(email, fname, lname,pw, phone);
+        return new User(email, fname, lname, pw, phone);
     }
 
 
