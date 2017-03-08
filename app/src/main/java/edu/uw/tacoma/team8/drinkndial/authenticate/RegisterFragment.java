@@ -255,7 +255,7 @@ public class RegisterFragment extends Fragment {
 
 
         } catch (Exception e) {
-            Toast.makeText(view.getContext(), "Something wrong with the url" + e.getMessage(),
+            Toast.makeText(view.getContext(), "Something wrong with the ADD_PREFERENCE_URL url" + e.getMessage(),
                     Toast.LENGTH_LONG)
                     .show();
             Log.e("Catch", e.getMessage());

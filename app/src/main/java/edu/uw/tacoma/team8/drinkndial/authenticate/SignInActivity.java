@@ -16,8 +16,10 @@ import android.widget.Toast;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
@@ -56,7 +58,15 @@ public class SignInActivity extends AppCompatActivity implements
 
     private static final String USER_GET_URL
             = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndlist.php?cmd=dnd_user";
+    /**
+     * An URL for setting prefer mile to find drivers
+     */
+    private final static String ADD_PREFERENCE_URL
+            = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndPreference.php?cmd=add";
 
+
+    /** Default prefer mile to find driver */
+    public static final String DEFAULT_MILES = "1";
 
     private static final String TAG = "SignInActivity";
     public static final int USER_CODE = 1001;
@@ -71,8 +81,8 @@ public class SignInActivity extends AppCompatActivity implements
     private UserDB mUserDB;
     private String mUserEmail;
     private String mUserPwd;
-    private SharedPreferences mSharedPreferences;
     private SharedPreferencesHelper mSharedPreferencesHelper;
+    private SharedPreferenceEntry mSharedPreferenceEntry;
 
 
 
@@ -83,6 +93,7 @@ public class SignInActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(this);
         setContentView(R.layout.activity_log_in);
 
 
@@ -91,15 +102,20 @@ public class SignInActivity extends AppCompatActivity implements
                 .getDefaultSharedPreferences(this);
         mSharedPreferencesHelper = new SharedPreferencesHelper(
                 sharedPreferences);
-        SharedPreferenceEntry entry = mSharedPreferencesHelper.getLoginInfo();
+        mSharedPreferenceEntry = mSharedPreferencesHelper.getLoginInfo();
 
-        if (entry.isLoggedIn()){
+        if (mSharedPreferenceEntry.isLoggedIn()){
+
             // Retrieve user's information from local database
             if (mUserDB == null) {
-                mUserDB = new UserDB(getApplicationContext());
+                mUserDB = new UserDB(this);
             }
             mUser = mUserDB.getUser();
             mUserEmail = mUser.getEmail();
+
+
+            if (mUser.getPw() != null) {
+                login(null, false);
 
             Intent i = new Intent(this, NavigationActivity.class);
             i.putExtra("email", mUserEmail);
@@ -112,57 +128,67 @@ public class SignInActivity extends AppCompatActivity implements
             edit.commit();
         }
 
-//        mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS)
-//                , Context.MODE_PRIVATE);
-//        if (mSharedPreferences.getBoolean(getString(R.string.LOGGEDIN), false)) {
-//
-//            // Retrieve user's information from local database
-//            if (mUserDB == null) {
-//                mUserDB = new UserDB(getApplicationContext());
-//            }
-//            mUser = mUserDB.getUser();
-//            mUserEmail = mUser.getEmail();
-//
-//            // Send user's data to the NavigationActivity to show user's info on navigation drawer
-//            Intent i = new Intent(this, NavigationActivity.class);
-//            i.putExtra("email", mUserEmail);
-//            i.putExtra("name", (mUser.getFname() + " " + mUser.getLname()));
-//            i.putExtra("phone", mUser.getPhone());
-//            startActivityForResult(i, USER_CODE);
-//            finish();
-//        }
+
+            } else {
+                login(mUser.getFname(), true);
+            }
+        }
 
 
         // facebook login
         // test facebook id: 450team8@gmail.com / pw: 450Team@8
         mCallbackManager = CallbackManager.Factory.create();
+
         mFacebookButton = (LoginButton)findViewById(R.id.facebook_signin_button);
         mFacebookButton.setReadPermissions(Arrays.asList("public_profile", "email"));
         mFacebookButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(final LoginResult loginResult) {
-                GraphRequest graphRequest = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject object, GraphResponse response) {
-                        Log.v("result",object.toString());
 
-                        if (response.getError() != null) {
+                GraphRequest request = GraphRequest.newMeRequest( loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
 
-                        } else {
-                            Log.i("TAG", "user: " + object.toString());
-                            Log.i("TAG", "AccessToken: " + loginResult.getAccessToken().getToken());
-                            setResult(RESULT_OK);
+                                try {
+                                    mUserEmail = object.getString("email");
+                                    String name = object.getString("name");
 
-                            login();
+
+                                    // set prefer mile w/ default value
+                                    String mileUrl = buildAddPreferenceURL();
+                                    AddPreferMileTask addPreferMileTask = new AddPreferMileTask();
+                                    addPreferMileTask.execute(mileUrl);
+
+                                    // save logged in w/ FB
+                                    SharedPreferenceEntry entry = new SharedPreferenceEntry(
+                                            true, mUserEmail);
+                                    mSharedPreferencesHelper.savePersonalInfo(entry);
+
+                                    // save user into UserDB on device
+                                    mUser = new User (mUserEmail, name, null, null, null);
+
+                                    // store all user's information into local database using SQLite
+                                    if (mUserDB == null) {
+                                        mUserDB = new UserDB(getApplicationContext());
+                                    }
+                                    mUserDB.deleteUser();
+                                    mUserDB.insertUser(mUser);
+
+                                    // log in w/ given name and it is logged in w/ FB accout (true)
+                                    login(name, true);
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
+                );
 
-
-                    }
-                });
                 Bundle parameters = new Bundle();
                 parameters.putString("fields", "id,name,email,gender,birthday");
-                graphRequest.setParameters(parameters);
-                graphRequest.executeAsync();
+                request.setParameters(parameters);
+                request.executeAsync();
 
             }
 
@@ -172,6 +198,7 @@ public class SignInActivity extends AppCompatActivity implements
             @Override
             public void onCancel() { }
         });
+
 
         mUserIdText = (EditText) findViewById(R.id.userid_edit);
         mPwdText = (EditText) findViewById(R.id.pwd_edit);
@@ -185,31 +212,27 @@ public class SignInActivity extends AppCompatActivity implements
                 mUserEmail = mUserIdText.getText().toString();
                 mUserPwd = mPwdText.getText().toString();
                 if (TextUtils.isEmpty(mUserEmail)) {
-                    Toast.makeText(v.getContext(), "Enter userEmail"
-                            , Toast.LENGTH_SHORT)
+                    Toast.makeText(v.getContext(), "Enter userEmail", Toast.LENGTH_SHORT)
                             .show();
                     mUserIdText.requestFocus();
                     return;
                 }
                 if (!mUserEmail.contains("@")) {
-                    Toast.makeText(v.getContext(), "Enter a valid email address"
-                            , Toast.LENGTH_SHORT)
+                    Toast.makeText(v.getContext(), "Enter a valid email address", Toast.LENGTH_SHORT)
                             .show();
                     mUserIdText.requestFocus();
                     return;
                 }
 
                 if (TextUtils.isEmpty(mUserPwd)) {
-                    Toast.makeText(v.getContext(), "Enter password"
-                            , Toast.LENGTH_SHORT)
+                    Toast.makeText(v.getContext(), "Enter password", Toast.LENGTH_SHORT)
                             .show();
                     mPwdText.requestFocus();
                     return;
                 }
                 if (mUserPwd.length() < 6) {
                     Toast.makeText(v.getContext()
-                            , "Enter password of at least 6 characters"
-                            , Toast.LENGTH_SHORT)
+                            , "Enter password of at least 6 characters", Toast.LENGTH_SHORT)
                             .show();
                     mPwdText.requestFocus();
                     return;
@@ -251,70 +274,43 @@ public class SignInActivity extends AppCompatActivity implements
                 .commit();
     }
 
-    public void login() {
 
-//        ConnectivityManager connMgr = (ConnectivityManager)
-//                getSystemService(Context.CONNECTIVITY_SERVICE);
-//        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-//        if (networkInfo != null && networkInfo.isConnected()) {
-//            try {
-//                // store user email and password in an internal file
-//                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-//                        openFileOutput(getString(R.string.LOGIN_FILE)
-//                                , Context.MODE_PRIVATE));
-//                outputStreamWriter.write("email = " + mUserEmail + ";");
-//                outputStreamWriter.write("password = " + mUserPwd);
-//                outputStreamWriter.close();
-//
-//                Toast.makeText(this,"Stored in File Successfully!", Toast.LENGTH_LONG)
-//                        .show();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//
-//        }
-//        else {
-//            Toast.makeText(this, "No network connection available. Cannot authenticate user",
-//                    Toast.LENGTH_SHORT) .show();
-//            return;
-//        }
-
-//        mSharedPreferences
-//                .edit()
-//                .putBoolean(getString(R.string.LOGGEDIN), true)
-//                .commit();
+    public void login(String name, boolean fbLoggedIn) {
 
         Intent i = new Intent(this, NavigationActivity.class);
         i.putExtra("email", mUserEmail);
-        i.putExtra("name", (mUser.getFname() + " " + mUser.getLname()));
-        i.putExtra("phone", mUser.getPhone());
+
+        if (fbLoggedIn) {
+
+
+            i.putExtra("name", name);
+            // for security reason, Facebook removed permission to get user's phone number
+            i.putExtra("phone", "");
+
+        } else {
+            i.putExtra("name", (mUser.getFname() + " " + mUser.getLname()));
+            i.putExtra("phone", mUser.getPhone());
+        }
         startActivityForResult(i, USER_CODE);
         finish();
 
     }
 
-    public void logout() {
+    public void logout(boolean fbLoggedIn) {
 
         SharedPreferenceEntry entry = new SharedPreferenceEntry(false,"");
         mSharedPreferencesHelper.savePersonalInfo(entry);
+
+        if (fbLoggedIn) {
+            LoginManager.getInstance().logOut();
+        }
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)  {
-        switch(requestCode) {
-            case USER_CODE:
-                if(resultCode == RESULT_OK) {
-                    String email = data.getExtras().getString("email");
-                    String name = data.getExtras().getString("name");
-
-                    Log.i("Facebook Result", email);
-                    Log.i("Facebook Result", name);
-
-                }
-                break;
-
-        }
+        super.onActivityResult(requestCode, resultCode, data);
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
 //    @Override
@@ -504,7 +500,7 @@ public class SignInActivity extends AppCompatActivity implements
                             .show();
 
                     // if email and pw are matched, try log in
-                    login();
+                    login(null, false);
 
                 } else {
                     Toast.makeText(getApplicationContext(), "Failed to log in: "
@@ -609,6 +605,38 @@ public class SignInActivity extends AppCompatActivity implements
      *                             FOR "Setting preferred mile"
      *******************************************************************************************************************/
 
+    /**
+     * Build user URL with given information of user.
+     * It returns message how it built.
+     * It catches exception and shows a dialog with error message
+     *
+     * @return Message
+     */
+    private String buildAddPreferenceURL() {
+
+        StringBuilder sb = new StringBuilder(ADD_PREFERENCE_URL);
+
+        try {
+
+            // email
+            sb.append("&email=");
+            sb.append(URLEncoder.encode(mUserEmail, "UTF-8"));
+
+            // mile
+            sb.append("&mile=");
+            sb.append(URLEncoder.encode(DEFAULT_MILES, "UTF-8"));
+
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Something wrong with the ADD_PREFERENCE_URL url" + e.getMessage(),
+                    Toast.LENGTH_LONG)
+                    .show();
+            Log.e("Catch", e.getMessage());
+        }
+        return sb.toString();
+    }
+
+
     private class AddPreferMileTask extends AsyncTask<String, Void, String> {
 
         @Override
@@ -668,7 +696,7 @@ public class SignInActivity extends AppCompatActivity implements
                             .show();
                 }
             } catch (JSONException e) {
-                Toast.makeText(getApplicationContext(), "Something wrong with the data" +
+                Toast.makeText(getApplicationContext(), "(AddPreferMileTask)Something wrong with the data" +
                         e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
