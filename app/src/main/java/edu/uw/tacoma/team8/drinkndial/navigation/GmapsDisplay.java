@@ -2,7 +2,6 @@ package edu.uw.tacoma.team8.drinkndial.navigation;
 
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -43,26 +42,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.uw.tacoma.team8.drinkndial.R;
-import edu.uw.tacoma.team8.drinkndial.confirm.ConfirmationActivity;
 import edu.uw.tacoma.team8.drinkndial.navigation.mapinfo.MapDirectionListener;
 import edu.uw.tacoma.team8.drinkndial.navigation.mapinfo.MapDirections;
 import edu.uw.tacoma.team8.drinkndial.navigation.mapinfo.MapRoute;
 
+
 /**
- * This class displays the main fragment of the Navigation Activity.
- * This fragment contains 2 places auto complete text views, 3 text views, 2 buttons
- * and a Google Map display.
- * As the user enters inputs into the auto complete text view, the google search will
- * display the latest item searched as well as locations biased to the current position if
- * searching for nearby pick up locations but no bias on drop off locations.
  *
- * Once the user selects a trip, they can get an estimate of the trip which shows
- * a path from your position to the destination as well as duration, distance and estimated price.
- *
- * The user can click and hold to drop pins which will automatically fill the destination search
- * with a latitude, longitude coordinate.
- *
- * Finally, the user can request a driver with "Find Ride" thus beginning their journey!
  * @version 2/23/2017
  * @author Lovejit Hari
  */
@@ -74,6 +60,13 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
 
     private static final String REMOVE_PARAN = "[()]";
 
+    private static double mFare;
+
+    private static String mOrigin;
+
+    private static String mDestination;
+
+    private static String mTripDistance;
 
     //Class instance of the google map
     private GoogleMap mMap;
@@ -90,7 +83,12 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
     //Progress Dialog
     private ProgressDialog mProgressDialog;
 
-    //Autocomplete text used when the user wants to enter a location or destination
+    //'Find Drivers' button
+    private Button mGetDriverButton;
+
+    private LatLng mCurrentLocation;
+
+    //Autocomplete text used when the user wants to enter a location
     private PlacesAutocompleteTextView mEditOrigin;
     private PlacesAutocompleteTextView mEditDestination;
 
@@ -99,6 +97,8 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
     private List<Marker> mOriginMarkers = new ArrayList<>();
     private List<Marker> mDestinationMarkers = new ArrayList<>();
     private List<Polyline> mPolyLinePaths = new ArrayList<>();
+
+
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
@@ -125,13 +125,13 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
      * or input location
      */
     private void sendRequest() {
-        final String origin = mEditOrigin.getText().toString();
-        final String destination = mEditDestination.getText().toString();
-        if (origin.isEmpty()) {
+        mOrigin = mEditOrigin.getText().toString();
+        mDestination = mEditDestination.getText().toString();
+        if (mOrigin.isEmpty()) {
             Toast.makeText(getContext(), "Please enter origin address!", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (destination.isEmpty()) {
+        if (mDestination.isEmpty()) {
             Toast.makeText(getContext(), "Please enter destination address!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -144,16 +144,20 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
             if(currPos.equals(mEditOrigin.getText().toString())) {
                 mCurrLocationMarker.remove();
             }
-
-            if(mDestLocationMarker != null) {
+            if (mDestLocationMarker != null) {
                 mDestLocationMarker.remove();
             }
-
-            new MapDirections(this, origin, destination).execute();
+            mGetDriverButton.setEnabled(true);
+            new MapDirections(this, mOrigin, mDestination).execute();
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+
+
+    }
+
+    public void editTextFieldClicked(View v) {
 
 
     }
@@ -194,14 +198,6 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
         }
     }
 
-    /**
-     * Syncs with google maps as well as checks for permissions.
-     * Sets up all button and edit text view listeners and/or location bias.
-     * @param inflater the layout inflater
-     * @param container container
-     * @param savedInstanceState bundle
-     * @return the View
-     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -213,8 +209,9 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
         checkLocationPermission();
 
 
-        Button estimate = (Button) v.findViewById(R.id.btn_estimate);
-        Button confirm = (Button) v.findViewById(R.id.confirm_ride);
+        Button estimatebutton = (Button) v.findViewById(R.id.btn_estimate);
+        mGetDriverButton = (Button) v.findViewById(R.id.confirm_ride);
+        mGetDriverButton.setEnabled(false);
         mEditDestination = (PlacesAutocompleteTextView) v.findViewById(R.id.destination_location);
         mEditOrigin = (PlacesAutocompleteTextView) v.findViewById(R.id.origin_location);
 
@@ -225,8 +222,6 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
         mEditDestination.setLocationBiasEnabled(true);
         mEditDestination.setRadiusMeters(max_radius);
 
-        //Opens a dialog fragment which allows the user to select
-        //3 options, 2 of which place a location into the destination search
         mEditDestination.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -247,30 +242,24 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
         });
 
         //retrieve request to create a path
-        estimate.setOnClickListener(new View.OnClickListener() {
+        estimatebutton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 sendRequest();
+
             }
         });
 
-
-        confirm.setOnClickListener(new View.OnClickListener() {
-
+        mGetDriverButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mEditOrigin != null && mEditDestination != null) {
-                    Intent i = new Intent(getActivity(), ConfirmationActivity.class);
-                    startActivity(i);
-                }
-
+                ((NavigationActivity)getActivity()).showDrivers(mCurrentLocation);
             }
         });
 
         return v;
     }
-
 
     /**
      * Manipulates the map once available.
@@ -369,9 +358,9 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
         }
 
         //Place current location marker
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
+        markerOptions.position(mCurrentLocation);
         markerOptions.title("Current Position");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
@@ -379,7 +368,7 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
         mEditOrigin.setText(position);
 
         //move map camera
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(mCurrentLocation));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
         //stop location updates
@@ -428,9 +417,6 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
     }
 
     /**
-     *
-     * Displays the trip's current location/destination markers as well as the trip
-     * polyline path.
      * @param routes list of directions
      */
     @Override
@@ -451,20 +437,25 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
             ((TextView) getView().findViewById(R.id.distance)).setText(route.mDistance.mText);
 
 
+
+
             //calculate fare...
             double metersToKm = route.mDistance.mValue / 1000;
             double kmToMiles = metersToKm * 0.621371;
 
             double timeInMinutes = route.mDuration.mValue / 60;
 
-            double fare = kmToMiles * 3 + (timeInMinutes * .25);
+            mFare = kmToMiles * 3 + (timeInMinutes * .20);
 
             DecimalFormat df = new DecimalFormat("$0.00");
-            String estFare = df.format(fare);
-            ((TextView) getView().findViewById(R.id.price)).setText(estFare); //end of calculation..
+            String estFare = df.format(mFare);
+            ((TextView) getView().findViewById(R.id.price)).setText(estFare);
+            //end of calculation
+
+            Double totalmiles = kmToMiles;
+            mTripDistance = totalmiles.toString();
 
 
-            //add the trip destination markers
             mOriginMarkers.add(mMap.addMarker(new MarkerOptions()
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
                     .title(route.mStartAddress)
@@ -487,8 +478,27 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
     }
 
     /**
-     * Once we click Find Ride, we are prompted with a progress dialog that says Finding Directions
-     * Once directions are found we remove all previous markers.
+     * Return the fare
+     * @return the total fare
+     */
+    public static double getFare() {
+        return mFare;
+    }
+
+    public static String getOrigin() {
+        return mOrigin;
+    }
+
+    public static String getmDestination() {
+        return mDestination;
+    }
+
+    public static String getDistance() {
+        return mTripDistance;
+    }
+
+    /**
+     * Find the
      */
     @Override
     public void findDirectionsStart() {
