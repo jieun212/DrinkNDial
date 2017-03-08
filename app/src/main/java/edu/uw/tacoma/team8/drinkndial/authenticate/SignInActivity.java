@@ -107,9 +107,6 @@ public class SignInActivity extends AppCompatActivity implements
             i.putExtra("phone", mUser.getPhone());
             startActivityForResult(i, USER_CODE);
             finish();
-            SharedPreferences.Editor edit = mSharedPreferences.edit();
-            edit.putString("email", mUserEmail);
-            edit.commit();
         }
 
 //        mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS)
@@ -227,6 +224,7 @@ public class SignInActivity extends AppCompatActivity implements
                 logintask.execute(loginUrl);
             }
         });
+
 
 
         // sign up button for registering
