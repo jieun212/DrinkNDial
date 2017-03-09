@@ -395,7 +395,6 @@ public class NavigationActivity extends AppCompatActivity implements
         i.putExtra("dist", GmapsDisplay.getDistance());
         i.putExtra("mail", mUserEmail);
         startActivityForResult(i, USER_CODE);
-        finish();
     }
 
     @Override
