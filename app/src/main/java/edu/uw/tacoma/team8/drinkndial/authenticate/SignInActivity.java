@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -83,7 +85,7 @@ public class SignInActivity extends AppCompatActivity implements
     private String mUserPwd;
     private SharedPreferencesHelper mSharedPreferencesHelper;
     private SharedPreferenceEntry mSharedPreferenceEntry;
-
+    private Fragment mRegisterFragment;
 
 
     /**
@@ -117,17 +119,12 @@ public class SignInActivity extends AppCompatActivity implements
             if (mUser.getPw() != null) {
                 login(null, false);
 
-            Intent i = new Intent(this, NavigationActivity.class);
-            i.putExtra("email", mUserEmail);
-            i.putExtra("name", (mUser.getFname() + " " + mUser.getLname()));
-            i.putExtra("phone", mUser.getPhone());
-            startActivityForResult(i, USER_CODE);
-            finish();
-            SharedPreferences.Editor edit = mSharedPreferences.edit();
-            edit.putString("email", mUserEmail);
-            edit.commit();
-        }
-
+                Intent i = new Intent(this, NavigationActivity.class);
+                i.putExtra("email", mUserEmail);
+                i.putExtra("name", (mUser.getFname() + " " + mUser.getLname()));
+                i.putExtra("phone", mUser.getPhone());
+                startActivityForResult(i, USER_CODE);
+                finish();
 
             } else {
                 login(mUser.getFname(), true);
@@ -252,6 +249,7 @@ public class SignInActivity extends AppCompatActivity implements
         });
 
 
+
         // sign up button for registering
         Button signupButton = (Button) findViewById(R.id.signup_button);
         signupButton.setOnClickListener(new View.OnClickListener() {
@@ -268,9 +266,9 @@ public class SignInActivity extends AppCompatActivity implements
      * It replace fragment_continer(SignInActivity) to new RegisterFragment.
      */
     public void signup() {
-        RegisterFragment registerFragment = new RegisterFragment();
+        mRegisterFragment = new RegisterFragment();
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, registerFragment)
+                .add(R.id.fragment_container, mRegisterFragment)
                 .commit();
     }
 
@@ -294,16 +292,6 @@ public class SignInActivity extends AppCompatActivity implements
         startActivityForResult(i, USER_CODE);
         finish();
 
-    }
-
-    public void logout(boolean fbLoggedIn) {
-
-        SharedPreferenceEntry entry = new SharedPreferenceEntry(false,"");
-        mSharedPreferencesHelper.savePersonalInfo(entry);
-
-        if (fbLoggedIn) {
-            LoginManager.getInstance().logOut();
-        }
     }
 
 
@@ -334,7 +322,15 @@ public class SignInActivity extends AppCompatActivity implements
         addPreferMileTask.execute(new String[]{mileUrl.toString()});
 
         // Takes you back to the previous fragment by popping the current fragment out.
-        getSupportFragmentManager().popBackStackImmediate();
+//        getSupportFragmentManager().popBackStackImmediate();
+
+
+        getSupportFragmentManager().beginTransaction()
+                .remove(mRegisterFragment)
+                .commit();
+
+
+
     }
 
 
@@ -696,8 +692,8 @@ public class SignInActivity extends AppCompatActivity implements
                             .show();
                 }
             } catch (JSONException e) {
-                Toast.makeText(getApplicationContext(), "(AddPreferMileTask)Something wrong with the data" +
-                        e.getMessage(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(), "(AddPreferMileTask)Something wrong with the data" +
+//                        e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
     }

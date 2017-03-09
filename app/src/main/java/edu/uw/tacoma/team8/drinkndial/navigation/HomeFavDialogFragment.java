@@ -64,7 +64,8 @@ public class HomeFavDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        mSharedPreferences = getContext().getSharedPreferences(getString(R.string.SETTINGS_PREFS), Context.MODE_PRIVATE);
+        mSharedPreferences = getContext().getSharedPreferences(getString(R.string.SETTINGS_PREFS),
+                Context.MODE_PRIVATE);
         mHome = mSharedPreferences.getString("home", "");
         mFave = mSharedPreferences.getString("fave", "");
         builder.setMessage(R.string.home_fav_dialog)

@@ -81,6 +81,7 @@
 
     <string name="SETTINGS_PREFS">edu.uw.tacoma.team8.drinkndial.SETTINGSPREFS</string>
 
+    <string name="TRIP_INFO_PREFS">edu.uw.tacoma.team8.drinkndial.TRIPPREFS</string>
     <string name="username">Jieun Lee</string>
     <string name="userphone">Jieun Lee</string>
     <string name="useremail">email@email.com</string>
@@ -107,6 +108,15 @@
 
     <string name="DROP_DND_USER_SQL">
         DROP TABLE IF EXISTS dnd_user
+    </string>
+
+    <string name="CREATE_DND_TRIP_SQL">
+        CREATE TABLE IF NOT EXISTS dnd_trip
+        (tripid INTEGER PRIMARY KEY, distance REAL, paid REAL, startAddress TEXT, endAddress TEXT, email TEXT)
+    </string>
+
+    <string name="DROP_DND_TRIP_SQL">
+        DROP TABLE IF EXSITS dnd_trip
     </string>
 
 

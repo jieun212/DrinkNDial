@@ -53,8 +53,8 @@ public class MapDirections {
 
     /**
      *
-     * @param listener d
-     * @param location d
+     * @param listener Interface
+     * @param location Current Location
      */
     public void MapLocation(MapDirectionListener listener, String location) {
 

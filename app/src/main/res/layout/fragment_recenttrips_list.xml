@@ -2,12 +2,13 @@
 <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_location_list"
-    android:name="edu.uw.tacoma.team8.drinkndial.RecentLocationsFragment"
+    android:id="@+id/fragment_trips_list"
+    android:name="edu.uw.tacoma.team8.drinkndial.RecentTripsFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="60dp"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="edu.uw.tacoma.team8.drinkndial.search.RecentLocationsFragment"
-    tools:listitem="@layout/fragment_recentlocations" />
+    tools:context="edu.uw.tacoma.team8.drinkndial.navigation.RecentTripsFragment"
+    tools:listitem="@layout/fragment_trips" />
