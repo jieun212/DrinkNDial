@@ -49,8 +49,8 @@ import edu.uw.tacoma.team8.drinkndial.util.SharedPreferencesHelper;
  * It logs into Navigation activity after loging in with user email and password.
  * It registers a user with email, name, phone and password.
  *
+ * @author Jieun Lee (jieun212@uw.edu)
  * @version 02/14/2017
- * @author  Jieun Lee (jieun212@uw.edu)
  */
 public class SignInActivity extends AppCompatActivity implements
         RegisterFragment.UserAddListener {
@@ -67,12 +67,13 @@ public class SignInActivity extends AppCompatActivity implements
             = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndPreference.php?cmd=add";
 
 
-    /** Default prefer mile to find driver */
+    /**
+     * Default prefer mile to find driver
+     */
     public static final String DEFAULT_MILES = "1";
 
     private static final String TAG = "SignInActivity";
     public static final int USER_CODE = 1001;
-
 
 
     private EditText mUserIdText;
@@ -90,6 +91,7 @@ public class SignInActivity extends AppCompatActivity implements
 
     /**
      * It creates a SigninActivity
+     *
      * @param savedInstanceState
      */
     @Override
@@ -106,7 +108,7 @@ public class SignInActivity extends AppCompatActivity implements
                 sharedPreferences);
         mSharedPreferenceEntry = mSharedPreferencesHelper.getLoginInfo();
 
-        if (mSharedPreferenceEntry.isLoggedIn()){
+        if (mSharedPreferenceEntry.isLoggedIn()) {
 
             // Retrieve user's information from local database
             if (mUserDB == null) {
@@ -136,13 +138,13 @@ public class SignInActivity extends AppCompatActivity implements
         // test facebook id: 450team8@gmail.com / pw: 450Team@8
         mCallbackManager = CallbackManager.Factory.create();
 
-        mFacebookButton = (LoginButton)findViewById(R.id.facebook_signin_button);
+        mFacebookButton = (LoginButton) findViewById(R.id.facebook_signin_button);
         mFacebookButton.setReadPermissions(Arrays.asList("public_profile", "email"));
         mFacebookButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(final LoginResult loginResult) {
 
-                GraphRequest request = GraphRequest.newMeRequest( loginResult.getAccessToken(),
+                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
@@ -163,7 +165,7 @@ public class SignInActivity extends AppCompatActivity implements
                                     mSharedPreferencesHelper.savePersonalInfo(entry);
 
                                     // save user into UserDB on device
-                                    mUser = new User (mUserEmail, name, null, null, null);
+                                    mUser = new User(mUserEmail, name, null, null, null);
 
                                     // store all user's information into local database using SQLite
                                     if (mUserDB == null) {
@@ -190,10 +192,13 @@ public class SignInActivity extends AppCompatActivity implements
             }
 
             @Override
-            public void onError(FacebookException error) { Log.e("Facebook Login Err", error.toString()); }
+            public void onError(FacebookException error) {
+                Log.e("Facebook Login Err", error.toString());
+            }
 
             @Override
-            public void onCancel() { }
+            public void onCancel() {
+            }
         });
 
 
@@ -249,7 +254,6 @@ public class SignInActivity extends AppCompatActivity implements
         });
 
 
-
         // sign up button for registering
         Button signupButton = (Button) findViewById(R.id.signup_button);
         signupButton.setOnClickListener(new View.OnClickListener() {
@@ -296,15 +300,10 @@ public class SignInActivity extends AppCompatActivity implements
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)  {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
-
-//    @Override
-//    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-//        Log.d(TAG, "onConnectionFailed:" + connectionResult);
-//    }
 
 
     @Override
@@ -313,7 +312,7 @@ public class SignInActivity extends AppCompatActivity implements
         mUser = user;
 
         // insert new user's information into web service
-        UserAddAsyncTask  userAddAsyncTask = new UserAddAsyncTask();
+        UserAddAsyncTask userAddAsyncTask = new UserAddAsyncTask();
         userAddAsyncTask.execute(new String[]{userUrl.toString()});
 
 
@@ -321,14 +320,9 @@ public class SignInActivity extends AppCompatActivity implements
         AddPreferMileTask addPreferMileTask = new AddPreferMileTask();
         addPreferMileTask.execute(new String[]{mileUrl.toString()});
 
-        // Takes you back to the previous fragment by popping the current fragment out.
-//        getSupportFragmentManager().popBackStackImmediate();
-
-
         getSupportFragmentManager().beginTransaction()
                 .remove(mRegisterFragment)
                 .commit();
-
 
 
     }
@@ -340,7 +334,8 @@ public class SignInActivity extends AppCompatActivity implements
 
     /**
      * Inner class for Adding user (Register) task
-     */    private class UserAddAsyncTask extends AsyncTask<String, Void, String> {
+     */
+    private class UserAddAsyncTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected void onPreExecute() {
@@ -433,7 +428,7 @@ public class SignInActivity extends AppCompatActivity implements
 
             Log.i("SigninActivity", sb.toString());
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             Toast.makeText(v.getContext(), "Something wrong with the url" + e.getMessage(),
                     Toast.LENGTH_LONG)
                     .show();
@@ -461,9 +456,8 @@ public class SignInActivity extends AppCompatActivity implements
                     }
                 } catch (Exception e) {
                     response = "Unable to get user, Reason: " + e.getMessage();
-                }
-                finally {
-                    if (urlConnection != null)  urlConnection.disconnect();
+                } finally {
+                    if (urlConnection != null) urlConnection.disconnect();
                 }
             }
             return response;
@@ -476,7 +470,7 @@ public class SignInActivity extends AppCompatActivity implements
             if (result.startsWith("Unable to")) {
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
                         .show();
-                SharedPreferenceEntry entry = new SharedPreferenceEntry(false,"");
+                SharedPreferenceEntry entry = new SharedPreferenceEntry(false, "");
                 mSharedPreferencesHelper.savePersonalInfo(entry);
                 return;
             } else {
@@ -487,7 +481,7 @@ public class SignInActivity extends AppCompatActivity implements
 
             try {
                 JSONObject jsonObject = new JSONObject(result);
-                String status = (String)jsonObject.get("result");
+                String status = (String) jsonObject.get("result");
 
                 // verify password
                 if (status.equals("success")) {
@@ -527,7 +521,7 @@ public class SignInActivity extends AppCompatActivity implements
             sb.append("&email=");
             sb.append(URLEncoder.encode(mUserEmail, "UTF-8"));
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "Something wrong with the url" + e.getMessage(),
                     Toast.LENGTH_LONG)
                     .show();
@@ -581,7 +575,7 @@ public class SignInActivity extends AppCompatActivity implements
 
                 Log.i("Retrieving: ", fname);
 
-                mUser = new User (mUserEmail, fname, lname, mUserPwd, phone);
+                mUser = new User(mUserEmail, fname, lname, mUserPwd, phone);
 
                 // store all user's information into local database using SQLite
                 if (mUserDB == null) {
@@ -692,8 +686,7 @@ public class SignInActivity extends AppCompatActivity implements
                             .show();
                 }
             } catch (JSONException e) {
-//                Toast.makeText(getApplicationContext(), "(AddPreferMileTask)Something wrong with the data" +
-//                        e.getMessage(), Toast.LENGTH_LONG).show();
+                e.getMessage();
             }
         }
     }

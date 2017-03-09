@@ -50,7 +50,6 @@ public class ConfirmationActivity extends AppCompatActivity {
     private TextView mDriverPhoneTextView;
 
 
-
     //Some instance fields used to populate our text views.
     private String mSAddr;
     private String mEAddr;
@@ -64,9 +63,10 @@ public class ConfirmationActivity extends AppCompatActivity {
     private String mDriverFullName;
     private String mDriverPhone;
 
-   /**
+    /**
      * Initializes all of our fields as well as retrieving data from the NavigationActivity class
      * using Intent's getExtras() method.
+     *
      * @param savedInstanceState bundle
      */
     @Override
@@ -90,7 +90,7 @@ public class ConfirmationActivity extends AppCompatActivity {
         mEAddr = i.getExtras().getString("to");
         mDriverFullName = i.getExtras().getString("drivername");
         mDriverPhone = i.getExtras().getString("driverphone");
-      
+
         Double totalFare = i.getExtras().getDouble("fare");
         mDist = i.getExtras().getString("dist");
         mUserName = i.getExtras().getString("username");
@@ -102,7 +102,7 @@ public class ConfirmationActivity extends AppCompatActivity {
         String fare = df.format(totalFare);
 
         mFare = fare;
-      
+
         mFromTextView.setText(mSAddr);
         mToTextView.setText(mEAddr);
         mDriverNameTextView.setText(mDriverFullName);
@@ -141,11 +141,12 @@ public class ConfirmationActivity extends AppCompatActivity {
                                 //If successful, set a Toast message.
                                 Toast.makeText(getApplicationContext(), "Email sent to " + mUserEmail, Toast.LENGTH_SHORT).show();
 
-                            } catch(Exception e) {
+                            } catch (Exception e) {
                                 Log.e("SendMail", e.getMessage(), e);
                             }
-                            return null;}
-                        }.execute();
+                            return null;
+                        }
+                    }.execute();
 
                 } catch (Exception e) {
 
@@ -160,8 +161,6 @@ public class ConfirmationActivity extends AppCompatActivity {
     }
 
 
-
-
     @Override
     public void onBackPressed() {
         finish();
@@ -173,9 +172,10 @@ public class ConfirmationActivity extends AppCompatActivity {
 
     }
 
-      /**
+    /**
      * Helper method that returns a URL that adds a trip that the user made to their account on the
      * trip database.
+     *
      * @return string verison of the URL
      */
     private String buildAddTripURL() {
@@ -199,7 +199,7 @@ public class ConfirmationActivity extends AppCompatActivity {
 
             Log.i("buildAddTripURL", sb.toString());
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             Log.e("Catch", e.getMessage());
             Toast.makeText(getApplicationContext(), "(buildAddTripURL)Something wrong with the url" + e.getMessage(),
                     Toast.LENGTH_LONG)

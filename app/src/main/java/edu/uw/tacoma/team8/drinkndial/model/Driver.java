@@ -13,12 +13,12 @@ import java.util.List;
 public class Driver {
 
     public static final String DRIVER_ID = "driverid",
-                                FIRST_NAME = "fname",
-                                LAST_NAME = "lname",
-                                PHONE = "phone",
-                                RATING = "rating",
-                                LONGITUDE = "longitude",
-                                LATITUDE = "latitude";
+            FIRST_NAME = "fname",
+            LAST_NAME = "lname",
+            PHONE = "phone",
+            RATING = "rating",
+            LONGITUDE = "longitude",
+            LATITUDE = "latitude";
 
     private String mId;
     private String mFname;
@@ -61,16 +61,8 @@ public class Driver {
         return mFname;
     }
 
-    public void setFname(String fname) {
-        this.mFname = fname;
-    }
-
     public String getLname() {
         return mLname;
-    }
-
-    public void setLname(String lname) {
-        this.mLname = lname;
     }
 
     public String getPhone() {
@@ -85,26 +77,13 @@ public class Driver {
         return mRating;
     }
 
-    public void setRating(String rating) {
-        this.mRating = rating;
-    }
-
     public String getLongitude() {
         return mLongitude;
-    }
-
-    public void setLongitude(String longitude) {
-        this.mLongitude = longitude;
     }
 
     public String getLatitude() {
         return mLatitude;
     }
-
-    public void setLatitude(String latitude) {
-        this.mLatitude = latitude;
-    }
-
 
     public double getDistance() {
         return mDistance;
@@ -117,7 +96,8 @@ public class Driver {
     /**
      * Parses the json string, returns an error message if unsuccessful.
      * Returns driver list if success.
-     * @param driverJSON   @return reason or null if successful.
+     *
+     * @param driverJSON @return reason or null if successful.
      */
     public static String parseDriverJSON(String driverJSON, List<Driver> driverList) {
         String reason = null;
@@ -127,16 +107,16 @@ public class Driver {
                 for (int i = 0; i < arr.length(); i++) {
                     JSONObject obj = arr.getJSONObject(i);
                     Driver driver = new Driver(obj.getString(Driver.DRIVER_ID),
-                                                obj.getString(Driver.FIRST_NAME),
-                                                obj.getString(Driver.LAST_NAME),
-                                                obj.getString(Driver.PHONE),
-                                                obj.getString(Driver.RATING),
-                                                obj.getString(Driver.LONGITUDE),
-                                                obj.getString(Driver.LATITUDE));
+                            obj.getString(Driver.FIRST_NAME),
+                            obj.getString(Driver.LAST_NAME),
+                            obj.getString(Driver.PHONE),
+                            obj.getString(Driver.RATING),
+                            obj.getString(Driver.LONGITUDE),
+                            obj.getString(Driver.LATITUDE));
                     driverList.add(driver);
                 }
             } catch (JSONException e) {
-                reason =  "Unable to parse data, Reason: " + e.getMessage();
+                reason = "Unable to parse data, Reason: " + e.getMessage();
             }
         }
         return reason;
