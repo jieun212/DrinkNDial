@@ -138,9 +138,6 @@ public class ConfirmationActivity extends AppCompatActivity {
                                         SENDER_EMAIL,
                                         mUserEmail);
 
-                                //If successful, set a Toast message.
-                                Toast.makeText(getApplicationContext(), "Email sent to " + mUserEmail, Toast.LENGTH_SHORT).show();
-
                             } catch (Exception e) {
                                 Log.e("SendMail", e.getMessage(), e);
                             }
@@ -148,11 +145,12 @@ public class ConfirmationActivity extends AppCompatActivity {
                         }
                     }.execute();
 
+                    //If successful, set a Toast message.
+                    Toast.makeText(getApplicationContext(), "Email sent to " + mUserEmail, Toast.LENGTH_SHORT).show();
+
+
                 } catch (Exception e) {
-
                     Log.e("SendMail", e.getMessage(), e);
-                    Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
-
                 }
             }
 
