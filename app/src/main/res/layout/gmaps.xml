@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:tag="tag_gmaps_fragment">
 
     <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
         android:id="@+id/origin_location"
