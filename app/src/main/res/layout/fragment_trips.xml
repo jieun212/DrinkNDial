@@ -1,15 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_trips"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="edu.uw.tacoma.team8.drinkndial.navigation.TripsFragment">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
+    android:orientation="vertical"
+    android:background="@color/drinkListGray"
+    tools:context="edu.uw.tacoma.team8.drinkndial.navigation.RecentTripsFragment">
+
+    <TextView
+        android:id="@+id/trips_from_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold" />
 
 
     <TextView
+        android:id="@+id/trips_to_address"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="HELLO"
-        android:gravity="center"/>
-</RelativeLayout>
+        android:layout_height="wrap_content"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/trips_distance_travelled"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end" />
+
+
+</LinearLayout>

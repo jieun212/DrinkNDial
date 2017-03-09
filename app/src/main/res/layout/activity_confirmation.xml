@@ -47,12 +47,14 @@
 
             <TextView
                 android:id="@+id/confirmation_textview"
-                android:layout_width="285dp"
-                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginStart="50dp"
                 android:layout_marginLeft="50dp"
                 android:text="Confirmation"
-                android:textSize="30sp" />
+                android:textSize="30sp"
+                android:gravity="center"/>
 
         </LinearLayout>
 
@@ -69,6 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
                 android:layout_marginLeft="50dp"
+                android:layout_marginTop="15dp"
                 android:text="From: "
                 android:textSize="15sp" />
 
@@ -78,6 +81,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
                 android:layout_marginLeft="50dp"
+                android:layout_marginTop="15dp"
                 android:text="To: "
                 android:textSize="15sp" />
 
@@ -87,8 +91,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
                 android:layout_marginLeft="50dp"
+                android:layout_marginTop="15dp"
                 android:text="Driver: "
                 android:textSize="15sp" />
+            <TextView
+                android:id="@+id/driver_phone_info"
+                android:layout_width="285dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="15dp"
+                android:text="Driver phone #: "
+                android:textSize="15sp"/>
 
             <TextView
                 android:id="@+id/fare_info"
@@ -96,6 +110,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
                 android:layout_marginLeft="50dp"
+                android:layout_marginTop="15dp"
                 android:text="Fare: "
                 android:textSize="15sp" />
 
@@ -109,7 +124,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:background="@color/drinkDarkBlue"
             android:text="Send confirmation via email"
             android:textColor="@color/drinkWhite" />
