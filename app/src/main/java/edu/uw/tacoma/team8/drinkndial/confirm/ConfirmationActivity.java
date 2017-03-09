@@ -61,6 +61,9 @@ public class ConfirmationActivity extends AppCompatActivity {
     private String mUserPhone;
     private String mUserEmail;
 
+    private String mDriverFullName;
+    private String mDriverPhone;
+
    /**
      * Initializes all of our fields as well as retrieving data from the NavigationActivity class
      * using Intent's getExtras() method.
@@ -85,8 +88,8 @@ public class ConfirmationActivity extends AppCompatActivity {
 
         mSAddr = i.getExtras().getString("from");
         mEAddr = i.getExtras().getString("to");
-        String driverFullName = i.getExtras().getString("drivername");
-        String driverPhone = i.getExtras().getString("driverphone");
+        mDriverFullName = i.getExtras().getString("drivername");
+        mDriverPhone = i.getExtras().getString("driverphone");
       
         Double totalFare = i.getExtras().getDouble("fare");
         mDist = i.getExtras().getString("dist");
@@ -102,9 +105,9 @@ public class ConfirmationActivity extends AppCompatActivity {
       
         mFromTextView.setText(mSAddr);
         mToTextView.setText(mEAddr);
-        mDriverNameTextView.setText(driverFullName);
+        mDriverNameTextView.setText(mDriverFullName);
         mFareTextView.setText(fare);
-        mDriverPhoneTextView.setText(driverPhone);
+        mDriverPhoneTextView.setText(mDriverPhone);
 
         //Build a trip url to add to the data base upon creating this activity
         String url = buildAddTripURL();
@@ -131,7 +134,7 @@ public class ConfirmationActivity extends AppCompatActivity {
                                 sender.sendMail("Confirmation",
                                         "Details regarding your previous trip!:" +
                                                 "\nfrom: " + mSAddr + "\nto: " + mEAddr + "\ndriver name: " +
-                                                driverFullName + "\ndriver's phone #: " + driverPhone + "\nfare: " + mFare,
+                                                mDriverFullName + "\ndriver's phone #: " + mDriverPhone + "\nfare: " + mFare,
                                         SENDER_EMAIL,
                                         mUserEmail);
 
