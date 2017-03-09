@@ -1,5 +1,7 @@
 package edu.uw.tacoma.team8.drinkndial.navigation;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -29,6 +31,7 @@ public class SettingsFragment extends Fragment {
     private TextView mEmailTextView;
     private TextView mMileTextView;
     private String mUserEamil;
+    private SharedPreferences mSharedPreferences;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -61,12 +64,14 @@ public class SettingsFragment extends Fragment {
 
         // add home button
         Button addHomeBtn =(Button) v.findViewById(R.id.add_home_button);
-        if (homeAddress != null && homeAddress.length() > 0) {
+
+        if (homeAddress != null) {
             addHomeBtn.setText(homeAddress);
+
         } else if (addHomeBtn.getText() == null || addHomeBtn.getText().toString().length() < 1) {
             addHomeBtn.setText("Add Home");
         }
-            addHomeBtn.setOnClickListener(new View.OnClickListener() {
+        addHomeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((NavigationActivity) getActivity()).goAddHome();
@@ -80,12 +85,20 @@ public class SettingsFragment extends Fragment {
         } else if (addLocationBtn.getText() == null || addLocationBtn.getText().toString().length() < 1) {
             addLocationBtn.setText("Add Favorite Location");
         }
-            addLocationBtn.setOnClickListener(new View.OnClickListener() {
+        addLocationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((NavigationActivity) getActivity()).goAddLocation();
             }
         });
+        mSharedPreferences = getContext().getSharedPreferences(getString(R.string.SETTINGS_PREFS),
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = mSharedPreferences.edit();
+        edit.clear();
+        edit.putString("home",homeAddress);
+        edit.putString("fave",favoriteAddress);
+        edit.putString("recipientmail", mUserEamil);
+        edit.commit();
 
 
         // Mile preference
@@ -98,6 +111,7 @@ public class SettingsFragment extends Fragment {
                 ((NavigationActivity) getActivity()).goEditPreference();
             }
         });
+
         return v;
     }
 

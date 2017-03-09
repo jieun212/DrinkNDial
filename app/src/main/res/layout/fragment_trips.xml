@@ -1,15 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_trips"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="edu.uw.tacoma.team8.drinkndial.navigation.TripsFragment">
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp">
 
-
-    <TextView
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="HELLO"
-        android:gravity="center"/>
-</RelativeLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/drinkListGray"
+        android:orientation="vertical"
+        tools:context="edu.uw.tacoma.team8.drinkndial.navigation.RecentTripsFragment">
+
+        <TextView
+            android:id="@+id/trips_from_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/trips_to_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/trips_distance_travelled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:gravity="right"
+            android:textAlignment="gravity" />
+
+
+    </LinearLayout>
+</FrameLayout>

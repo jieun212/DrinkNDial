@@ -115,6 +115,7 @@ public class RegisterFragment extends Fragment {
         mPhoneEditText = (EditText) v.findViewById(R.id.add_user_phone);
         mPwConfirmEditText = (EditText) v.findViewById(R.id.add_user_pwconfirm);
 
+        final String regexStr = "^[0-9]{10}$";
 
         // call the buildURL
         Button registerButton = (Button) v.findViewById(R.id.register_register_button);
@@ -127,6 +128,10 @@ public class RegisterFragment extends Fragment {
                         .show();
                 mPwEditText.requestFocus();
                 return;
+            } else if (!(mPhoneEditText.getText().toString()).matches(regexStr)) {
+                Toast.makeText(v.getContext(), "Wrong phone number format",
+                        Toast.LENGTH_SHORT)
+                        .show();
             } else {
                 String userUrl = buildUserURL(v);
                 String mileUrl = buildAddPreferenceURL(v);
@@ -137,7 +142,6 @@ public class RegisterFragment extends Fragment {
 
         return v;
     }
-
 
     /**
      * Attaches
@@ -255,7 +259,7 @@ public class RegisterFragment extends Fragment {
 
 
         } catch (Exception e) {
-            Toast.makeText(view.getContext(), "Something wrong with the url" + e.getMessage(),
+            Toast.makeText(view.getContext(), "Something wrong with the ADD_PREFERENCE_URL url" + e.getMessage(),
                     Toast.LENGTH_LONG)
                     .show();
             Log.e("Catch", e.getMessage());
