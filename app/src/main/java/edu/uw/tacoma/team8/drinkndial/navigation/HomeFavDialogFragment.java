@@ -42,6 +42,7 @@ public class HomeFavDialogFragment extends DialogFragment {
      * we need to pass in the text view of the destination edit field.
      * Once we have done that, all uses of the field mEditDestination will have the same information
      * as the same field within GmapsDisplay.
+     *
      * @param theTextView the text view to construct
      */
     public HomeFavDialogFragment(PlacesAutocompleteTextView theTextView) {
@@ -58,6 +59,7 @@ public class HomeFavDialogFragment extends DialogFragment {
     /**
      * Change the destination field to the home location, favorite location or simply cancel out of
      * the dialog fragment.
+     *
      * @param savedInstanceState bundle
      * @return Alert Dialog
      */

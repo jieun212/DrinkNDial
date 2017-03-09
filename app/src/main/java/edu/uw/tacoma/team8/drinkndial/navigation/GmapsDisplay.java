@@ -101,7 +101,6 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
     private List<Polyline> mPolyLinePaths = new ArrayList<>();
 
 
-
     //Permsissions number = 99
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
@@ -144,7 +143,7 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
         //remove the current location marker
         try {
             String currPos = removeChars(mCurrLocationMarker.getPosition().toString());
-            if(currPos.equals(mEditOrigin.getText().toString())) {
+            if (currPos.equals(mEditOrigin.getText().toString())) {
                 mCurrLocationMarker.remove();
             }
             if (mDestLocationMarker != null) {
@@ -199,8 +198,9 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
     /**
      * Inflates the gmaps resource layout file and then syncs the google maps fragment to the
      * layout. We also find our views and set their listeners.
-     * @param inflater LayoutInflater
-     * @param container ViewGroup
+     *
+     * @param inflater           LayoutInflater
+     * @param container          ViewGroup
      * @param savedInstanceState Bundle
      * @return the view
      */
@@ -210,7 +210,7 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
 
         View v = inflater.inflate(R.layout.gmaps, container, false);
 
-        SupportMapFragment mapFragment = (SupportMapFragment)this.getChildFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         checkLocationPermission();
 
@@ -260,7 +260,7 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
         mGetDriverButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((NavigationActivity)getActivity()).showDrivers(mCurrentLocation);
+                ((NavigationActivity) getActivity()).showDrivers(mCurrentLocation);
             }
         });
 
@@ -305,7 +305,9 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
             public void onMapLongClick(LatLng latLng) {
 
                 //remove marker if already exists
-                if (mDestLocationMarker != null) { mDestLocationMarker.remove(); }
+                if (mDestLocationMarker != null) {
+                    mDestLocationMarker.remove();
+                }
 
                 mDestLocationMarker = mMap.addMarker(new MarkerOptions()
                         .position(latLng)
@@ -345,7 +347,6 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
         }
 
     }
-
 
 
     /**
@@ -448,8 +449,6 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
             ((TextView) getView().findViewById(R.id.distance)).setText(route.mDistance.mText);
 
 
-
-
             //calculate fare...
             double metersToKm = route.mDistance.mValue / 1000;
             double kmToMiles = metersToKm * 0.621371;
@@ -494,6 +493,7 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
 
     /**
      * Return the fare
+     *
      * @return the total fare
      */
     public static double getFare() {
@@ -545,15 +545,17 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
         }
 
         if (mPolyLinePaths != null) {
-            for (Polyline polyline:mPolyLinePaths ) {
+            for (Polyline polyline : mPolyLinePaths) {
                 polyline.remove();
             }
         }
     }
 
 //**********************************************EMPTY****************************************************
+
     /**
      * empty
+     *
      * @param connectionResult empty
      */
     @Override
@@ -563,6 +565,7 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
 
     /**
      * empty
+     *
      * @param i int
      */
     @Override

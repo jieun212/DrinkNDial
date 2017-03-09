@@ -64,8 +64,8 @@ public class RecentTripsFragment extends Fragment {
      * populating the list upon entry to this fragment as long as this view is recreated the
      * list will update.
      *
-     * @param inflater layoutinflater
-     * @param container view group
+     * @param inflater           layoutinflater
+     * @param container          view group
      * @param savedInstanceState bundle
      * @return this view
      */
@@ -77,7 +77,7 @@ public class RecentTripsFragment extends Fragment {
         mUserEmail = getArguments().getString("email");
         Log.i("TripList email", mUserEmail);
 
-        if(v instanceof RecyclerView) {
+        if (v instanceof RecyclerView) {
             Context context = v.getContext();
             mRecyclerView = (RecyclerView) v;
             if (mColumnCount <= 1) {
@@ -90,7 +90,7 @@ public class RecentTripsFragment extends Fragment {
         ConnectivityManager connMgr = (ConnectivityManager)
                 getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if(networkInfo != null && networkInfo.isConnected()) {
+        if (networkInfo != null && networkInfo.isConnected()) {
             String url = buildAddTripURL();
             DownloadTripsTask downloadTripsTask = new DownloadTripsTask();
             downloadTripsTask.execute(url);
@@ -98,7 +98,7 @@ public class RecentTripsFragment extends Fragment {
         } else {
             Toast.makeText(v.getContext(),
                     "No network connection available.",
-                    Toast.LENGTH_SHORT) .show();
+                    Toast.LENGTH_SHORT).show();
         }
         return v;
     }
@@ -106,6 +106,7 @@ public class RecentTripsFragment extends Fragment {
 
     /**
      * When attached initialize the listener
+     *
      * @param context Context
      */
     @Override
@@ -129,7 +130,6 @@ public class RecentTripsFragment extends Fragment {
     }
 
 
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -147,6 +147,7 @@ public class RecentTripsFragment extends Fragment {
 
     /**
      * Helper method to build the trip's URL
+     *
      * @return a url
      */
     private String buildAddTripURL() {
@@ -157,7 +158,7 @@ public class RecentTripsFragment extends Fragment {
 
             Log.i("buildGetTripURL", sb.toString());
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             Log.e("Catch", e.getMessage());
             Toast.makeText(getActivity(), "(buildGetTripURL)Something wrong with the url" + e.getMessage(),
                     Toast.LENGTH_LONG)
@@ -170,8 +171,6 @@ public class RecentTripsFragment extends Fragment {
      * an Async class that retrieves data from the database.
      */
     private class DownloadTripsTask extends AsyncTask<String, Void, String> {
-
-
 
         @Override
         protected String doInBackground(String... urls) {
@@ -189,9 +188,8 @@ public class RecentTripsFragment extends Fragment {
                     }
                 } catch (Exception e) {
                     response = "Unable to download the list of trips, Reason: " + e.getMessage();
-                }
-                finally {
-                    if (urlConnection != null)  urlConnection.disconnect();
+                } finally {
+                    if (urlConnection != null) urlConnection.disconnect();
                 }
             }
             return response;
@@ -201,6 +199,7 @@ public class RecentTripsFragment extends Fragment {
          * We retrieve data only until there are 10 trip items in the view, if there are any more
          * trips that need to be retrieved from the database, then the earliest trips are deleted while
          * the latest trips are kept, only dipslaying the previous 10 trips.
+         *
          * @param result String
          */
         @Override
@@ -232,7 +231,7 @@ public class RecentTripsFragment extends Fragment {
             }
 
             //Add the valid trips our list
-            for(int i = 0; i < size; i++) {
+            for (int i = 0; i < size; i++) {
                 validTrips.add(mTripList.get(i));
             }
 

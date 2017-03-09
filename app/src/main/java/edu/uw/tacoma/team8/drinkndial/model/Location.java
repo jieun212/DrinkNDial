@@ -14,11 +14,11 @@ import java.util.List;
 public class Location implements Serializable {
 
     public static final String LOCATION_ID = "locationid",
-                                LONGITUDE = "longitude",
-                                LATITUDE = "latitude",
-                                ADDRESS = "address",
-                                EMAIL = "email",
-                                MARK = "mark";
+            LONGITUDE = "longitude",
+            LATITUDE = "latitude",
+            ADDRESS = "address",
+            EMAIL = "email",
+            MARK = "mark";
 
     private String mId;
     private String mLongitude;
@@ -50,38 +50,9 @@ public class Location implements Serializable {
         this.mId = id;
     }
 
-    public String getLongitude() {
-        return mLongitude;
-    }
-
-    public void setLongitude(String longitude) {
-        this.mLongitude = longitude;
-    }
-
-    public String getLatitude() {
-        return mLatitude;
-    }
-
-    public void setLatitude(String latitude) {
-        this.mLatitude = latitude;
-    }
-
-    public String getUserEmail() {
-        return mEmail;
-    }
-
-    public void setUserEmail(String email) {
-        this.mEmail = email;
-    }
-
     public String getMark() {
         return mMark;
     }
-
-    public void setMark(String mark) {
-        this.mMark = mark;
-    }
-
 
     public String getAddress() {
         return mAddress;
@@ -98,7 +69,8 @@ public class Location implements Serializable {
     /**
      * Parses the json string, returns an error message if unsuccessful.
      * Returns user list if success.
-     * @param loccationJSON   @return reason or null if successful.
+     *
+     * @param loccationJSON @return reason or null if successful.
      */
     public static List<Location> parseLocationJSON(String loccationJSON, List<Location> locationList) {
         if (loccationJSON != null) {
@@ -115,6 +87,7 @@ public class Location implements Serializable {
                     locationList.add(location);
                 }
             } catch (JSONException e) {
+                e.getMessage();
             }
         }
         return locationList;

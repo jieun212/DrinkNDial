@@ -250,7 +250,6 @@ public class NavigationActivity extends AppCompatActivity implements
             ft.commit();
 
 
-
         } else if (id == R.id.nav_trips) {
             RecentTripsFragment recentTripsFragment = new RecentTripsFragment();
             Bundle b = new Bundle();
@@ -343,7 +342,7 @@ public class NavigationActivity extends AppCompatActivity implements
     public void onListFragmentInteraction(Driver driver) {
         Intent i = new Intent(this, ConfirmationActivity.class);
         i.putExtra("useremail", mUserEmail);
-        Log.i("navi-empty???", mUserEmail );
+        Log.i("navi-empty???", mUserEmail);
         i.putExtra("username", mUserName);
         i.putExtra("userphone", mUserPhone);
         i.putExtra("drivername", driver.getFname() + " " + driver.getLname());
@@ -360,11 +359,6 @@ public class NavigationActivity extends AppCompatActivity implements
     public void recentTripsListInteractionListener(Trips trips) {
 
     }
-
-
-
-
-
 
 
     /********************************************************************************************************************
@@ -543,12 +537,6 @@ public class NavigationActivity extends AppCompatActivity implements
 
         }
     }
-
-
-
-
-
-
 
 
 }
