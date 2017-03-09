@@ -25,36 +25,50 @@ import edu.uw.tacoma.team8.drinkndial.R;
 import edu.uw.tacoma.team8.drinkndial.authenticate.SignInActivity;
 import edu.uw.tacoma.team8.drinkndial.navigation.NavigationActivity;
 
+/**
+ * This Activity is a confirmation page that contains a few text views as well as
+ * a button that sends an email to the current user's email address as long as that email address
+ * is a valid one.
+ *
+ * @author Lovejit Hari
+ * @version 3/9/2017
+ */
 public class ConfirmationActivity extends AppCompatActivity {
 
+    //The email that sends the confirmation email to the user
     private static final String SENDER_EMAIL = "drinkndialconfirmation@gmail.com";
 
+    //used to build a url that adds trips to the database
     private static final String ADD_TRIPS_URL =
             "http://cssgate.insttech.washington.edu/~jieun212/Android/dndAddTrip.php?";
 
+    //all of the text views
     private TextView mFromTextView;
     private TextView mToTextView;
     private TextView mDriverNameTextView;
     private TextView mFareTextView;
     private TextView mDriverPhoneTextView;
 
+
+
+    //Some instance fields used to populate our text views.
     private String mSAddr;
-
     private String mEAddr;
-
     private String mDist;
-
     private String mFare;
-
-    private String mRecipient;
 
     private String mUserName;
     private String mUserPhone;
     private String mUserEmail;
 
+    private String mDriverFullName;
+    private String mDriverPhone;
 
-
-
+   /**
+     * Initializes all of our fields as well as retrieving data from the NavigationActivity class
+     * using Intent's getExtras() method.
+     * @param savedInstanceState bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,46 +83,73 @@ public class ConfirmationActivity extends AppCompatActivity {
         mDriverPhoneTextView = (TextView) findViewById(R.id.driver_phone_info);
 
 
+        //Get data from NavigationActivity
         Intent i = getIntent();
+
         mSAddr = i.getExtras().getString("from");
         mEAddr = i.getExtras().getString("to");
-        String driverFullName = i.getExtras().getString("drivername");
-        String driverPhone = i.getExtras().getString("driverphone");
+        mDriverFullName = i.getExtras().getString("drivername");
+        mDriverPhone = i.getExtras().getString("driverphone");
+      
         Double totalFare = i.getExtras().getDouble("fare");
         mDist = i.getExtras().getString("dist");
         mUserName = i.getExtras().getString("username");
         mUserPhone = i.getExtras().getString("userphone");
         mUserEmail = i.getExtras().getString("useremail");
-        Log.i("confirm-empty???", mUserEmail );
 
-
+        //Decimal format to show as dollar currency
         DecimalFormat df = new DecimalFormat("$0.00");
         String fare = df.format(totalFare);
 
         mFare = fare;
-
+      
         mFromTextView.setText(mSAddr);
         mToTextView.setText(mEAddr);
-        mDriverNameTextView.setText(driverFullName);
+        mDriverNameTextView.setText(mDriverFullName);
         mFareTextView.setText(fare);
-        mDriverPhoneTextView.setText(driverPhone);
+        mDriverPhoneTextView.setText(mDriverPhone);
 
-
+        //Build a trip url to add to the data base upon creating this activity
         String url = buildAddTripURL();
         AddTripTask task = new AddTripTask();
         task.execute(new String[]{url.toString()});
 
 
+        //Set an on click listener to our confirmation button
         confirmation.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 try {
+                    //our email
+                    final GMailSender sender = new GMailSender(SENDER_EMAIL, "team8450");
 
-                    Toast.makeText(getApplicationContext(), "Email sent to " + mUserEmail, Toast.LENGTH_SHORT).show();
+                    //new asynctask to avoid android network issues
+                    new AsyncTask<Void, Void, Void>() {
+
+                        //In the background, try sending a mail
+                        @Override
+                        protected Void doInBackground(Void... params) {
+                            try {
+                                sender.sendMail("Confirmation",
+                                        "Details regarding your previous trip!:" +
+                                                "\nfrom: " + mSAddr + "\nto: " + mEAddr + "\ndriver name: " +
+                                                mDriverFullName + "\ndriver's phone #: " + mDriverPhone + "\nfare: " + mFare,
+                                        SENDER_EMAIL,
+                                        mUserEmail);
+
+                                //If successful, set a Toast message.
+                                Toast.makeText(getApplicationContext(), "Email sent to " + mUserEmail, Toast.LENGTH_SHORT).show();
+
+                            } catch(Exception e) {
+                                Log.e("SendMail", e.getMessage(), e);
+                            }
+                            return null;}
+                        }.execute();
 
                 } catch (Exception e) {
 
+                    Log.e("SendMail", e.getMessage(), e);
                     Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
 
                 }
@@ -117,6 +158,9 @@ public class ConfirmationActivity extends AppCompatActivity {
 
         });
     }
+
+
+
 
     @Override
     public void onBackPressed() {
@@ -129,6 +173,11 @@ public class ConfirmationActivity extends AppCompatActivity {
 
     }
 
+      /**
+     * Helper method that returns a URL that adds a trip that the user made to their account on the
+     * trip database.
+     * @return string verison of the URL
+     */
     private String buildAddTripURL() {
         StringBuilder sb = new StringBuilder(ADD_TRIPS_URL);
         try {
@@ -160,6 +209,10 @@ public class ConfirmationActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * This class is used to add the data to the database. Calling execute on an AddTripTask
+     * object with a url argument will add the trip to the database.
+     */
     private class AddTripTask extends AsyncTask<String, Void, String> {
 
         @Override

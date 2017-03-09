@@ -48,24 +48,26 @@ import edu.uw.tacoma.team8.drinkndial.navigation.mapinfo.MapRoute;
 
 
 /**
+ * This class is the main fragment of our NavigationActivity.
+ * It displays a map with two autocomplete text views as well as buttons that show
+ * directions and allow you to confirm a trip.
  *
- * @version 2/23/2017
  * @author Lovejit Hari
+ * @version 3/8/2017
  */
 public class GmapsDisplay extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, MapDirectionListener {
 
 
+    //Strings that need to be removed from dropping a pin/getting current location and setting the text
+    //to the editable text view.
     private static final String REMOVE_FROM_POSITION = "lat/lng: ";
-
     private static final String REMOVE_PARAN = "[()]";
 
+    //Static instance fields to pass information
     private static double mFare;
-
     private static String mOrigin;
-
     private static String mDestination;
-
     private static String mTripDistance;
 
     //Class instance of the google map
@@ -100,6 +102,7 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
 
 
 
+    //Permsissions number = 99
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     public GmapsDisplay() {
@@ -157,11 +160,6 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
 
     }
 
-    public void editTextFieldClicked(View v) {
-
-
-    }
-
     /**
      * Checks permissions, needed in order to use ACCESS_FINE_LOCATION
      * from the Google API. It prompts the user with a dialog when the map
@@ -198,6 +196,14 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
         }
     }
 
+    /**
+     * Inflates the gmaps resource layout file and then syncs the google maps fragment to the
+     * layout. We also find our views and set their listeners.
+     * @param inflater LayoutInflater
+     * @param container ViewGroup
+     * @param savedInstanceState Bundle
+     * @return the view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -417,6 +423,11 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
     }
 
     /**
+     * When directions have been found we move the camera to try and show as much of the trip as we can
+     * without not being able to see the path. Then we set the estimated: duration, time, and fare
+     * for the trip as well as adding a marker determined by your start location and a marker for your
+     * destination location. Then the polyline is drawn from your start to your destination.
+     *
      * @param routes list of directions
      */
     @Override
@@ -456,6 +467,7 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
             mTripDistance = totalmiles.toString();
 
 
+            //Add the origin and destination markers
             mOriginMarkers.add(mMap.addMarker(new MarkerOptions()
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
                     .title(route.mStartAddress)
@@ -465,14 +477,17 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
                     .title(route.mEndAddress)
                     .position(route.mEndLocation)));
 
+            //The polyline settings
             PolylineOptions polylineOptions = new PolylineOptions().
                     geodesic(true).
                     color(Color.BLUE).
                     width(12);
 
+            //Connect the dots
             for (int i = 0; i < route.mPoints.size(); i++)
                 polylineOptions.add(route.mPoints.get(i));
 
+            //Show the directions on the map
             mPolyLinePaths.add(mMap.addPolyline(polylineOptions));
         }
     }
@@ -485,23 +500,35 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
         return mFare;
     }
 
+    /**
+     * @return the origin address
+     */
     public static String getOrigin() {
         return mOrigin;
     }
 
+    /**
+     * @return the destination address
+     */
     public static String getmDestination() {
         return mDestination;
     }
 
+    /**
+     * @return the trip distance.
+     */
     public static String getDistance() {
         return mTripDistance;
     }
 
     /**
-     * Find the
+     * Before the polylines that connect the two markers are displayed, get rid of all unncessary markers
+     * and previous polylines that were there so as to not show confusing "current location" or "destination location"
+     * markers as well as overlapping polylines.
      */
     @Override
     public void findDirectionsStart() {
+        //display a progress dialog to show that the app is retrieving a trip
         mProgressDialog = ProgressDialog.show(getContext(), "Please wait...",
                 "Finding directions...", true);
 

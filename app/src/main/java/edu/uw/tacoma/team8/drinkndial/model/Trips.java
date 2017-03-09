@@ -7,11 +7,16 @@ import org.json.JSONObject;
 import java.util.List;
 
 /**
- * Created by lovejithari on 3/8/17.
+ * This is the Trips model class which is charge of parsing through the Trips JSON object to retrieve
+ * data from the trip database.
+ *
+ * @author Lovejit Hari
+ * @version 3/9/2017
  */
 
 public class Trips {
 
+    //initializing some static final variables
     public static final String TRIP_ID = "tripid",
             DISTANCE = "distance",
             PAID = "paid",
@@ -19,6 +24,7 @@ public class Trips {
             END_ADDRESS = "endAddress",
             EMAIL = "email";
 
+    //Some instance fields
     private String mId;
     private String mTravelDistance;
     private String mPaid;
@@ -26,6 +32,16 @@ public class Trips {
     private String mEndAddress;
     private String mEmail;
 
+    /**
+     * Constructs a Trips object that contains the trip id, distance, how much was paid, the
+     * start address and end address as well as the current user's email.
+     * @param id string
+     * @param travelDistance string
+     * @param paid string
+     * @param start string
+     * @param end string
+     * @param email string
+     */
     public Trips(String id, String travelDistance, String paid, String start, String end, String email) {
         this.mId = id;
         this.mTravelDistance = travelDistance;
@@ -83,6 +99,13 @@ public class Trips {
         this.mEmail = mEmail;
     }
 
+    /**
+     * This method parses through a trips json object to retrieve values from the database that
+     * can then be used in activities/fragments as nececssary.
+     * @param tripsJSON The object to parse through
+     * @param tripList the list of trips
+     * @return String
+     */
     public static String parseTripsJSON(String tripsJSON, List<Trips> tripList) {
         String reason = null;
         if (tripsJSON != null) {

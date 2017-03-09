@@ -47,4 +47,7 @@ dependencies {
     compile 'com.seatgeek:placesautocomplete:0.2-SNAPSHOT'
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     testCompile 'junit:junit:4.12'
+    compile files('libs/mail.jar')
+    compile files('libs/additionnal.jar')
+    compile files('libs/activation.jar')
 }
