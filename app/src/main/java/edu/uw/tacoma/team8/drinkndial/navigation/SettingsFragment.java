@@ -20,12 +20,6 @@ import edu.uw.tacoma.team8.drinkndial.R;
  */
 public class SettingsFragment extends Fragment {
 
-    /**
-     * An URL for getting prefer mile to find drivers
-     */
-    private final static String GET_PREFERENCE_URL
-            = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndPreference.php?cmd=select";
-
     private TextView mNameTextView;
     private TextView mPhoneTextView;
     private TextView mEmailTextView;

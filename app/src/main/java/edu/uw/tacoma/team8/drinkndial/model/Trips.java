@@ -52,7 +52,6 @@ public class Trips {
         this.mEmail = email;
     }
 
-
     public String getmTravelDistance() {
         return mTravelDistance;
     }
@@ -60,7 +59,6 @@ public class Trips {
     public String getmStartAddress() {
         return mStartAddress;
     }
-
 
     public String getmEndAddress() {
         return mEndAddress;
