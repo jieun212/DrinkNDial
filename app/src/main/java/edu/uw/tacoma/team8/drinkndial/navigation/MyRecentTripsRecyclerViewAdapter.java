@@ -1,6 +1,7 @@
 package edu.uw.tacoma.team8.drinkndial.navigation;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,15 +27,26 @@ public class MyRecentTripsRecyclerViewAdapter extends RecyclerView.Adapter<MyRec
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_recentlocations, parent, false);
+                .inflate(R.layout.fragment_trips, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mFromView.setText("From: " + mValues.get(position).getmStartAddress());
-        holder.mToView.setText("To: " + mValues.get(position).getmEndAddress());
+
+        if (holder.mItem == null) {
+            Log.i("ITS NULL!!!!!!!", "null" );
+
+        }
+
+
+        String from = "From: " + mValues.get(position).getmStartAddress();
+        String to = "To: " +  mValues.get(position).getmEndAddress();
+        Log.i("mItem", from);
+
+        holder.mFromView.setText(from);
+        holder.mToView.setText(to);
         holder.mDistanceView.setText("(" + mValues.get(position).getmTravelDistance() + " mi)");
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -64,9 +76,9 @@ public class MyRecentTripsRecyclerViewAdapter extends RecyclerView.Adapter<MyRec
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mFromView = (TextView) view.findViewById(R.id.from_address);
-            mToView = (TextView) view.findViewById(R.id.to_address);
-            mDistanceView = (TextView) view.findViewById(R.id.distance_travelled);
+            mFromView = (TextView) view.findViewById(R.id.trips_from_address);
+            mToView = (TextView) view.findViewById(R.id.trips_to_address);
+            mDistanceView = (TextView) view.findViewById(R.id.trips_distance_travelled);
         }
 
         @Override

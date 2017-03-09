@@ -90,10 +90,7 @@ public class ConfirmationActivity extends AppCompatActivity {
         mFareTextView.setText("FARE: " + fare);
         mDriverPhoneTextView.setText("DRIVER PHONE: " + driverPhone);
 
-
-        SharedPreferences mSharedPreferences = getSharedPreferences(getString(R.string.SETTINGS_PREFS)
-                ,Context.MODE_PRIVATE);
-        mRecipient = mSharedPreferences.getString("recipientmail", "");
+        mRecipient = i.getExtras().getString("mail");
 
         String url = buildAddTripURL();
         AddTripTask task = new AddTripTask();
@@ -131,7 +128,8 @@ public class ConfirmationActivity extends AppCompatActivity {
             sb.append(URLEncoder.encode(mDist, "UTF-8"));
 
             sb.append("&paid=");
-            sb.append(URLEncoder.encode(mFare, "UTF-8"));
+            sb.append(URLEncoder.encode(mFare.substring(1, mFare.length()), "UTF-8"));
+            Log.i("check", mFare);
 
             sb.append("&startAddress=");
             sb.append(URLEncoder.encode(mSAddr, "UTF-8"));
@@ -142,7 +140,7 @@ public class ConfirmationActivity extends AppCompatActivity {
             sb.append("&email=");
             sb.append(URLEncoder.encode(mRecipient, "UTF-8"));
 
-
+            Log.i("buildAddTripURL", sb.toString());
 
         } catch(Exception e) {
             Log.e("Catch", e.getMessage());

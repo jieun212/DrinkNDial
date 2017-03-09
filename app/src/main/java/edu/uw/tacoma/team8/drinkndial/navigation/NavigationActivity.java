@@ -46,7 +46,6 @@ import edu.uw.tacoma.team8.drinkndial.model.Trips;
 /**
  * The NavigationActivity
  *
- *
  * @author Lovejit Hari
  * @author Jieun Lee
  * @version 3/5/2017
@@ -68,9 +67,6 @@ public class NavigationActivity extends AppCompatActivity implements
     private final static String GET_PREFER_MILE_URL
             = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndGetPreference.php?";
 
-    public static final int MILE_CODE = 2001;
-
-
 
     public static final int MILE_CODE = 2001;
     private static final int USER_CODE = 4002;
@@ -78,12 +74,10 @@ public class NavigationActivity extends AppCompatActivity implements
 
     private TextView mUserNameTextView;
     private TextView mUserPhoneTextView;
+    private TextView mUserEmailTextView;
 
     private String mUserEmail;
     private String mPreferMile;
-
-    private String mUserEamil;
-
     private Location mHomeLocation;
     private Location mFavoriteLocation;
     private GmapsDisplay mGmapFragment;
@@ -122,12 +116,12 @@ public class NavigationActivity extends AppCompatActivity implements
 
         // navigation header user information
         mUserNameTextView = (TextView) header.findViewById(R.id.nav_user_name);
-        TextView mUserEmailTextView = (TextView) header.findViewById(R.id.nav_user_email);
+        mUserEmailTextView = (TextView) header.findViewById(R.id.nav_user_email);
         mUserPhoneTextView = (TextView) header.findViewById(R.id.nav_user_phone);
 
         // get user's information from SignInActivity
         Intent i = getIntent();
-        mUserEmail= i.getExtras().getString("email");
+        mUserEmail = i.getExtras().getString("email");
         String name = i.getExtras().getString("name");
         String phone = i.getExtras().getString("phone");
 
@@ -248,20 +242,25 @@ public class NavigationActivity extends AppCompatActivity implements
             SettingsFragment settingsFragment = new SettingsFragment();
             settingsFragment.setArguments(bundle);
 
-        } else if (id == R.id.nav_trips) {
-
             FragmentTransaction ft = fm.beginTransaction()
                     .replace(R.id.nav_frag_container, settingsFragment)
                     .addToBackStack(null);
             ft.commit();
 
         } else if (id == R.id.nav_trips) {
+            RecentTripsFragment recentTripsFragment = new RecentTripsFragment();
+            Bundle b = new Bundle();
+//            mUserEmail = mUserEmailTextView.getText().toString();
+            b.putString("email", mUserEmail);
 
+            Log.i("HERE!!!!!!!!!!", mUserEmail);
+            recentTripsFragment.setArguments(b);
             FragmentTransaction ft = fm.beginTransaction()
-                    .replace(R.id.nav_frag_container, new RecentTripsFragment()).addToBackStack(null);
+                    .replace(R.id.nav_frag_container, recentTripsFragment)
+                    .addToBackStack(null);
             ft.commit();
 
-        } else if (id == R.id.map_item) {
+        }  else if (id == R.id.map_item) {
 
             FragmentTransaction ft = fm.beginTransaction()
                     .replace(R.id.nav_frag_container, new GmapsDisplay()).addToBackStack(null);
@@ -285,7 +284,6 @@ public class NavigationActivity extends AppCompatActivity implements
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
 
     /**
@@ -332,7 +330,6 @@ public class NavigationActivity extends AppCompatActivity implements
         finish();
     }
 
-   @Override
     public void showDrivers(LatLng location) {
         Bundle bundle = new Bundle();
         bundle.putDouble("longitude", location.longitude);
@@ -351,10 +348,6 @@ public class NavigationActivity extends AppCompatActivity implements
         Bundle bundle = new Bundle();
     }
 
-    @Override
-    public void onListFragmentInteraction(Driver driver) {
-        //TODO : delete if it is not used
-    }
 
     /********************************************************************************************************************
      *                                                FOR "Retrieving locations"
@@ -400,6 +393,7 @@ public class NavigationActivity extends AppCompatActivity implements
         i.putExtra("from", GmapsDisplay.getOrigin());
         i.putExtra("to", GmapsDisplay.getmDestination());
         i.putExtra("dist", GmapsDisplay.getDistance());
+        i.putExtra("mail", mUserEmail);
         startActivityForResult(i, USER_CODE);
         finish();
     }
@@ -451,15 +445,7 @@ public class NavigationActivity extends AppCompatActivity implements
                 JSONArray arr = new JSONArray(result);
 
                 if (arr.length() > 0) {
-                    List<Location>  locationList = new ArrayList<>();
-
-            List<Location>  locationList = new ArrayList<Location>();
-
-            // parses location json and get the saved list
-            if (result != null) {
-                try {
-                    JSONArray arr = new JSONArray(result);
-
+                    List<Location> locationList = new ArrayList<>();
                     for (int i = 0; i < arr.length(); i++) {
                         JSONObject obj = arr.getJSONObject(i);
                         Location location = new Location(obj.getString(Location.LOCATION_ID),
@@ -481,7 +467,6 @@ public class NavigationActivity extends AppCompatActivity implements
                         }
                     }
                 }
-
             } catch (JSONException e) {
 //                Toast.makeText(getApplicationContext(), "(GetLocationTask)Something wrong with the data" +
 //                        e.getMessage(), Toast.LENGTH_LONG).show();
@@ -509,7 +494,7 @@ public class NavigationActivity extends AppCompatActivity implements
             Log.i("Navi-GetMileURL", sb.toString());
 
         } catch (Exception e) {
-            Toast.makeText(this, "Something wrong with GET_PREFER_MILE_URL url" + e.getMessage(),
+            Toast.makeText(getApplicationContext(), "Something wrong with GET_PREFER_MILE_URL url" + e.getMessage(),
                     Toast.LENGTH_LONG)
                     .show();
             Log.e("Catch", e.getMessage());
@@ -567,43 +552,11 @@ public class NavigationActivity extends AppCompatActivity implements
         }
     }
 
-                } catch (JSONException e) {
-
-                }
-                mPreferMile = arr.getJSONObject(0).getString("mile");
-
-            } catch (JSONException e) {
-                Toast.makeText(getApplicationContext(), "Something wrong with the data" +
-                        e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-
-
-            // finds home location and favorite location
-            for (int i = 0; i < locationList.size(); i++) {
-                if (locationList.get(i).getMark().equals("home")) {
-                    mHomeLocation = locationList.get(i);
-                } else if (locationList.get(i).getMark().equals("favorite")) {
-                    mFavoriteLocation = locationList.get(i);
-                }
-            }
 
 
 
-            Log.i("list is empty? ", String.valueOf(locationList.size()));
 
 
-            // send user's information to setting fragment
-            Bundle bundle = new Bundle();
-            bundle.putString("username", mUserNameTextView.getText().toString());
-            bundle.putString("userphone", mUserPhoneTextView.getText().toString());
-            bundle.putString("useremail", mUserEamil);
-            bundle.putString("homeaddress", mHomeLocation.getAddress());
-            bundle.putString("favoriteaddress", mFavoriteLocation.getAddress());
-
-            goSettingFragment(bundle);
-
-        }
-    }
 
 
 }
