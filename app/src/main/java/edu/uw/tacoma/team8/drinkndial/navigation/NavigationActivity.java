@@ -69,14 +69,14 @@ public class NavigationActivity extends AppCompatActivity implements
 
 
     public static final int MILE_CODE = 2001;
-    private static final int USER_CODE = 4002;
-
 
     private TextView mUserNameTextView;
     private TextView mUserPhoneTextView;
     private TextView mUserEmailTextView;
 
     private String mUserEmail;
+    private String mUserName;
+    private String mUserPhone;
     private String mPreferMile;
     private Location mHomeLocation;
     private Location mFavoriteLocation;
@@ -122,8 +122,8 @@ public class NavigationActivity extends AppCompatActivity implements
         // get user's information from SignInActivity
         Intent i = getIntent();
         mUserEmail = i.getExtras().getString("email");
-        String name = i.getExtras().getString("name");
-        String phone = i.getExtras().getString("phone");
+        mUserName = i.getExtras().getString("name");
+        mUserPhone = i.getExtras().getString("phone");
 
 
         // get User's saved locations
@@ -137,9 +137,9 @@ public class NavigationActivity extends AppCompatActivity implements
         getPreferMileTask.execute(getMileUrl);
 
         // set text for navigation header
-        mUserNameTextView.setText(name);
+        mUserNameTextView.setText(mUserName);
         mUserEmailTextView.setText(mUserEmail);
-        mUserPhoneTextView.setText(phone);
+        mUserPhoneTextView.setText(mUserPhone);
 
         // add Google map display fragment to navigation container fragment
 
@@ -159,11 +159,13 @@ public class NavigationActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
+
     }
 
     /**
@@ -221,8 +223,8 @@ public class NavigationActivity extends AppCompatActivity implements
 
             // send user's information to setting fragment
             Bundle bundle = new Bundle();
-            bundle.putString("username", mUserNameTextView.getText().toString());
-            bundle.putString("userphone", mUserPhoneTextView.getText().toString());
+            bundle.putString("username", mUserName);
+            bundle.putString("userphone", mUserPhone);
 
             bundle.putString("useremail", mUserEmail);
             if (mHomeLocation != null) {
@@ -243,27 +245,21 @@ public class NavigationActivity extends AppCompatActivity implements
             settingsFragment.setArguments(bundle);
 
             FragmentTransaction ft = fm.beginTransaction()
-                    .replace(R.id.nav_frag_container, settingsFragment)
-                    .addToBackStack(null);
+                    .add(R.id.nav_frag_container, settingsFragment)
+                    .addToBackStack(mGmapFragment.getTag());
             ft.commit();
+
+
 
         } else if (id == R.id.nav_trips) {
             RecentTripsFragment recentTripsFragment = new RecentTripsFragment();
             Bundle b = new Bundle();
-//            mUserEmail = mUserEmailTextView.getText().toString();
             b.putString("email", mUserEmail);
-
-            Log.i("HERE!!!!!!!!!!", mUserEmail);
             recentTripsFragment.setArguments(b);
-            FragmentTransaction ft = fm.beginTransaction()
-                    .replace(R.id.nav_frag_container, recentTripsFragment)
-                    .addToBackStack(null);
-            ft.commit();
-
-        }  else if (id == R.id.map_item) {
 
             FragmentTransaction ft = fm.beginTransaction()
-                    .replace(R.id.nav_frag_container, new GmapsDisplay()).addToBackStack(null);
+                    .add(R.id.nav_frag_container, recentTripsFragment)
+                    .addToBackStack(mGmapFragment.getTag());
             ft.commit();
 
         } else if (id == R.id.logout_menuitem) {
@@ -293,8 +289,8 @@ public class NavigationActivity extends AppCompatActivity implements
     public void goAddHome() {
         Intent i = new Intent(this, AddLocationActivity.class);
         i.putExtra("email", mUserEmail);
-        i.putExtra("name", mUserNameTextView.getText().toString());
-        i.putExtra("phone", mUserPhoneTextView.getText().toString());
+        i.putExtra("name", mUserName);
+        i.putExtra("phone", mUserPhone);
         i.putExtra("mark", "home");
         startActivityForResult(i, SignInActivity.USER_CODE);
         finish();
@@ -307,8 +303,8 @@ public class NavigationActivity extends AppCompatActivity implements
     public void goAddLocation() {
         Intent i = new Intent(this, AddLocationActivity.class);
         i.putExtra("email", mUserEmail);
-        i.putExtra("name", mUserNameTextView.getText().toString());
-        i.putExtra("phone", mUserPhoneTextView.getText().toString());
+        i.putExtra("name", mUserName);
+        i.putExtra("phone", mUserPhone);
         i.putExtra("mark", "favorite");
         startActivityForResult(i, SignInActivity.USER_CODE);
         finish();
@@ -322,9 +318,8 @@ public class NavigationActivity extends AppCompatActivity implements
     public void goEditPreference() {
         Intent i = new Intent(this, UpdatePreferenceActivity.class);
         i.putExtra("email", mUserEmail);
-
-        i.putExtra("name", mUserNameTextView.getText().toString());
-        i.putExtra("phone", mUserPhoneTextView.getText().toString());
+        i.putExtra("name", mUserName);
+        i.putExtra("phone", mUserPhone);
         i.putExtra("mile", mPreferMile);
         startActivityForResult(i, NavigationActivity.MILE_CODE);
         finish();
@@ -339,14 +334,37 @@ public class NavigationActivity extends AppCompatActivity implements
         driverListFragment.setArguments(bundle);
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction()
-                .replace(R.id.nav_frag_container, driverListFragment)
-                .addToBackStack(null);
+                .add(R.id.nav_frag_container, driverListFragment)
+                .addToBackStack(mGmapFragment.getTag());
         ft.commit();
     }
 
-    public void showTrips() {
-        Bundle bundle = new Bundle();
+    @Override
+    public void onListFragmentInteraction(Driver driver) {
+        Intent i = new Intent(this, ConfirmationActivity.class);
+        i.putExtra("useremail", mUserEmail);
+        Log.i("navi-empty???", mUserEmail );
+        i.putExtra("username", mUserName);
+        i.putExtra("userphone", mUserPhone);
+        i.putExtra("drivername", driver.getFname() + " " + driver.getLname());
+        i.putExtra("driverphone", driver.getPhone());
+        i.putExtra("fare", GmapsDisplay.getFare());
+        i.putExtra("from", GmapsDisplay.getOrigin());
+        i.putExtra("to", GmapsDisplay.getmDestination());
+        i.putExtra("dist", GmapsDisplay.getDistance());
+
+        startActivityForResult(i, MILE_CODE);
     }
+
+    @Override
+    public void recentTripsListInteractionListener(Trips trips) {
+
+    }
+
+
+
+
+
 
 
     /********************************************************************************************************************
@@ -362,9 +380,7 @@ public class NavigationActivity extends AppCompatActivity implements
      */
     private String buildGetLocationURL() {
 
-
         StringBuilder sb = new StringBuilder(GET_LOCATIONS_URL);
-
 
         try {
 
@@ -381,25 +397,6 @@ public class NavigationActivity extends AppCompatActivity implements
             Log.e("Catch", e.getMessage());
         }
         return sb.toString();
-    }
-
-
-    @Override
-    public void onListFragmentInteraction(Driver driver) {
-        Intent i = new Intent(this, ConfirmationActivity.class);
-        i.putExtra("name", driver.getFname() + " " + driver.getLname());
-        i.putExtra("phone", driver.getPhone());
-        i.putExtra("fare", GmapsDisplay.getFare());
-        i.putExtra("from", GmapsDisplay.getOrigin());
-        i.putExtra("to", GmapsDisplay.getmDestination());
-        i.putExtra("dist", GmapsDisplay.getDistance());
-        i.putExtra("mail", mUserEmail);
-        startActivityForResult(i, USER_CODE);
-    }
-
-    @Override
-    public void recentTripsListInteractionListener(Trips trips) {
-
     }
 
     private class GetLocationTask extends AsyncTask<String, Void, String> {
@@ -467,11 +464,7 @@ public class NavigationActivity extends AppCompatActivity implements
                     }
                 }
             } catch (JSONException e) {
-//                Toast.makeText(getApplicationContext(), "(GetLocationTask)Something wrong with the data" +
-//                        e.getMessage(), Toast.LENGTH_LONG).show();
             }
-
-
         }
     }
 

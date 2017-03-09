@@ -9,9 +9,6 @@
             android:id="@+id/nav_trips"
             android:title="@string/nav_trips" />
         <item
-            android:id="@+id/map_item"
-            android:title="@string/title_activity_maps"/>
-        <item
             android:id="@+id/logout_menuitem"
             android:title="@string/logout_button" />
 
