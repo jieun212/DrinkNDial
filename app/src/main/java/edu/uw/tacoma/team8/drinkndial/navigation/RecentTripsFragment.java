@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,6 @@ import edu.uw.tacoma.team8.drinkndial.model.Trips;
 public class RecentTripsFragment extends Fragment {
 
 
-
     private static final String GET_TRIPS_URL =
             "http://cssgate.insttech.washington.edu/~jieun212/Android/dndGetTrip.php?";
 
@@ -43,7 +43,7 @@ public class RecentTripsFragment extends Fragment {
     private RecentTripsListInteractionListener mListener;
     private RecyclerView mRecyclerView;
     private List<Trips> mTripList;
-
+    private String mUserEmail;
 
     public RecentTripsFragment() {
         // Required empty public constructor
@@ -52,7 +52,10 @@ public class RecentTripsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_trips, container, false);
+        View v = inflater.inflate(R.layout.fragment_recenttrips_list, container, false);
+
+        mUserEmail = getArguments().getString("email");
+        Log.i("TripList email", mUserEmail);
 
         if(v instanceof RecyclerView) {
             Context context = v.getContext();
@@ -62,17 +65,16 @@ public class RecentTripsFragment extends Fragment {
             } else {
                 mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-
-            DownloadTripsTask task = new DownloadTripsTask();
-            task.execute(new String[]{GET_TRIPS_URL});
         }
 
         ConnectivityManager connMgr = (ConnectivityManager)
                 getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if(networkInfo != null && networkInfo.isConnected()) {
-            DownloadTripsTask task = new DownloadTripsTask();
-            task.execute(new String[]{GET_TRIPS_URL});
+            String url = buildAddTripURL();
+            DownloadTripsTask downloadTripsTask = new DownloadTripsTask();
+            downloadTripsTask.execute(url);
+
         } else {
             Toast.makeText(v.getContext(),
                     "No network connection available.",
@@ -99,6 +101,8 @@ public class RecentTripsFragment extends Fragment {
         mListener = null;
     }
 
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -112,6 +116,24 @@ public class RecentTripsFragment extends Fragment {
 
     public interface RecentTripsListInteractionListener {
         void recentTripsListInteractionListener(Trips trips);
+    }
+
+
+    private String buildAddTripURL() {
+        StringBuilder sb = new StringBuilder(GET_TRIPS_URL);
+        try {
+            sb.append("&email=");
+            sb.append(URLEncoder.encode(mUserEmail, "UTF-8"));
+
+            Log.i("buildGetTripURL", sb.toString());
+
+        } catch(Exception e) {
+            Log.e("Catch", e.getMessage());
+            Toast.makeText(getActivity(), "(buildGetTripURL)Something wrong with the url" + e.getMessage(),
+                    Toast.LENGTH_LONG)
+                    .show();
+        }
+        return sb.toString();
     }
 
     private class DownloadTripsTask extends AsyncTask<String, Void, String> {
@@ -143,7 +165,7 @@ public class RecentTripsFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
-
+            Log.i("Trips post", result);
             // Something wrong with the network or the URL.
             if (result.startsWith("Unable to")) {
                 Toast.makeText(getActivity().getApplicationContext(), result, Toast.LENGTH_LONG)
@@ -161,11 +183,15 @@ public class RecentTripsFragment extends Fragment {
             }
 
             List<Trips> validTrips = new ArrayList<Trips>();
-            for(int i = 0; i < mTripList.size(); i++) {
-                if(i <= 11) {
-                    validTrips.add(mTripList.get(i));
-                }
+            int size = 0;
+            if (10 >= mTripList.size()) {
+                size = mTripList.size();
+            } else {
+                size = 10;
+            }
 
+            for(int i = 0; i < size; i++) {
+                validTrips.add(mTripList.get(i));
             }
             mRecyclerView.setAdapter(new MyRecentTripsRecyclerViewAdapter(validTrips, mListener));
 

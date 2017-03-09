@@ -91,8 +91,8 @@ public class Trips {
                 for (int i = 0; i < arr.length(); i++) {
                     JSONObject obj = arr.getJSONObject(i);
                     Trips trips = new Trips(obj.getString(Trips.TRIP_ID),
-                            obj.getString(Trips.DISTANCE),
-                            obj.getString(Trips.PAID),
+                            String.valueOf(obj.getDouble(Trips.DISTANCE)),
+                            String.valueOf(obj.getDouble(Trips.PAID)),
                             obj.getString(Trips.START_ADDRESS),
                             obj.getString(Trips.END_ADDRESS),
                             obj.getString(Trips.EMAIL));
