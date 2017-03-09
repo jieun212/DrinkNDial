@@ -18,19 +18,20 @@ import com.seatgeek.placesautocomplete.PlacesAutocompleteTextView;
 
 import edu.uw.tacoma.team8.drinkndial.R;
 
-
-
 /**
- *
  * Displays an Alert Dialog that gives the user 3 options.
  * The user can either click on home or favorite or cancel.
  * If cancelled, nothing happens and the dialog closes.
  * If the other two are chosen then the destination search bar is updated with the
  * home or favorite address depending on the user's option.
  * A simple {@link Fragment} subclass.
+ *
+ * @author Lovejit Hari
+ * @version 3/9/2017
  */
 public class HomeFavDialogFragment extends DialogFragment {
 
+    //Instance fields
     private String mHome;
     private String mFave;
     private PlacesAutocompleteTextView mEditDestination;
@@ -64,6 +65,8 @@ public class HomeFavDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
+        //Using shared preferences to set the home and favorite locations. This information is retrieved
+        //from the settings fragment
         mSharedPreferences = getContext().getSharedPreferences(getString(R.string.SETTINGS_PREFS),
                 Context.MODE_PRIVATE);
         mHome = mSharedPreferences.getString("home", "");

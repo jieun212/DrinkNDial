@@ -10,20 +10,38 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.uw.tacoma.team8.drinkndial.R;
-import edu.uw.tacoma.team8.drinkndial.model.Location;
 import edu.uw.tacoma.team8.drinkndial.model.Trips;
-import edu.uw.tacoma.team8.drinkndial.search.RecentLocationsFragment.OnListFragmentInteractionListener;
 
+/**
+ * This class is reponsible for providing views that represent items in a data set.
+ *
+ * @author Lovejit Hari
+ * @version 3/8/2017
+ */
 public class MyRecentTripsRecyclerViewAdapter extends RecyclerView.Adapter<MyRecentTripsRecyclerViewAdapter.ViewHolder> {
 
+    //a list of trips
     private final List<Trips> mValues;
+
+    //our recent trip listener
     private final RecentTripsFragment.RecentTripsListInteractionListener mListener;
 
+    /**
+     * Constructs an object that initializes the items and the listener
+     * @param items adapter
+     * @param listener Recent trips
+     */
     public MyRecentTripsRecyclerViewAdapter(List<Trips> items, RecentTripsFragment.RecentTripsListInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
 
+    /**
+     * Inflates the trips fragment
+     * @param parent fragment_trips
+     * @param viewType int
+     * @return the view holder
+     */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -31,6 +49,11 @@ public class MyRecentTripsRecyclerViewAdapter extends RecyclerView.Adapter<MyRec
         return new ViewHolder(view);
     }
 
+    /**
+     * Set the on click listener of the trip item
+     * @param holder view holder
+     * @param position int
+     */
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
@@ -61,11 +84,15 @@ public class MyRecentTripsRecyclerViewAdapter extends RecyclerView.Adapter<MyRec
         });
     }
 
+
     @Override
     public int getItemCount() {
         return mValues.size();
     }
 
+    /**
+     * Gets the views that are displayed in the fragment and initialize them
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mFromView;
