@@ -102,12 +102,7 @@ public class ConfirmationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    GMailSender sender = new GMailSender(
-                            SENDER_EMAIL, "team8450"
-                    );
 
-                    sender.sendMail("Confirmation/Receipt", "This mail has been sent from Drink n " +
-                            "Dial: Mobile in regards to your confirmed trip!", SENDER_EMAIL, mRecipient);
                     Toast.makeText(getApplicationContext(), "Email sent to " + mRecipient, Toast.LENGTH_SHORT).show();
 
                 } catch (Exception e) {
