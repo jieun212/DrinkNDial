@@ -56,28 +56,5 @@ public class User implements Serializable {
         this.mPhone = phone;
     }
 
-    /**
-     * Parses the json string, returns an error message if unsuccessful.
-     * Returns user list if success.
-     *
-     * @param userJSON @return reason or null if successful.
-     */
-    public static String parseUserJSON(String userJSON) {
-        String reason = null;
-        if (userJSON != null) {
-            try {
-                JSONObject obj = new JSONObject(userJSON);
-                User user = new User(obj.getString(User.EMAIL),
-                        obj.getString(User.FNAME),
-                        obj.getString(User.LNAME),
-                        obj.getString(User.PW),
-                        obj.getString(User.PHONE));
-            } catch (JSONException e) {
-                reason = "Unable to parse data, Reason: " + e.getMessage();
-            }
-        }
-        return reason;
-    }
-
 
 }

@@ -66,31 +66,5 @@ public class Location implements Serializable {
         return mAddress;
     }
 
-    /**
-     * Parses the json string, returns an error message if unsuccessful.
-     * Returns user list if success.
-     *
-     * @param loccationJSON @return reason or null if successful.
-     */
-    public static List<Location> parseLocationJSON(String loccationJSON, List<Location> locationList) {
-        if (loccationJSON != null) {
-            try {
-                JSONArray arr = new JSONArray(loccationJSON);
-                for (int i = 0; i < arr.length(); i++) {
-                    JSONObject obj = arr.getJSONObject(i);
-                    Location location = new Location(obj.getString(Location.LOCATION_ID),
-                            obj.getString(Location.LONGITUDE),
-                            obj.getString(Location.LATITUDE),
-                            obj.getString(Location.EMAIL),
-                            obj.getString(Location.ADDRESS),
-                            obj.getString(Location.MARK));
-                    locationList.add(location);
-                }
-            } catch (JSONException e) {
-                e.getMessage();
-            }
-        }
-        return locationList;
-    }
 
 }
