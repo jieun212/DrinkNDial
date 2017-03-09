@@ -1,15 +1,11 @@
 package edu.uw.tacoma.team8.drinkndial.confirm;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +22,8 @@ import java.net.URLEncoder;
 import java.text.DecimalFormat;
 
 import edu.uw.tacoma.team8.drinkndial.R;
+import edu.uw.tacoma.team8.drinkndial.authenticate.SignInActivity;
+import edu.uw.tacoma.team8.drinkndial.navigation.NavigationActivity;
 
 public class ConfirmationActivity extends AppCompatActivity {
 
@@ -50,6 +48,10 @@ public class ConfirmationActivity extends AppCompatActivity {
 
     private String mRecipient;
 
+    private String mUserName;
+    private String mUserPhone;
+    private String mUserEmail;
+
 
 
 
@@ -68,29 +70,29 @@ public class ConfirmationActivity extends AppCompatActivity {
 
 
         Intent i = getIntent();
-        String originFrom = i.getExtras().getString("from");
-        String destinationTo = i.getExtras().getString("to");
-        String driverFullName = i.getExtras().getString("name");
-        String driverPhone = i.getExtras().getString("phone");
+        mSAddr = i.getExtras().getString("from");
+        mEAddr = i.getExtras().getString("to");
+        String driverFullName = i.getExtras().getString("drivername");
+        String driverPhone = i.getExtras().getString("driverphone");
         Double totalFare = i.getExtras().getDouble("fare");
-        String totalDistance = i.getExtras().getString("dist");
+        mDist = i.getExtras().getString("dist");
+        mUserName = i.getExtras().getString("username");
+        mUserPhone = i.getExtras().getString("userphone");
+        mUserEmail = i.getExtras().getString("useremail");
+        Log.i("confirm-empty???", mUserEmail );
 
-        mSAddr = originFrom;
-        mEAddr = destinationTo;
-        mDist = totalDistance;
 
         DecimalFormat df = new DecimalFormat("$0.00");
         String fare = df.format(totalFare);
 
         mFare = fare;
 
-        mFromTextView.setText("FROM: " + originFrom);
-        mToTextView.setText("TO: " + destinationTo);
-        mDriverNameTextView.setText("DRIVER NAME: " + driverFullName);
-        mFareTextView.setText("FARE: " + fare);
-        mDriverPhoneTextView.setText("DRIVER PHONE: " + driverPhone);
+        mFromTextView.setText(mSAddr);
+        mToTextView.setText(mEAddr);
+        mDriverNameTextView.setText(driverFullName);
+        mFareTextView.setText(fare);
+        mDriverPhoneTextView.setText(driverPhone);
 
-        mRecipient = i.getExtras().getString("mail");
 
         String url = buildAddTripURL();
         AddTripTask task = new AddTripTask();
@@ -103,7 +105,7 @@ public class ConfirmationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 try {
 
-                    Toast.makeText(getApplicationContext(), "Email sent to " + mRecipient, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Email sent to " + mUserEmail, Toast.LENGTH_SHORT).show();
 
                 } catch (Exception e) {
 
@@ -114,6 +116,17 @@ public class ConfirmationActivity extends AppCompatActivity {
 
 
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        Intent i = new Intent(ConfirmationActivity.this, NavigationActivity.class);
+        i.putExtra("email", mUserEmail);
+        i.putExtra("name", mUserName);
+        i.putExtra("phone", mUserPhone);
+        startActivityForResult(i, SignInActivity.USER_CODE);
+
     }
 
     private String buildAddTripURL() {
@@ -133,13 +146,13 @@ public class ConfirmationActivity extends AppCompatActivity {
             sb.append(URLEncoder.encode(mEAddr, "UTF-8"));
 
             sb.append("&email=");
-            sb.append(URLEncoder.encode(mRecipient, "UTF-8"));
+            sb.append(URLEncoder.encode(mUserEmail, "UTF-8"));
 
             Log.i("buildAddTripURL", sb.toString());
 
         } catch(Exception e) {
             Log.e("Catch", e.getMessage());
-            Toast.makeText(getApplicationContext(), "Something wrong with the url" + e.getMessage(),
+            Toast.makeText(getApplicationContext(), "(buildAddTripURL)Something wrong with the url" + e.getMessage(),
                     Toast.LENGTH_LONG)
                     .show();
         }
@@ -199,7 +212,7 @@ public class ConfirmationActivity extends AppCompatActivity {
                             .show();
                 }
             } catch (JSONException e) {
-                Toast.makeText(getApplicationContext(), "Something wrong with the data" +
+                Toast.makeText(getApplicationContext(), "(AddTripTask)Something wrong with the data" +
                         e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }

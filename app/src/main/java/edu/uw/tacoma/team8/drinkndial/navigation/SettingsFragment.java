@@ -111,6 +111,7 @@ public class SettingsFragment extends Fragment {
                 ((NavigationActivity) getActivity()).goEditPreference();
             }
         });
+
         return v;
     }
 
