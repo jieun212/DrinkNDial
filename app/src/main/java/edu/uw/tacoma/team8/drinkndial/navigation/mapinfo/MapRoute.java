@@ -5,12 +5,11 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.List;
 
 /**
- * This class is used as an object type of an ArrayList in MapDirections with the
- * declared fields.
+ * This class is used as a data type so we can display a trip on the map showing the route
+ * as well as storing the distance and duration of the trip.
  *
  * @version 2/20/2017
  * @author Lovejit Hari
- *
  */
 
 public class MapRoute {

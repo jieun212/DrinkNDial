@@ -35,20 +35,40 @@ import edu.uw.tacoma.team8.drinkndial.model.Trips;
 public class RecentTripsFragment extends Fragment {
 
 
+    //Used to get data from the database
     private static final String GET_TRIPS_URL =
             "http://cssgate.insttech.washington.edu/~jieun212/Android/dndGetTrip.php?";
 
 
+    //used as a clause for grid layouts
     private int mColumnCount = 1;
+
+    //Our trip list listener
     private RecentTripsListInteractionListener mListener;
+
+    //Our recycler view
     private RecyclerView mRecyclerView;
+
+    //The list of trips
     private List<Trips> mTripList;
+
+    //the user's email
     private String mUserEmail;
 
     public RecentTripsFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Inflates the fragment_recenttrips_list layout resource file as well as
+     * populating the list upon entry to this fragment as long as this view is recreated the
+     * list will update.
+     *
+     * @param inflater layoutinflater
+     * @param container view group
+     * @param savedInstanceState bundle
+     * @return this view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -84,6 +104,10 @@ public class RecentTripsFragment extends Fragment {
     }
 
 
+    /**
+     * When attached initialize the listener
+     * @param context Context
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -95,6 +119,9 @@ public class RecentTripsFragment extends Fragment {
         }
     }
 
+    /**
+     * Call super's onDetach and set our listener to null;
+     */
     @Override
     public void onDetach() {
         super.onDetach();
@@ -113,12 +140,15 @@ public class RecentTripsFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-
     public interface RecentTripsListInteractionListener {
         void recentTripsListInteractionListener(Trips trips);
     }
 
 
+    /**
+     * Helper method to build the trip's URL
+     * @return a url
+     */
     private String buildAddTripURL() {
         StringBuilder sb = new StringBuilder(GET_TRIPS_URL);
         try {
@@ -136,7 +166,11 @@ public class RecentTripsFragment extends Fragment {
         return sb.toString();
     }
 
+    /**
+     * an Async class that retrieves data from the database.
+     */
     private class DownloadTripsTask extends AsyncTask<String, Void, String> {
+
 
 
         @Override
@@ -163,6 +197,12 @@ public class RecentTripsFragment extends Fragment {
             return response;
         }
 
+        /**
+         * We retrieve data only until there are 10 trip items in the view, if there are any more
+         * trips that need to be retrieved from the database, then the earliest trips are deleted while
+         * the latest trips are kept, only dipslaying the previous 10 trips.
+         * @param result String
+         */
         @Override
         protected void onPostExecute(String result) {
             Log.i("Trips post", result);
@@ -184,15 +224,19 @@ public class RecentTripsFragment extends Fragment {
 
             List<Trips> validTrips = new ArrayList<Trips>();
             int size = 0;
+            //If we don't have many trips, then our size should be less than 10
             if (10 >= mTripList.size()) {
                 size = mTripList.size();
             } else {
-                size = 10;
+                size = 10; //else our size is 10
             }
 
+            //Add the valid trips our list
             for(int i = 0; i < size; i++) {
                 validTrips.add(mTripList.get(i));
             }
+
+            //Add the trip items to the view
             mRecyclerView.setAdapter(new MyRecentTripsRecyclerViewAdapter(validTrips, mListener));
 
         }
