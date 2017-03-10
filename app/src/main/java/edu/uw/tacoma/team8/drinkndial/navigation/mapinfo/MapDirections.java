@@ -24,9 +24,8 @@ import java.util.List;
  * destination location as well as the polyline that connects the two
  * which will display a route from the origin to the destination.
  *
- * @version 2/20/2017
  * @author Lovejit Hari
- *
+ * @version 2/20/2017
  */
 
 public class MapDirections {
@@ -41,8 +40,9 @@ public class MapDirections {
     /**
      * Constructs an object that has a MapDirectionListener and 2 strings, one represents the
      * origin location as well as the destination location.
-     * @param listener MapDirectionListener
-     * @param origin start location
+     *
+     * @param listener    MapDirectionListener
+     * @param origin      start location
      * @param destination end location
      */
     public MapDirections(MapDirectionListener listener, String origin, String destination) {
@@ -52,7 +52,6 @@ public class MapDirections {
     }
 
     /**
-     *
      * @param listener Interface
      * @param location Current Location
      */
@@ -66,6 +65,7 @@ public class MapDirections {
 
     /**
      * Executes the findDirectionsStart() method as well as executing the createUrl() method
+     *
      * @throws UnsupportedEncodingException
      */
     public void execute() throws UnsupportedEncodingException {
@@ -76,9 +76,10 @@ public class MapDirections {
     /**
      * Creates a URL with this format https://maps.googleapis.com/maps/api/directions/json?origin=
      * INSERT_ORIGIN_HERE&destination=INSERT_DESTINATION_HERE&key=GOOGLE_API_KEY
-     *
+     * <p>
      * Where the origin and destination can be latitude/longitude, places, place IDs, etc.
      * and the key is the credentials required to access the directions.
+     *
      * @return the url
      * @throws UnsupportedEncodingException
      */
@@ -123,6 +124,7 @@ public class MapDirections {
 
         /**
          * Parses JSON string
+         *
          * @param res string object
          */
         @Override
@@ -137,6 +139,7 @@ public class MapDirections {
 
     /**
      * Parses the JSON string that shows the directions from one location to another
+     *
      * @param data
      * @throws JSONException
      */
@@ -176,11 +179,11 @@ public class MapDirections {
     /**
      * This is an open source decoder method to decode the directions from the
      * google maps api.
-     *
+     * <p>
      * https://developers.google.com/maps/documentation/utilities/polylinealgorithm
      * explains how polylines are encoded, from there I searched how to decode, and
      * used bits and pieces to construct the given code for polyline decoding.
-     *
+     * <p>
      * http://wptrafficanalyzer.in/blog/route-between-two-locations-with-waypoints-in-google-map-android-api-v2/
      * Actual code snippet located on that site.
      *

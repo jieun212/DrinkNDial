@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Created by leejieun on 2/19/17.
  */
-public class User implements Serializable{
+public class User implements Serializable {
 
     public static final String EMAIL = "email", FNAME = "fname", LNAME = "lname", PW = "pw", PHONE = "phone";
 
@@ -32,16 +32,8 @@ public class User implements Serializable{
         return mFname;
     }
 
-    public void setFname(String fname) {
-        this.mFname = fname;
-    }
-
     public String getLname() {
         return mLname;
-    }
-
-    public void setLname(String lname) {
-        this.mLname = lname;
     }
 
     public String getEmail() {
@@ -56,10 +48,6 @@ public class User implements Serializable{
         return mPw;
     }
 
-    public void setPw(String pw) {
-        this.mPw = pw;
-    }
-
     public String getPhone() {
         return mPhone;
     }
@@ -67,29 +55,6 @@ public class User implements Serializable{
     public void setPhone(String phone) {
         this.mPhone = phone;
     }
-
-    /**
-     * Parses the json string, returns an error message if unsuccessful.
-     * Returns user list if success.
-     * @param userJSON   @return reason or null if successful.
-     */
-    public static String parseUserJSON(String userJSON) {
-        String reason = null;
-        if (userJSON != null) {
-            try {
-                JSONObject obj = new JSONObject(userJSON);
-                User user = new User(obj.getString(User.EMAIL),
-                        obj.getString(User.FNAME),
-                        obj.getString(User.LNAME),
-                        obj.getString(User.PW),
-                        obj.getString(User.PHONE));
-            } catch (JSONException e) {
-                reason =  "Unable to parse data, Reason: " + e.getMessage();
-            }
-        }
-        return reason;
-    }
-
 
 
 }

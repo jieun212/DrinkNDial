@@ -35,12 +35,13 @@ public class Trips {
     /**
      * Constructs a Trips object that contains the trip id, distance, how much was paid, the
      * start address and end address as well as the current user's email.
-     * @param id string
+     *
+     * @param id             string
      * @param travelDistance string
-     * @param paid string
-     * @param start string
-     * @param end string
-     * @param email string
+     * @param paid           string
+     * @param start          string
+     * @param end            string
+     * @param email          string
      */
     public Trips(String id, String travelDistance, String paid, String start, String end, String email) {
         this.mId = id;
@@ -51,59 +52,25 @@ public class Trips {
         this.mEmail = email;
     }
 
-    public String getmId() {
-        return mId;
-    }
-
-    public void setmId(String mId) {
-        this.mId = mId;
-    }
-
     public String getmTravelDistance() {
         return mTravelDistance;
-    }
-
-    public void setmTravelDistance(String mTravelDistance) {
-        this.mTravelDistance = mTravelDistance;
-    }
-
-    public String getmPaid() {
-        return mPaid;
-    }
-
-    public void setmPaid(String mPaid) {
-        this.mPaid = mPaid;
     }
 
     public String getmStartAddress() {
         return mStartAddress;
     }
 
-    public void setmStartAddress(String mStartAddress) {
-        this.mStartAddress = mStartAddress;
-    }
-
     public String getmEndAddress() {
         return mEndAddress;
     }
 
-    public void setmEndAddress(String mEndAddress) {
-        this.mEndAddress = mEndAddress;
-    }
-
-    public String getmEmail() {
-        return mEmail;
-    }
-
-    public void setmEmail(String mEmail) {
-        this.mEmail = mEmail;
-    }
 
     /**
      * This method parses through a trips json object to retrieve values from the database that
      * can then be used in activities/fragments as nececssary.
+     *
      * @param tripsJSON The object to parse through
-     * @param tripList the list of trips
+     * @param tripList  the list of trips
      * @return String
      */
     public static String parseTripsJSON(String tripsJSON, List<Trips> tripList) {
@@ -122,7 +89,7 @@ public class Trips {
                     tripList.add(trips);
                 }
             } catch (JSONException e) {
-                reason =  "Unable to parse data, Reason: " + e.getMessage();
+                reason = "Unable to parse data, Reason: " + e.getMessage();
             }
         }
         return reason;

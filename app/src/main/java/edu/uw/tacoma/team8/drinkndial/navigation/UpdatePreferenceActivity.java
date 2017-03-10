@@ -46,7 +46,7 @@ public class UpdatePreferenceActivity extends AppCompatActivity {
 
         // get user's email from NavigationActivity
         Intent i = getIntent();
-        mUserEamil= i.getExtras().getString("email");
+        mUserEamil = i.getExtras().getString("email");
         mUserName = i.getExtras().getString("name");
         mUserPhone = i.getExtras().getString("phone");
         mPrevMile = i.getExtras().getString("mile");

@@ -3,8 +3,7 @@ package edu.uw.tacoma.team8.drinkndial.util;
 import android.content.SharedPreferences;
 
 /**
- *  Helper class to manage access to {@link SharedPreferences}.
- *
+ * Helper class to manage access to {@link SharedPreferences}.
  */
 public class SharedPreferencesHelper {
 
@@ -32,9 +31,9 @@ public class SharedPreferencesHelper {
      *
      * @param sharedPreferenceEntry contains data to save to {@link SharedPreferences}.
      * @return {@code true} if writing to {@link SharedPreferences} succeeded. {@code false}
-     *         otherwise.
+     * otherwise.
      */
-    public boolean savePersonalInfo(SharedPreferenceEntry sharedPreferenceEntry){
+    public boolean savePersonalInfo(SharedPreferenceEntry sharedPreferenceEntry) {
         // Start a SharedPreferences transaction.
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putBoolean(KEY_LOGGED_IN, sharedPreferenceEntry.isLoggedIn());

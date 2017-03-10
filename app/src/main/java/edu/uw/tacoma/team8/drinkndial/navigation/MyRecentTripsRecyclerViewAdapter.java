@@ -28,7 +28,8 @@ public class MyRecentTripsRecyclerViewAdapter extends RecyclerView.Adapter<MyRec
 
     /**
      * Constructs an object that initializes the items and the listener
-     * @param items adapter
+     *
+     * @param items    adapter
      * @param listener Recent trips
      */
     public MyRecentTripsRecyclerViewAdapter(List<Trips> items, RecentTripsFragment.RecentTripsListInteractionListener listener) {
@@ -38,7 +39,8 @@ public class MyRecentTripsRecyclerViewAdapter extends RecyclerView.Adapter<MyRec
 
     /**
      * Inflates the trips fragment
-     * @param parent fragment_trips
+     *
+     * @param parent   fragment_trips
      * @param viewType int
      * @return the view holder
      */
@@ -51,7 +53,8 @@ public class MyRecentTripsRecyclerViewAdapter extends RecyclerView.Adapter<MyRec
 
     /**
      * Set the on click listener of the trip item
-     * @param holder view holder
+     *
+     * @param holder   view holder
      * @param position int
      */
     @Override
@@ -59,13 +62,13 @@ public class MyRecentTripsRecyclerViewAdapter extends RecyclerView.Adapter<MyRec
         holder.mItem = mValues.get(position);
 
         if (holder.mItem == null) {
-            Log.i("ITS NULL!!!!!!!", "null" );
+            Log.i("ITS NULL!!!!!!!", "null");
 
         }
 
 
         String from = "From: " + mValues.get(position).getmStartAddress();
-        String to = "To: " +  mValues.get(position).getmEndAddress();
+        String to = "To: " + mValues.get(position).getmEndAddress();
         Log.i("mItem", from);
 
         holder.mFromView.setText(from);

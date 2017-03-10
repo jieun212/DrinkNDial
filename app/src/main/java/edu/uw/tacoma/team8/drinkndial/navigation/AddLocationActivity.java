@@ -111,13 +111,11 @@ public class AddLocationActivity extends Activity {
     }
 
     /**
-     *
-     *
      * (Resource: how to get longitude & latitude from string address
      * http://stackoverflow.com/questions/17835426/get-latitude-longitude-from-address-in-android)
      *
-     * @method getLocationFromAddress
      * @param strAddress Address/Location String
+     * @method getLocationFromAddress
      * @desc Get searched location points from address and plot/update on map.
      */
     public Address getLocationFromAddress(String strAddress) {
@@ -128,7 +126,7 @@ public class AddLocationActivity extends Activity {
 
         try {
             //Get latLng from String
-            addresses = coder.getFromLocationName(strAddress,5);
+            addresses = coder.getFromLocationName(strAddress, 5);
 
             //check for null
             if (addresses != null && addresses.size() > 0) {
@@ -177,7 +175,7 @@ public class AddLocationActivity extends Activity {
 
             Log.i("AddLocationSet", sb.toString());
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             Log.e("Catch", e.getMessage());
             Toast.makeText(getApplicationContext(), "Something wrong with the url" + e.getMessage(),
                     Toast.LENGTH_LONG)
@@ -256,7 +254,6 @@ public class AddLocationActivity extends Activity {
             }
         }
     }
-
 
 
 }
