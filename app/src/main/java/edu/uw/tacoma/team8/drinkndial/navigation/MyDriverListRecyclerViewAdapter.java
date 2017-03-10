@@ -12,11 +12,25 @@ import edu.uw.tacoma.team8.drinkndial.R;
 import edu.uw.tacoma.team8.drinkndial.model.Driver;
 import edu.uw.tacoma.team8.drinkndial.navigation.DriverListFragment.OnListFragmentInteractionListener;
 
+/**
+ * This MyDriverListRecyclerViewAdapter for Driver.
+ *
+ * @version 03/05/2017
+ * @author  Jieun Lee (jieun212@uw.edu)
+ */
 public class MyDriverListRecyclerViewAdapter extends RecyclerView.Adapter<MyDriverListRecyclerViewAdapter.ViewHolder> {
 
+    /** A Driver list */
     private final List<Driver> mValues;
+
+    /** An OnListFragmentInteractionListener */
     private final OnListFragmentInteractionListener mListener;
 
+    /**
+     * Construct a MyDriverListRecyclerViewAdapter with given list and listener
+     * @param items Driver list
+     * @param listener OnListFragmentInteractionListener
+     */
     public MyDriverListRecyclerViewAdapter(List<Driver> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
@@ -50,8 +64,6 @@ public class MyDriverListRecyclerViewAdapter extends RecyclerView.Adapter<MyDriv
                 }
             }
         });
-//        }
-
     }
 
     @Override
@@ -59,7 +71,11 @@ public class MyDriverListRecyclerViewAdapter extends RecyclerView.Adapter<MyDriv
         return mValues.size();
     }
 
+    /**
+     * Inner class for ViewHolder
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
+
         public final View mView;
         public final TextView mNameTextView;
         public final TextView mPhoneTextView;

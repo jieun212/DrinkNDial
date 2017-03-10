@@ -17,14 +17,13 @@ package edu.uw.tacoma.team8.drinkndial.confirm;
  *  limitations under the License.
  */
 
+import java.security.AccessController;
+import java.security.Provider;
+
 /**
  * @author Alexander Y. Kleymenov
  * @version $Revision$
  */
-
-
-import java.security.AccessController;
-import java.security.Provider;
 
 public final class JSSEProvider extends Provider {
 

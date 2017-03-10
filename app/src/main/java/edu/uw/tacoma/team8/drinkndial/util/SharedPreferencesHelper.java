@@ -4,14 +4,19 @@ import android.content.SharedPreferences;
 
 /**
  * Helper class to manage access to {@link SharedPreferences}.
+ *
+ * @author Jieun Lee (jieun212@uw.edu)
+ * @version 2/25/17.
  */
 public class SharedPreferencesHelper {
 
-    // Keys for saving values in SharedPreferences.
-    public static final String KEY_LOGGED_IN = "key_logged_in";
-    public static final String KEY_EMAIL = "key_email";
+    /** Logged_in key for saving values in SharedPreferences. */
+    private static final String KEY_LOGGED_IN = "key_logged_in";
 
-    // The injected SharedPreferences implementation to use for persistence.
+    /** Email key for saving values in SharedPreferences. */
+    private static final String KEY_EMAIL = "key_email";
+
+    /** The injected SharedPreferences implementation to use for persistence. */
     private final SharedPreferences mSharedPreferences;
 
     /**

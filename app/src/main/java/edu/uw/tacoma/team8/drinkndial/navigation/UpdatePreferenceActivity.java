@@ -22,21 +22,31 @@ import java.net.URLEncoder;
 
 import edu.uw.tacoma.team8.drinkndial.R;
 
+/**
+ *
+ */
 public class UpdatePreferenceActivity extends AppCompatActivity {
 
-    /**
-     * An URL for getting prefer mile to find drivers
-     */
+    /** An URL for updating prefer mile to find drivers */
     private final static String UPDATE_PREFERENCE_URL
             = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndPreference.php?cmd=update";
 
-    public final static int MILE_CODE = 2001;
+    /** A user's email */
+    private String mUserEmail;
 
-    private String mUserEamil;
+    /** A user's name */
     private String mUserName;
+
+    /** A user's phone */
     private String mUserPhone;
+
+    /** A user's prefer mile */
     private String mUserMile;
+
+    /** A user's previous prefer mile before updating */
     private String mPrevMile;
+
+    /** A perfer mile EditText */
     private EditText mPreferMileEdit;
 
     @Override
@@ -46,12 +56,12 @@ public class UpdatePreferenceActivity extends AppCompatActivity {
 
         // get user's email from NavigationActivity
         Intent i = getIntent();
-        mUserEamil = i.getExtras().getString("email");
+        mUserEmail = i.getExtras().getString("email");
         mUserName = i.getExtras().getString("name");
         mUserPhone = i.getExtras().getString("phone");
         mPrevMile = i.getExtras().getString("mile");
 
-        mPreferMileEdit = (EditText) findViewById(R.id.preference_miles);
+        mPreferMileEdit = (EditText) findViewById(R.id.preference_miles_edit_text);
         Button preferButton = (Button) findViewById(R.id.save_miles_button);
         preferButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,8 +69,8 @@ public class UpdatePreferenceActivity extends AppCompatActivity {
 
                 mUserMile = mPreferMileEdit.getText().toString();
 
-                String updateMileurl = buildUpdatePreferenceURL(v);
-                UpdatePreferMileTask updatePreferMileTask = new UpdatePreferMileTask();
+                String updateMileurl = buildUpdatePreferenceURL();
+                UpdatePreferMileAsyncTask updatePreferMileTask = new UpdatePreferMileAsyncTask();
                 updatePreferMileTask.execute(updateMileurl);
             }
         });
@@ -70,27 +80,28 @@ public class UpdatePreferenceActivity extends AppCompatActivity {
 
         // Send user's data to the NavigationActivity to show user's info on navigation drawer
         Intent i = new Intent(this, NavigationActivity.class);
-        i.putExtra("email", mUserEamil);
+        i.putExtra("email", mUserEmail);
         i.putExtra("name", mUserName);
         i.putExtra("phone", mUserPhone);
         i.putExtra("mile", mUserMile);
-        startActivityForResult(i, MILE_CODE);
+        startActivityForResult(i, NavigationActivity.MILE_CODE);
         finish();
     }
 
     @Override
     public void onBackPressed() {
         Intent i = new Intent(this, NavigationActivity.class);
-        i.putExtra("email", mUserEamil);
+        i.putExtra("email", mUserEmail);
         i.putExtra("name", mUserName);
         i.putExtra("phone", mUserPhone);
         i.putExtra("mile", mPrevMile);
-        startActivityForResult(i, MILE_CODE);
+        startActivityForResult(i, NavigationActivity.MILE_CODE);
         finish();
     }
 
 
-    /********************************************************************************************************************
+    /*
+     *******************************************************************************************************************
      *                             FOR "Updating preferred mile"
      *******************************************************************************************************************/
     /**
@@ -100,7 +111,7 @@ public class UpdatePreferenceActivity extends AppCompatActivity {
      *
      * @return Message
      */
-    private String buildUpdatePreferenceURL(View view) {
+    private String buildUpdatePreferenceURL() {
 
         StringBuilder sb = new StringBuilder(UPDATE_PREFERENCE_URL);
 
@@ -108,7 +119,7 @@ public class UpdatePreferenceActivity extends AppCompatActivity {
 
             // email
             sb.append("&email=");
-            sb.append(URLEncoder.encode(mUserEamil, "UTF-8"));
+            sb.append(URLEncoder.encode(mUserEmail, "UTF-8"));
 
             // mile
             sb.append("&mile=");
@@ -118,7 +129,7 @@ public class UpdatePreferenceActivity extends AppCompatActivity {
             Log.i("SettingFrag,UpdatePref", sb.toString());
 
         } catch (Exception e) {
-            Toast.makeText(view.getContext(), "Something wrong with the url" + e.getMessage(),
+            Toast.makeText(this, "Something wrong with the url" + e.getMessage(),
                     Toast.LENGTH_LONG)
                     .show();
             Log.e("Catch", e.getMessage());
@@ -126,7 +137,7 @@ public class UpdatePreferenceActivity extends AppCompatActivity {
         return sb.toString();
     }
 
-    private class UpdatePreferMileTask extends AsyncTask<String, Void, String> {
+    private class UpdatePreferMileAsyncTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected void onPreExecute() {

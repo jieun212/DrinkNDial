@@ -1,13 +1,12 @@
 package edu.uw.tacoma.team8.drinkndial.navigation;
 
 import android.content.Context;
+import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,9 +23,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import edu.uw.tacoma.team8.drinkndial.R;
-import edu.uw.tacoma.team8.drinkndial.model.Location;
 import edu.uw.tacoma.team8.drinkndial.model.Trips;
 
 /**
@@ -40,17 +39,11 @@ public class RecentTripsFragment extends Fragment {
             "http://cssgate.insttech.washington.edu/~jieun212/Android/dndGetTrip.php?";
 
 
-    //used as a clause for grid layouts
-    private int mColumnCount = 1;
-
     //Our trip list listener
     private RecentTripsListInteractionListener mListener;
 
     //Our recycler view
     private RecyclerView mRecyclerView;
-
-    //The list of trips
-    private List<Trips> mTripList;
 
     //the user's email
     private String mUserEmail;
@@ -80,11 +73,7 @@ public class RecentTripsFragment extends Fragment {
         if (v instanceof RecyclerView) {
             Context context = v.getContext();
             mRecyclerView = (RecyclerView) v;
-            if (mColumnCount <= 1) {
-                mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         }
 
         ConnectivityManager connMgr = (ConnectivityManager)
@@ -92,7 +81,7 @@ public class RecentTripsFragment extends Fragment {
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             String url = buildAddTripURL();
-            DownloadTripsTask downloadTripsTask = new DownloadTripsTask();
+            DownloadTripsAsyncTask downloadTripsTask = new DownloadTripsAsyncTask();
             downloadTripsTask.execute(url);
 
         } else {
@@ -170,7 +159,7 @@ public class RecentTripsFragment extends Fragment {
     /**
      * an Async class that retrieves data from the database.
      */
-    private class DownloadTripsTask extends AsyncTask<String, Void, String> {
+    private class DownloadTripsAsyncTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... urls) {
@@ -212,16 +201,19 @@ public class RecentTripsFragment extends Fragment {
                 return;
             }
 
-            mTripList = new ArrayList<Trips>();
+
+            List<Trips> mTripList = new ArrayList<Trips>();
             result = Trips.parseTripsJSON(result, mTripList);
 
             if (result != null) {
-                Toast.makeText(getActivity().getApplicationContext(), result, Toast.LENGTH_LONG)
+                Toast.makeText(getActivity().getApplicationContext(),
+                        "No previous trip to show! Let's make a trip :)", Toast.LENGTH_LONG)
                         .show();
-                return;
             }
 
             List<Trips> validTrips = new ArrayList<Trips>();
+
+
             int size = 0;
             //If we don't have many trips, then our size should be less than 10
             if (10 >= mTripList.size()) {
@@ -235,8 +227,11 @@ public class RecentTripsFragment extends Fragment {
                 validTrips.add(mTripList.get(i));
             }
 
+            Geocoder geocoder;
+            geocoder = new Geocoder(getContext(), Locale.getDefault());
+
             //Add the trip items to the view
-            mRecyclerView.setAdapter(new MyRecentTripsRecyclerViewAdapter(validTrips, mListener));
+            mRecyclerView.setAdapter(new MyRecentTripsRecyclerViewAdapter(validTrips, mListener, geocoder));
 
         }
     }

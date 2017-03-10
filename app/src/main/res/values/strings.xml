@@ -49,7 +49,7 @@
     <string name="setting_favorit_title">Favorites</string>
     <string name="setting_preference_title">Preference</string>
     <string name="setting_add_home">Add Home</string>
-    <string name="setting_add_location">Add Location</string>
+    <string name="setting_add_location">Add Favorite Location</string>
     <string name="setting_home">Home</string>
     <string name="setting_favorite">Favorite</string>
     <string name="setting_find_driver">Find drivers within</string>
@@ -70,6 +70,12 @@
     <string name="location_hint_City">city</string>
     <string name="location_hint_State">ex) WA</string>
     <string name="location_hint_zip">ex) 11111</string>
+
+    <string name="driver_title">Available Drivers</string>
+
+    <string name="trip_title">Recent Trips</string>
+    <string name="trip_from">FROM</string>
+    <string name="trip_to">TO</string>
 
 
     <!--Navigation Drawer Specific Strings-->
