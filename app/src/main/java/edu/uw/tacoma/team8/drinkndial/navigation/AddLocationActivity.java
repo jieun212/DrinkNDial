@@ -27,25 +27,48 @@ import java.util.List;
 
 import edu.uw.tacoma.team8.drinkndial.R;
 import edu.uw.tacoma.team8.drinkndial.authenticate.SignInActivity;
-import edu.uw.tacoma.team8.drinkndial.model.Location;
 
+
+/** A  */
+
+
+/**
+ *
+ * AddLocationActivity is an Activity to add user's favorite locations.
+ * This activity starts when user press button for home or favorite on Setting fragment.
+ * THis activity finishes when user press save button.
+ *
+ * @version 02/14/2017
+ * @author  Jieun Lee (jieun212@uw.edu)
+ */
 public class AddLocationActivity extends Activity {
 
-    /**
-     * An URL
-     */
+    /** An URL to add user's favorite locations */
     private final static String ADD_LOCATION_URL
             = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndAddLocation.php?";
 
-    private Location mLocation;
-    private Button mSaveButton;
+    /** A PlacesAutocompleteTextView */
     private PlacesAutocompleteTextView mAddressEdit;
+
+    /** An address */
     private String mAddress;
+
+    /** A longitude */
     private String mLongitude;
+
+    /** A latitude */
     private String mLatitude;
+
+    /** A user's email */
     private String mUserEmail;
+
+    /** A user's name */
     private String mUserName;
+
+    /** A user's phone */
     private String mUserPhone;
+
+    /** A mark */
     private String mUserMark;
 
 
@@ -55,7 +78,7 @@ public class AddLocationActivity extends Activity {
         setContentView(R.layout.activity_home_location);
 
         mAddressEdit = (PlacesAutocompleteTextView) findViewById(R.id.setting_home_edit);
-        mSaveButton = (Button) findViewById(R.id.setting_home_save_button);
+        Button mSaveButton = (Button) findViewById(R.id.setting_home_save_button);
 
         Intent i = getIntent();
         mUserEmail = i.getExtras().getString("email");
@@ -79,7 +102,7 @@ public class AddLocationActivity extends Activity {
 
                 String url = buildAddLocationURL();
                 LocationAddAsyncTask task = new LocationAddAsyncTask();
-                task.execute(new String[]{url.toString()});
+                task.execute(url);
 
                 goNavigation();
             }
@@ -99,6 +122,9 @@ public class AddLocationActivity extends Activity {
         finish();
     }
 
+    /**
+     * Start NavigationActivity
+     */
     private void goNavigation() {
         Intent i = new Intent(this, NavigationActivity.class);
         i.putExtra("email", mUserEmail);
@@ -115,8 +141,6 @@ public class AddLocationActivity extends Activity {
      * http://stackoverflow.com/questions/17835426/get-latitude-longitude-from-address-in-android)
      *
      * @param strAddress Address/Location String
-     * @method getLocationFromAddress
-     * @desc Get searched location points from address and plot/update on map.
      */
     public Address getLocationFromAddress(String strAddress) {
 
@@ -140,11 +164,17 @@ public class AddLocationActivity extends Activity {
 
     }
 
-    /********************************************************************************************************************
+    /*
+     *******************************************************************************************************************
      *                        FOR Adding home location
      *******************************************************************************************************************/
 
-
+    /**
+     * Build user URL with given information of user.
+     * It returns message how it built.
+     * It catches execption and shows a dialog with error message
+     * @return Message
+     */
     private String buildAddLocationURL() {
 
         StringBuilder sb = new StringBuilder(ADD_LOCATION_URL);
@@ -177,7 +207,7 @@ public class AddLocationActivity extends Activity {
 
         } catch (Exception e) {
             Log.e("Catch", e.getMessage());
-            Toast.makeText(getApplicationContext(), "Something wrong with the url" + e.getMessage(),
+            Toast.makeText(getApplicationContext(), "(buildAddLocationURL)Something wrong with the url" + e.getMessage(),
                     Toast.LENGTH_LONG)
                     .show();
 
@@ -208,7 +238,7 @@ public class AddLocationActivity extends Activity {
                     InputStream content = urlConnection.getInputStream();
 
                     BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
-                    String s = "";
+                    String s;
                     while ((s = buffer.readLine()) != null) {
                         response += s;
                     }
@@ -229,7 +259,7 @@ public class AddLocationActivity extends Activity {
          * exception is caught. It tries to call the parse Method and checks to see if it was successful.
          * If not, it displays the exception.
          *
-         * @param result
+         * @param result result
          */
         @Override
         protected void onPostExecute(String result) {
@@ -249,7 +279,7 @@ public class AddLocationActivity extends Activity {
                             .show();
                 }
             } catch (JSONException e) {
-                Toast.makeText(getApplicationContext(), "Something wrong with the data" +
+                Toast.makeText(getApplicationContext(), "(LocationAddAsyncTask)Something wrong with the data" +
                         e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }

@@ -3,15 +3,12 @@ package edu.uw.tacoma.team8.drinkndial.authenticate;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import java.net.URLEncoder;
 
 import edu.uw.tacoma.team8.drinkndial.R;
 import edu.uw.tacoma.team8.drinkndial.model.User;
@@ -29,21 +26,7 @@ import edu.uw.tacoma.team8.drinkndial.model.User;
 public class RegisterFragment extends Fragment {
 
 
-    /**
-     * An URL for adding a user
-     */
-    private final static String ADD_USER_URL
-            = "http://cssgate.insttech.washington.edu/~jieun212/Android/register.php?";
 
-    /**
-     * An URL for setting prefer mile to find drivers
-     */
-    private final static String ADD_PREFERENCE_URL
-            = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndPreference.php?cmd=add";
-
-
-    /** Default prefer mile to find driver */
-    public static final String DEFAULT_MILES = "1";
 
 
     /** Edittext for first name of user.*/
@@ -78,7 +61,7 @@ public class RegisterFragment extends Fragment {
 
     /**
      * Creates a RegisterFragment
-     * @param savedInstanceState
+     * @param savedInstanceState A bundle
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,9 +79,9 @@ public class RegisterFragment extends Fragment {
     /**
      * Returns a created view
      *
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
+     * @param inflater A LayoutInflater
+     * @param container A ViewGroup
+     * @param savedInstanceState A Bundle
      *
      * @return Register fragment view
      */
@@ -106,7 +89,7 @@ public class RegisterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = (View) inflater.inflate(R.layout.fragment_register, container, false);
+        View v = inflater.inflate(R.layout.fragment_register, container, false);
 
         mFnameEditText = (EditText) v.findViewById(R.id.add_user_fname);
         mLnameEditText = (EditText) v.findViewById(R.id.add_user_lname);
@@ -127,15 +110,16 @@ public class RegisterFragment extends Fragment {
                         ,Toast.LENGTH_SHORT)
                         .show();
                 mPwEditText.requestFocus();
-                return;
             } else if (!(mPhoneEditText.getText().toString()).matches(regexStr)) {
                 Toast.makeText(v.getContext(), "Wrong phone number format",
                         Toast.LENGTH_SHORT)
                         .show();
             } else {
-                String userUrl = buildUserURL(v);
-                String mileUrl = buildAddPreferenceURL(v);
-                mListener.addUser(userUrl, mileUrl, mUser);
+
+                mUser = new User(mEmailEditText.getText().toString(), mFnameEditText.getText().toString(),
+                        mLnameEditText.getText().toString(), mPwEditText.getText().toString(),
+                        mPhoneEditText.getText().toString());
+                mListener.addUser(mUser);
             }
             }
         });
@@ -145,7 +129,7 @@ public class RegisterFragment extends Fragment {
 
     /**
      * Attaches
-     * @param context
+     * @param context A Context
      */
     @Override
     public void onAttach(Context context) {
@@ -174,98 +158,10 @@ public class RegisterFragment extends Fragment {
      * activity.
      * <p>
      */
-    public interface UserAddListener {
-        public void addUser(String userUrl, String mileUrl, User user);
+    interface UserAddListener {
+        void addUser(User user);
     }
 
-    /**
-     * Build user URL with given information of user.
-     * It returns message how it built.
-     * It catches execption and shows a dialog with error message
-     * @param v View
-     * @return Message
-     */
-    private String buildUserURL(View v) {
-
-        StringBuilder sb = new StringBuilder(ADD_USER_URL);
-
-        try {
-
-            // email
-            String userEmail = mEmailEditText.getText().toString();
-            sb.append("&email=");
-            sb.append(URLEncoder.encode(userEmail, "UTF-8"));
-
-            // fist name
-            String userFname = mFnameEditText.getText().toString();
-            sb.append("&fname=");
-            sb.append(URLEncoder.encode(userFname, "UTF-8"));
-
-
-            // last name
-            String userLname = mLnameEditText.getText().toString();
-            sb.append("&lname=");
-            sb.append(URLEncoder.encode(userLname, "UTF-8"));
-
-
-            // password
-            String userPw = mPwEditText.getText().toString();
-            sb.append("&pw=");
-            sb.append(URLEncoder.encode(userPw, "UTF-8"));
-
-
-            // phone
-            String userPhone = mPhoneEditText.getText().toString();
-            sb.append("&phone=");
-            sb.append(URLEncoder.encode(userPhone, "UTF-8"));
-
-            mUser = new User(mEmailEditText.getText().toString(),
-                    mFnameEditText.getText().toString(), mLnameEditText.getText().toString(),
-                    mPwEditText.getText().toString() ,mPhoneEditText.getText().toString());
-
-
-            Log.i("RegisterFragment", sb.toString());
-
-        } catch(Exception e) {
-            Toast.makeText(v.getContext(), "Something wrong with the url" + e.getMessage(),
-                    Toast.LENGTH_LONG)
-                    .show();
-            Log.e("Catch", e.getMessage());
-        }
-        return sb.toString();
-    }
-
-
-     /**
-     * Build user URL with given information of user.
-     * It returns message how it built.
-     * It catches exception and shows a dialog with error message
-     *
-     * @return Message
-     */
-    private String buildAddPreferenceURL(View view) {
-
-        StringBuilder sb = new StringBuilder(ADD_PREFERENCE_URL);
-
-        try {
-
-            // email
-            sb.append("&email=");
-            sb.append(URLEncoder.encode(mUser.getEmail(), "UTF-8"));
-
-            // mile
-            sb.append("&mile=");
-            sb.append(URLEncoder.encode(DEFAULT_MILES, "UTF-8"));
-
-
-        } catch (Exception e) {
-            Toast.makeText(view.getContext(), "Something wrong with the ADD_PREFERENCE_URL url" + e.getMessage(),
-                    Toast.LENGTH_LONG)
-                    .show();
-            Log.e("Catch", e.getMessage());
-        }
-        return sb.toString();
-    }
 
 
 

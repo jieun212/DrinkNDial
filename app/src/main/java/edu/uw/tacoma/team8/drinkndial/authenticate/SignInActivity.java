@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,7 +20,6 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
@@ -50,49 +48,71 @@ import edu.uw.tacoma.team8.drinkndial.util.SharedPreferencesHelper;
  * It registers a user with email, name, phone and password.
  *
  * @author Jieun Lee (jieun212@uw.edu)
- * @version 02/14/2017
+ * @version 03/09/2017
  */
 public class SignInActivity extends AppCompatActivity implements
         RegisterFragment.UserAddListener {
 
+
+    /** Default prefer mile to find driver */
+    public static final String DEFAULT_MILES = "1";
+
+    /** USER_CODE for sending user's data*/
+    public static final int USER_CODE = 1001;
+
+    /** An URL for checking email validation. */
     private static final String LOGIN_URL
             = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndlogin.php?";
 
+    /** An URL for retrieving logged in user's information */
     private static final String USER_GET_URL
             = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndlist.php?cmd=dnd_user";
-    /**
-     * An URL for setting prefer mile to find drivers
-     */
+
+    /** An URL for setting prefer mile to find driver. */
     private final static String ADD_PREFERENCE_URL
             = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndPreference.php?cmd=add";
 
-
-    /**
-     * Default prefer mile to find driver
-     */
-    public static final String DEFAULT_MILES = "1";
-
-    private static final String TAG = "SignInActivity";
-    public static final int USER_CODE = 1001;
+    /** An URL for adding a user */
+    private final static String ADD_USER_URL
+            = "http://cssgate.insttech.washington.edu/~jieun212/Android/register.php?";
 
 
+
+
+
+    /** A user's login id(email) EditText */
     private EditText mUserIdText;
+
+    /** A user's login password EditText */
     private EditText mPwdText;
+
+    /** A User*/
     private User mUser;
-    private LoginButton mFacebookButton;
-    private CallbackManager mCallbackManager;
+
+    /** A UserDB for SQLite */
     private UserDB mUserDB;
+
+    /** A CallbackManager for facebook login*/
+    private CallbackManager mCallbackManager;
+
+    /** A user's email */
     private String mUserEmail;
+
+    /** A user's password */
     private String mUserPwd;
+
+    /** A SharedPreferencesHelper */
     private SharedPreferencesHelper mSharedPreferencesHelper;
-    private SharedPreferenceEntry mSharedPreferenceEntry;
+
+    /** A RegisterFragment*/
     private Fragment mRegisterFragment;
 
 
+
     /**
-     * It creates a SigninActivity
+     * It creates a SigninActivity.
      *
-     * @param savedInstanceState
+     * @param savedInstanceState A bundle
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +126,8 @@ public class SignInActivity extends AppCompatActivity implements
                 .getDefaultSharedPreferences(this);
         mSharedPreferencesHelper = new SharedPreferencesHelper(
                 sharedPreferences);
-        mSharedPreferenceEntry = mSharedPreferencesHelper.getLoginInfo();
+        /* A SharedPreferenceEntry */
+        SharedPreferenceEntry mSharedPreferenceEntry = mSharedPreferencesHelper.getLoginInfo();
 
         if (mSharedPreferenceEntry.isLoggedIn()) {
 
@@ -138,7 +159,8 @@ public class SignInActivity extends AppCompatActivity implements
         // test facebook id: 450team8@gmail.com / pw: 450Team@8
         mCallbackManager = CallbackManager.Factory.create();
 
-        mFacebookButton = (LoginButton) findViewById(R.id.facebook_signin_button);
+        /* A facebook log in button*/
+        LoginButton mFacebookButton = (LoginButton) findViewById(R.id.facebook_signin_button);
         mFacebookButton.setReadPermissions(Arrays.asList("public_profile", "email"));
         mFacebookButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -155,8 +177,8 @@ public class SignInActivity extends AppCompatActivity implements
 
 
                                     // set prefer mile w/ default value
-                                    String mileUrl = buildAddPreferenceURL();
-                                    AddPreferMileTask addPreferMileTask = new AddPreferMileTask();
+                                    String mileUrl = buildAddPreferenceURL(mUserEmail);
+                                    AddPreferMileAsyncTask addPreferMileTask = new AddPreferMileAsyncTask();
                                     addPreferMileTask.execute(mileUrl);
 
                                     // save logged in w/ FB
@@ -188,7 +210,6 @@ public class SignInActivity extends AppCompatActivity implements
                 parameters.putString("fields", "id,name,email,gender,birthday");
                 request.setParameters(parameters);
                 request.executeAsync();
-
             }
 
             @Override
@@ -243,12 +264,12 @@ public class SignInActivity extends AppCompatActivity implements
 
                 // get User's information
                 String userUrl = buildUserInfoURL();
-                GetUserTask usertask = new GetUserTask();
+                GetUserAsyncTask usertask = new GetUserAsyncTask();
                 usertask.execute(userUrl);
 
                 // verifying email and pwd are matching
-                String loginUrl = buildLoginURL(v);
-                LoginUserTask logintask = new LoginUserTask();
+                String loginUrl = buildLoginURL();
+                LoginUserAsyncTask logintask = new LoginUserAsyncTask();
                 logintask.execute(loginUrl);
             }
         });
@@ -276,7 +297,12 @@ public class SignInActivity extends AppCompatActivity implements
                 .commit();
     }
 
-
+    /**
+     * If user is logged in, go to Navigation activith
+     *
+     * @param name User's first and last name
+     * @param fbLoggedIn True if logged in with Facebook account, otherwise false.
+     */
     public void login(String name, boolean fbLoggedIn) {
 
         Intent i = new Intent(this, NavigationActivity.class);
@@ -284,21 +310,28 @@ public class SignInActivity extends AppCompatActivity implements
 
         if (fbLoggedIn) {
 
-
             i.putExtra("name", name);
+
             // for security reason, Facebook removed permission to get user's phone number
             i.putExtra("phone", "");
 
         } else {
+
             i.putExtra("name", (mUser.getFname() + " " + mUser.getLname()));
             i.putExtra("phone", mUser.getPhone());
         }
         startActivityForResult(i, USER_CODE);
         finish();
-
     }
 
 
+    /**
+     * It is for facebook login.
+     *
+     * @param requestCode A request code
+     * @param resultCode A result code
+     * @param data An Intent
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -306,31 +339,83 @@ public class SignInActivity extends AppCompatActivity implements
     }
 
 
+    /**
+     * Insert the given user into DB using webservice.
+     * Insert the givne prefer mile to find drivert into DB using webservice.
+     *
+     * @param user A user
+     */
     @Override
-    public void addUser(String userUrl, String mileUrl, User user) {
+    public void addUser(User user) {
 
         mUser = user;
 
         // insert new user's information into web service
+        String userUrl = buildUserURL(user);
         UserAddAsyncTask userAddAsyncTask = new UserAddAsyncTask();
-        userAddAsyncTask.execute(new String[]{userUrl.toString()});
+        userAddAsyncTask.execute(userUrl);
 
 
         // insert the new user's prefer mile to find drivers into web service
-        AddPreferMileTask addPreferMileTask = new AddPreferMileTask();
-        addPreferMileTask.execute(new String[]{mileUrl.toString()});
+        String mileUrl = buildAddPreferenceURL(user.getEmail());
+        AddPreferMileAsyncTask addPreferMileTask = new AddPreferMileAsyncTask();
+        addPreferMileTask.execute(mileUrl);
 
         getSupportFragmentManager().beginTransaction()
                 .remove(mRegisterFragment)
                 .commit();
-
-
     }
 
 
-    /********************************************************************************************************************
+    /*
+     *******************************************************************************************************************
      *                                                FOR "Register"
      *******************************************************************************************************************/
+    /**
+     * Build user URL with given information of user.
+     * It returns message how it built.
+     * It catches execption and shows a dialog with error message
+     * @return Message
+     */
+    private String buildUserURL(User user) {
+
+        StringBuilder sb = new StringBuilder(ADD_USER_URL);
+
+        try {
+
+            // email
+            sb.append("&email=");
+            sb.append(URLEncoder.encode(user.getEmail(), "UTF-8"));
+
+            // fist name
+            sb.append("&fname=");
+            sb.append(URLEncoder.encode(user.getFname(), "UTF-8"));
+
+
+            // last name
+            sb.append("&lname=");
+            sb.append(URLEncoder.encode(user.getLname(), "UTF-8"));
+
+
+            // password
+            sb.append("&pw=");
+            sb.append(URLEncoder.encode(user.getPw(), "UTF-8"));
+
+
+            // phone
+            sb.append("&phone=");
+            sb.append(URLEncoder.encode(user.getPhone(), "UTF-8"));
+
+            Log.i("Register User", sb.toString());
+
+        } catch(Exception e) {
+            Toast.makeText(this, "Something wrong with the url" + e.getMessage(),
+                    Toast.LENGTH_LONG)
+                    .show();
+            Log.e("Catch", e.getMessage());
+        }
+        return sb.toString();
+    }
 
     /**
      * Inner class for Adding user (Register) task
@@ -354,7 +439,7 @@ public class SignInActivity extends AppCompatActivity implements
                     InputStream content = urlConnection.getInputStream();
 
                     BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
-                    String s = "";
+                    String s;
                     while ((s = buffer.readLine()) != null) {
                         response += s;
                     }
@@ -374,7 +459,7 @@ public class SignInActivity extends AppCompatActivity implements
          * exception is caught. It tries to call the parse Method and checks to see if it was successful.
          * If not, it displays the exception.
          *
-         * @param result
+         * @param result The result of doInBackground()
          */
         @Override
         protected void onPostExecute(String result) {
@@ -408,10 +493,16 @@ public class SignInActivity extends AppCompatActivity implements
         }
     }
 
-    /********************************************************************************************************************
+    /*
+     *******************************************************************************************************************
      *                                          FOR Verifying "LOG IN"
      *******************************************************************************************************************/
-    private String buildLoginURL(View v) {
+
+    /**
+     * Build url to check if the input email and pw are valid and matched.
+     * @return Result of built url
+     */
+    private String buildLoginURL() {
 
         StringBuilder sb = new StringBuilder(LOGIN_URL);
 
@@ -429,7 +520,7 @@ public class SignInActivity extends AppCompatActivity implements
             Log.i("SigninActivity", sb.toString());
 
         } catch (Exception e) {
-            Toast.makeText(v.getContext(), "Something wrong with the url" + e.getMessage(),
+            Toast.makeText(this, "Something wrong with the url" + e.getMessage(),
                     Toast.LENGTH_LONG)
                     .show();
             Log.e("Catch", e.getMessage());
@@ -437,9 +528,14 @@ public class SignInActivity extends AppCompatActivity implements
         return sb.toString();
     }
 
-
-    private class LoginUserTask extends AsyncTask<String, Void, String> {
-
+    /**
+     * Inner class for checking validation of email and password.
+     */
+    private class LoginUserAsyncTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
         @Override
         protected String doInBackground(String... urls) {
             String response = "";
@@ -450,7 +546,7 @@ public class SignInActivity extends AppCompatActivity implements
                     urlConnection = (HttpURLConnection) urlObject.openConnection();
                     InputStream content = urlConnection.getInputStream();
                     BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
-                    String s = "";
+                    String s;
                     while ((s = buffer.readLine()) != null) {
                         response += s;
                     }
@@ -508,9 +604,14 @@ public class SignInActivity extends AppCompatActivity implements
     }
 
 
-    /********************************************************************************************************************
+    /*
+     *******************************************************************************************************************
      *                        FOR Retrieving User's all information
      *******************************************************************************************************************/
+    /**
+     * Build url to retrieve user's information
+     * @return Result of built url
+     */
     private String buildUserInfoURL() {
 
         StringBuilder sb = new StringBuilder(USER_GET_URL);
@@ -522,7 +623,8 @@ public class SignInActivity extends AppCompatActivity implements
             sb.append(URLEncoder.encode(mUserEmail, "UTF-8"));
 
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "Something wrong with the url" + e.getMessage(),
+            Toast.makeText(getApplicationContext(),
+                    "(buildUserInfoURL)Something wrong with the url" + e.getMessage(),
                     Toast.LENGTH_LONG)
                     .show();
             Log.e("Catch", e.getMessage());
@@ -530,8 +632,14 @@ public class SignInActivity extends AppCompatActivity implements
         return sb.toString();
     }
 
-    private class GetUserTask extends AsyncTask<String, Void, String> {
-
+    /**
+     * Inner class for retrieving user's information
+     */
+    private class GetUserAsyncTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
         @Override
         protected String doInBackground(String... urls) {
             String response = "";
@@ -542,7 +650,7 @@ public class SignInActivity extends AppCompatActivity implements
                     urlConnection = (HttpURLConnection) urlObject.openConnection();
                     InputStream content = urlConnection.getInputStream();
                     BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
-                    String s = "";
+                    String s;
                     while ((s = buffer.readLine()) != null) {
                         response += s;
                     }
@@ -591,7 +699,8 @@ public class SignInActivity extends AppCompatActivity implements
     }
 
 
-    /********************************************************************************************************************
+    /*
+     *******************************************************************************************************************
      *                             FOR "Setting preferred mile"
      *******************************************************************************************************************/
 
@@ -602,7 +711,7 @@ public class SignInActivity extends AppCompatActivity implements
      *
      * @return Message
      */
-    private String buildAddPreferenceURL() {
+    private String buildAddPreferenceURL(String userEmail) {
 
         StringBuilder sb = new StringBuilder(ADD_PREFERENCE_URL);
 
@@ -610,7 +719,7 @@ public class SignInActivity extends AppCompatActivity implements
 
             // email
             sb.append("&email=");
-            sb.append(URLEncoder.encode(mUserEmail, "UTF-8"));
+            sb.append(URLEncoder.encode(userEmail, "UTF-8"));
 
             // mile
             sb.append("&mile=");
@@ -618,7 +727,8 @@ public class SignInActivity extends AppCompatActivity implements
 
 
         } catch (Exception e) {
-            Toast.makeText(this, "Something wrong with the ADD_PREFERENCE_URL url" + e.getMessage(),
+            Toast.makeText(this,
+                    "(buildAddPreferenceURL)Something wrong with the ADD_PREFERENCE_URL url" + e.getMessage(),
                     Toast.LENGTH_LONG)
                     .show();
             Log.e("Catch", e.getMessage());
@@ -626,8 +736,10 @@ public class SignInActivity extends AppCompatActivity implements
         return sb.toString();
     }
 
-
-    private class AddPreferMileTask extends AsyncTask<String, Void, String> {
+    /**
+     * Inner class for adding prefer mile
+     */
+    private class AddPreferMileAsyncTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected void onPreExecute() {
@@ -646,7 +758,7 @@ public class SignInActivity extends AppCompatActivity implements
                     InputStream content = urlConnection.getInputStream();
 
                     BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
-                    String s = "";
+                    String s;
                     while ((s = buffer.readLine()) != null) {
                         response += s;
                     }
@@ -666,7 +778,7 @@ public class SignInActivity extends AppCompatActivity implements
          * exception is caught. It tries to call the parse Method and checks to see if it was successful.
          * If not, it displays the exception.
          *
-         * @param result
+         * @param result The result of doInBackground()
          */
         @Override
         protected void onPostExecute(String result) {

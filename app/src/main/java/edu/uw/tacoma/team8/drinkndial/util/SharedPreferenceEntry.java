@@ -6,28 +6,41 @@ package edu.uw.tacoma.team8.drinkndial.util;
  * Add to this class any other app related information
  * that needs to be cached.
  * <p>
- * Created by leejieun on 2/25/17.
+ * @author Jieun Lee (jieun212@uw.edu)
+ * @version 2/25/17.
  */
 public class SharedPreferenceEntry {
 
-    // Name of the user.
+    /** Name of the user. */
     private boolean mIsLoggedIn = false;
 
-    // Email address of the user.
+    /** Email address of the user. */
     private final String mEmail;
 
-    // Add others here..
-
+    /**
+     * Constructs SharedPreferenceEntry
+     *
+     * @param loggedIn boolean type of logged in
+     * @param email user's email address
+     */
     public SharedPreferenceEntry(boolean loggedIn, String email) {
         mIsLoggedIn = loggedIn;
         mEmail = email;
     }
 
+    /**
+     * Return true if is logged in
+     *
+     * @return true if is logged in, false otherwise.
+     */
     public boolean isLoggedIn() {
         return mIsLoggedIn;
     }
 
-
+    /**
+     * Return user's email address
+     * @return user's email address
+     */
     public String getEmail() {
         return mEmail;
     }

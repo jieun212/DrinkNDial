@@ -7,8 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 
 import com.facebook.login.LoginManager;
@@ -18,19 +18,34 @@ import edu.uw.tacoma.team8.drinkndial.util.SharedPreferenceEntry;
 import edu.uw.tacoma.team8.drinkndial.util.SharedPreferencesHelper;
 
 /**
- * A simple {@link Fragment} subclass.
+ * This is log out dialog fragment. When user clicks logout on navigation drawer
+ * This fragment pops up.
+ *
+ * @author Lovejit Hari
+ * @author Jieun Lee (jieun212@uw.edu)
+ * @version 03/09/2017
  */
 public class LogOutFragment extends DialogFragment {
 
+    /**
+     * Required empty public constructor
+     */
     public LogOutFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Creates a dialog
+     * @param savedInstanceState A Bundle
+     * @return A dialog
+     */
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         Boolean isFB = false;
+
         if (getArguments().getString("login").equals("fb")) {
             isFB = true;
         }

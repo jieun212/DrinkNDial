@@ -20,12 +20,12 @@ public class UserDB {
     /**
      * A DB_VERSIN
      */
-    public static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 1;
 
     /**
      * A DB_NAME
      */
-    public static final String DB_NAME = "dnd_user.db";
+    private static final String DB_NAME = "dnd_user.db";
 
     /**
      * A table name on web service
@@ -46,7 +46,7 @@ public class UserDB {
     /**
      * Construct a UserDB with given context.
      *
-     * @param context
+     * @param context The Context
      */
     public UserDB(Context context) {
         mUserDBHelper = new UserDBHelper(context, DB_NAME, null, DB_VERSION);
@@ -84,7 +84,7 @@ public class UserDB {
     /**
      * Insert the given user into proper SQLite database.
      *
-     * @param user A User
+     * @param user The User
      * @return True if the User is inserted, otherwise false
      */
     public boolean insertUser(User user) {
@@ -116,7 +116,7 @@ public class UserDB {
     /**
      * Inner class
      */
-    class UserDBHelper extends SQLiteOpenHelper {
+    private class UserDBHelper extends SQLiteOpenHelper {
 
         /**
          * A Create SQLite query
@@ -131,24 +131,35 @@ public class UserDB {
         /**
          * Constructs a UserDBHelper
          *
-         * @param context
-         * @param name
-         * @param factory
-         * @param version
+         * @param context The Context
+         * @param name The name
+         * @param factory The SQLiteDatabase.CursorFactory
+         * @param version The version
          */
-        public UserDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+        UserDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
             super(context, name, factory, version);
             CREATE_USER_SQL = context.getString(R.string.CREATE_DND_USER_SQL);
             DROP_USER_SQL = context.getString(R.string.DROP_DND_USER_SQL);
         }
 
+        /**
+         * Create table
+         * @param sqLiteDatabase The sqLiteDatabase
+         */
         @Override
         public void onCreate(SQLiteDatabase sqLiteDatabase) {
             sqLiteDatabase.execSQL(CREATE_USER_SQL);
         }
 
+        /**
+         * Drop table
+         *
+         * @param sqLiteDatabase The sqLiteDatabase
+         * @param oldVersion The old Version
+         * @param newVersion The new Version
+         */
         @Override
-        public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+        public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
             sqLiteDatabase.execSQL(DROP_USER_SQL);
             onCreate(sqLiteDatabase);
         }

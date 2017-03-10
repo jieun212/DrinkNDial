@@ -6,13 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
 
 import com.seatgeek.placesautocomplete.PlacesAutocompleteTextView;
 
@@ -38,10 +34,10 @@ public class HomeFavDialogFragment extends DialogFragment {
     private SharedPreferences mSharedPreferences;
 
     /**
-     * When we construct the HomeFavDialogFragment object in GmapsDisplay class,
+     * When we construct the HomeFavDialogFragment object in GmapsDisplayFragment class,
      * we need to pass in the text view of the destination edit field.
      * Once we have done that, all uses of the field mEditDestination will have the same information
-     * as the same field within GmapsDisplay.
+     * as the same field within GmapsDisplayFragment.
      *
      * @param theTextView the text view to construct
      */
