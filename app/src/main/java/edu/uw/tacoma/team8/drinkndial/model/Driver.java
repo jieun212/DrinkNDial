@@ -40,15 +40,6 @@ public class Driver {
         this.mLatitude = latitude;
     }
 
-    public Driver(String id, String fname, String lname, String phone, String rating, double distance) {
-        this.mId = id;
-        this.mFname = fname;
-        this.mLname = lname;
-        this.mPhone = phone;
-        this.mRating = rating;
-        this.mDistance = distance;
-    }
-
     public String getId() {
         return mId;
     }
