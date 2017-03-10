@@ -5,9 +5,8 @@ import java.util.List;
 /**
  * This is an interface that contains two methods, findDirectionsStart and directionsFoundSuccess.
  *
- * @version 2/20/2017
  * @author Lovejit Hari
- *
+ * @version 2/20/2017
  */
 
 public interface MapDirectionListener {

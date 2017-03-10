@@ -57,8 +57,7 @@
 
         <activity
             android:name=".navigation.NavigationActivity"
-            android:label="" />
-        <activity android:name=".search.SearchingActivity" />
+            android:label="Drink n Dial" />
         <activity android:name=".navigation.AddLocationActivity" />
         <activity android:name=".navigation.UpdatePreferenceActivity"></activity>
         <activity android:name=".confirm.ConfirmationActivity"></activity>

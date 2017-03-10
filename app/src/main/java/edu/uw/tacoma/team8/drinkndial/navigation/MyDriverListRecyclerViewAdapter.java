@@ -32,33 +32,24 @@ public class MyDriverListRecyclerViewAdapter extends RecyclerView.Adapter<MyDriv
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-//        //TODO: get distance from user's  current location to the driver's current location
-//        Location driverLocation = new Location("");
-//        driverLocation.setLongitude(Double.valueOf(mValues.get(position).getLongitude()));
-//        driverLocation.setLatitude(Double.valueOf(mValues.get(position).getLatitude()));
-//
-//        float distanceInMeter = mUserLocation.distanceTo(driverLocation);
-//        double distanceInMile = Math.round(distanceInMeter / 1000 * 0.621371 * 100)/100;
-//
-//        if (mPreferMile >= distanceInMile) {
-            holder.mItem = mValues.get(position);
-            holder.mNameTextView.setText(mValues.get(position).getFname() + " " + mValues.get(position).getLname());
-            holder.mPhoneTextView.setText(mValues.get(position).getPhone());
-            holder.mRateTextView.setText(mValues.get(position).getRating());
+        holder.mItem = mValues.get(position);
+        holder.mNameTextView.setText(mValues.get(position).getFname() + " " + mValues.get(position).getLname());
+        holder.mPhoneTextView.setText(mValues.get(position).getPhone());
+        holder.mRateTextView.setText(mValues.get(position).getRating());
 
 
-            holder.mDistanceTextView.setText(mValues.get(position).getDistance() + " mi");
+        holder.mDistanceTextView.setText(mValues.get(position).getDistance() + " mi");
 
-            holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (null != mListener) {
-                        // Notify the active callbacks interface (the activity, if the
-                        // fragment is attached to one) that an item has been selected.
-                        mListener.onListFragmentInteraction(holder.mItem);
-                    }
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null != mListener) {
+                    // Notify the active callbacks interface (the activity, if the
+                    // fragment is attached to one) that an item has been selected.
+                    mListener.onListFragmentInteraction(holder.mItem);
                 }
-            });
+            }
+        });
 //        }
 
     }

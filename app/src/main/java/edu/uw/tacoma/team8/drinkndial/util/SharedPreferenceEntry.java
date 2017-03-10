@@ -5,7 +5,7 @@ package edu.uw.tacoma.team8.drinkndial.util;
  * saved to SharedPreferences.
  * Add to this class any other app related information
  * that needs to be cached.
- *
+ * <p>
  * Created by leejieun on 2/25/17.
  */
 public class SharedPreferenceEntry {
