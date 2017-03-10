@@ -15,6 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -44,6 +48,14 @@ public class DriverListFragment extends Fragment {
     private Location mUserLocation;
     private double mUserPrefer;
     private List<Driver> mDriverList;
+
+    public final String DRIVER_ID = "driverid",
+            FIRST_NAME = "fname",
+            LAST_NAME = "lname",
+            PHONE = "phone",
+            RATING = "rating",
+            LONGITUDE = "longitude",
+            LATITUDE = "latitude";
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -167,26 +179,38 @@ public class DriverListFragment extends Fragment {
             }
 
             mDriverList = new ArrayList<Driver>();
-            result = Driver.parseDriverJSON(result, mDriverList);
 
-            // Something wrong with the JSON returned.
-            if (result != null) {
+            try {
+                JSONArray arr = new JSONArray(result);
+                for (int i = 0; i < arr.length(); i++) {
+                    JSONObject obj = arr.getJSONObject(i);
+                    Driver driver = new Driver(obj.getString(DRIVER_ID),
+                            obj.getString(FIRST_NAME),
+                            obj.getString(LAST_NAME),
+                            obj.getString(PHONE),
+                            obj.getString(RATING),
+                            obj.getString(LONGITUDE),
+                            obj.getString(LATITUDE));
+                    mDriverList.add(driver);
+                }
+            } catch (JSONException e) {
+                e.getMessage();
                 Toast.makeText(getActivity().getApplicationContext(), result, Toast.LENGTH_LONG)
                         .show();
-                return;
             }
+
             List<Driver> validDrivers = new ArrayList<Driver>();
             for (int i = 0; i < mDriverList.size(); i++) {
 
                 Location driverLocation = new Location("");
-                driverLocation.setLongitude(Double.valueOf(mDriverList.get(i).getLongitude()));
-                driverLocation.setLatitude(Double.valueOf(mDriverList.get(i).getLatitude()));
+                driverLocation.setLongitude(Double.valueOf(mDriverList.get(i).getmLongitude()));
+                driverLocation.setLatitude(Double.valueOf(mDriverList.get(i).getmLatitude()));
 
                 float distanceInMeter = mUserLocation.distanceTo(driverLocation);
                 double distanceInMile = Math.round(distanceInMeter * 0.0621371) / 100;
 
                 if (mUserPrefer >= distanceInMile) {
-                    mDriverList.get(i).setDistance(distanceInMile);
+                    mDriverList.get(i).setmDistance(distanceInMile);
                     validDrivers.add(mDriverList.get(i));
                 }
             }

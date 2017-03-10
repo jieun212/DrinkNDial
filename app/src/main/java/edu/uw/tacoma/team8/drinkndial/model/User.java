@@ -10,8 +10,6 @@ import java.io.Serializable;
  */
 public class User implements Serializable {
 
-    public static final String EMAIL = "email", FNAME = "fname", LNAME = "lname", PW = "pw", PHONE = "phone";
-
     private String mEmail;
     private String mFname;
     private String mLname;
@@ -27,34 +25,43 @@ public class User implements Serializable {
         this.mPhone = phone;
     }
 
+    public String getEmail() {
+        return mEmail;
+    }
+
+    public void setEmail(String mEmail) {
+        this.mEmail = mEmail;
+    }
 
     public String getFname() {
         return mFname;
+    }
+
+    public void setFname(String mFname) {
+        this.mFname = mFname;
     }
 
     public String getLname() {
         return mLname;
     }
 
-    public String getEmail() {
-        return mEmail;
-    }
-
-    public void setEmail(String email) {
-        this.mEmail = email;
+    public void setLname(String mLname) {
+        this.mLname = mLname;
     }
 
     public String getPw() {
         return mPw;
     }
 
+    public void setPw(String mPw) {
+        this.mPw = mPw;
+    }
+
     public String getPhone() {
         return mPhone;
     }
 
-    public void setPhone(String phone) {
-        this.mPhone = phone;
+    public void setPhone(String mPhone) {
+        this.mPhone = mPhone;
     }
-
-
 }

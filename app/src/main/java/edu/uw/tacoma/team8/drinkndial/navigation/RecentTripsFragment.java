@@ -16,6 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -54,6 +58,15 @@ public class RecentTripsFragment extends Fragment {
 
     //the user's email
     private String mUserEmail;
+
+    //initializing some static final variables
+    public final String TRIP_ID = "tripid",
+            DISTANCE = "distance",
+            PAID = "paid",
+            START_ADDRESS = "startAddress",
+            END_ADDRESS = "endAddress",
+            EMAIL = "email";
+
 
     public RecentTripsFragment() {
         // Required empty public constructor
@@ -213,13 +226,24 @@ public class RecentTripsFragment extends Fragment {
             }
 
             mTripList = new ArrayList<Trips>();
-            result = Trips.parseTripsJSON(result, mTripList);
-
-            if (result != null) {
+            try {
+                JSONArray arr = new JSONArray(result);
+                for (int i = 0; i < arr.length(); i++) {
+                    JSONObject obj = arr.getJSONObject(i);
+                    Trips trips = new Trips(obj.getString(TRIP_ID),
+                            String.valueOf(obj.getDouble(DISTANCE)),
+                            String.valueOf(obj.getDouble(PAID)),
+                            obj.getString(START_ADDRESS),
+                            obj.getString(END_ADDRESS),
+                            obj.getString(EMAIL));
+                    mTripList.add(trips);
+                }
+            } catch (JSONException e) {
+                e.getMessage();
                 Toast.makeText(getActivity().getApplicationContext(), result, Toast.LENGTH_LONG)
                         .show();
-                return;
             }
+
 
             List<Trips> validTrips = new ArrayList<Trips>();
             int size = 0;

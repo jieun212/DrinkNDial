@@ -345,8 +345,8 @@ public class NavigationActivity extends AppCompatActivity implements
         Log.i("navi-empty???", mUserEmail);
         i.putExtra("username", mUserName);
         i.putExtra("userphone", mUserPhone);
-        i.putExtra("drivername", driver.getFname() + " " + driver.getLname());
-        i.putExtra("driverphone", driver.getPhone());
+        i.putExtra("drivername", driver.getmFname() + " " + driver.getmLname());
+        i.putExtra("driverphone", driver.getmPhone());
         i.putExtra("fare", GmapsDisplay.getFare());
         i.putExtra("from", GmapsDisplay.getOrigin());
         i.putExtra("to", GmapsDisplay.getmDestination());
