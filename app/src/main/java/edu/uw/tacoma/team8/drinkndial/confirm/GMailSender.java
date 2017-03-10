@@ -40,7 +40,7 @@ public class GMailSender extends javax.mail.Authenticator {
      * Also we set the properties that coincide with Google's security settings in order to be
      * able to send mail from the host mail to the user.
      *
-     * @param user Whoever is sending the email
+     * @param user     Whoever is sending the email
      * @param password password of the email
      */
     public GMailSender(String user, String password) {
@@ -68,15 +68,14 @@ public class GMailSender extends javax.mail.Authenticator {
     /**
      * Sends an email to the recipient from a sender
      *
-     *
-     * @param subject Title of the email
-     * @param body Content of the email
-     * @param sender Whoever sent the email
+     * @param subject    Title of the email
+     * @param body       Content of the email
+     * @param sender     Whoever sent the email
      * @param recipients Recipient of the email
      * @throws Exception e
      */
     public synchronized void sendMail(String subject, String body, String sender, String recipients) throws Exception {
-        try{
+        try {
             MimeMessage message = new MimeMessage(session);
             DataHandler handler = new DataHandler(new ByteArrayDataSource(body.getBytes(), "text/plain"));
             message.setSender(new InternetAddress(sender));
@@ -88,7 +87,7 @@ public class GMailSender extends javax.mail.Authenticator {
                 message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));
             }
             Transport.send(message);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -103,6 +102,7 @@ public class GMailSender extends javax.mail.Authenticator {
 
         /**
          * Constructs an object that initializes the data and the string type
+         *
          * @param data byte array
          * @param type string
          */

@@ -41,7 +41,6 @@ public class DriverListFragment extends Fragment {
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
-//    private DriverDB mDriverDB;
     private Location mUserLocation;
     private double mUserPrefer;
     private List<Driver> mDriverList;
@@ -62,7 +61,7 @@ public class DriverListFragment extends Fragment {
 
         double lognitude = getArguments().getDouble("longitude");
         double latitude = getArguments().getDouble("latitude");
-        mUserPrefer= getArguments().getDouble("prefer");
+        mUserPrefer = getArguments().getDouble("prefer");
 
         mUserLocation = new Location("");
         mUserLocation.setLongitude(lognitude);
@@ -93,14 +92,7 @@ public class DriverListFragment extends Fragment {
         } else {
             Toast.makeText(view.getContext(),
                     "No network connection available. Displaying locally stored data",
-                    Toast.LENGTH_SHORT) .show();
-//            if (mCourseDB == null) {
-//                mCourseDB = new CourseDB(getActivity());
-//            }
-//            if (mCourseList == null) {
-//                mCourseList = mCourseDB.getCourses();
-//            }
-//            mRecyclerView.setAdapter(new MyCourseRecyclerViewAdapter(mCourseList, mListener));
+                    Toast.LENGTH_SHORT).show();
         }
 
 
@@ -136,7 +128,6 @@ public class DriverListFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteraction(Driver driver);
     }
 
@@ -158,9 +149,8 @@ public class DriverListFragment extends Fragment {
                     }
                 } catch (Exception e) {
                     response = "Unable to download the list of drivers, Reason: " + e.getMessage();
-                }
-                finally {
-                    if (urlConnection != null)  urlConnection.disconnect();
+                } finally {
+                    if (urlConnection != null) urlConnection.disconnect();
                 }
             }
             return response;
@@ -193,14 +183,14 @@ public class DriverListFragment extends Fragment {
                 driverLocation.setLatitude(Double.valueOf(mDriverList.get(i).getLatitude()));
 
                 float distanceInMeter = mUserLocation.distanceTo(driverLocation);
-                double distanceInMile = Math.round(distanceInMeter * 0.0621371)/100;
+                double distanceInMile = Math.round(distanceInMeter * 0.0621371) / 100;
 
                 if (mUserPrefer >= distanceInMile) {
                     mDriverList.get(i).setDistance(distanceInMile);
                     validDrivers.add(mDriverList.get(i));
                 }
             }
-                mRecyclerView.setAdapter(new MyDriverListRecyclerViewAdapter(validDrivers, mListener));
+            mRecyclerView.setAdapter(new MyDriverListRecyclerViewAdapter(validDrivers, mListener));
         }
 
     }

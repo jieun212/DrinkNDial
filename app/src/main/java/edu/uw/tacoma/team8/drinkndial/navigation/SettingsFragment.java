@@ -15,16 +15,10 @@ import edu.uw.tacoma.team8.drinkndial.R;
 /**
  * A simple {@link Fragment} subclass.
  *
+ * @author Jieun Lee (jieun212@uw.edu)
  * @version 02/14/2017
- * @author  Jieun Lee (jieun212@uw.edu)
  */
 public class SettingsFragment extends Fragment {
-
-    /**
-     * An URL for getting prefer mile to find drivers
-     */
-    private final static String GET_PREFERENCE_URL
-            = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndPreference.php?cmd=select";
 
     private TextView mNameTextView;
     private TextView mPhoneTextView;
@@ -63,7 +57,7 @@ public class SettingsFragment extends Fragment {
 
 
         // add home button
-        Button addHomeBtn =(Button) v.findViewById(R.id.add_home_button);
+        Button addHomeBtn = (Button) v.findViewById(R.id.add_home_button);
 
         if (homeAddress != null) {
             addHomeBtn.setText(homeAddress);
@@ -95,8 +89,8 @@ public class SettingsFragment extends Fragment {
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = mSharedPreferences.edit();
         edit.clear();
-        edit.putString("home",homeAddress);
-        edit.putString("fave",favoriteAddress);
+        edit.putString("home", homeAddress);
+        edit.putString("fave", favoriteAddress);
         edit.putString("recipientmail", mUserEamil);
         edit.commit();
 

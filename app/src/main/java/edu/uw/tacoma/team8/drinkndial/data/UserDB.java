@@ -11,25 +11,35 @@ import edu.uw.tacoma.team8.drinkndial.model.User;
 
 /**
  * This class creates SQLite db for user's information on device storage.
- *
+ * <p>
  * Created by leejieun on 2/19/17.
  */
 
 public class UserDB {
 
-    /** A DB_VERSIN */
+    /**
+     * A DB_VERSIN
+     */
     public static final int DB_VERSION = 1;
 
-    /** A DB_NAME */
+    /**
+     * A DB_NAME
+     */
     public static final String DB_NAME = "dnd_user.db";
 
-    /** A table name on web service */
+    /**
+     * A table name on web service
+     */
     private static final String USER_TABLE = "dnd_user";
 
-    /** A UserDBHelper */
+    /**
+     * A UserDBHelper
+     */
     private UserDBHelper mUserDBHelper;
 
-    /** A SQLiteDatabase */
+    /**
+     * A SQLiteDatabase
+     */
     private SQLiteDatabase mSQLiteDatabase;
 
 
@@ -54,11 +64,11 @@ public class UserDB {
         String[] columns = {"email", "fname", "lname", "pw", "phone"};
 
         Cursor c = mSQLiteDatabase.query(USER_TABLE, columns,
-                                            null, // where
-                                            null, // value of where
-                                            null, // don't group
-                                            null, // dont' filter
-                                            null); // order
+                null, // where
+                null, // value of where
+                null, // don't group
+                null, // dont' filter
+                null); // order
         c.moveToFirst();
 
         String email = c.getString(0);
@@ -73,6 +83,7 @@ public class UserDB {
 
     /**
      * Insert the given user into proper SQLite database.
+     *
      * @param user A User
      * @return True if the User is inserted, otherwise false
      */
@@ -107,10 +118,14 @@ public class UserDB {
      */
     class UserDBHelper extends SQLiteOpenHelper {
 
-        /** A Create SQLite query */
+        /**
+         * A Create SQLite query
+         */
         private final String CREATE_USER_SQL;
 
-        /** A Drop SQLite query */
+        /**
+         * A Drop SQLite query
+         */
         private final String DROP_USER_SQL;
 
         /**
