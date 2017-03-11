@@ -47,12 +47,12 @@ public class MyDriverListRecyclerViewAdapter extends RecyclerView.Adapter<MyDriv
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         holder.mItem = mValues.get(position);
-        holder.mNameTextView.setText(mValues.get(position).getFname() + " " + mValues.get(position).getLname());
-        holder.mPhoneTextView.setText(mValues.get(position).getPhone());
-        holder.mRateTextView.setText(mValues.get(position).getRating());
+        holder.mNameTextView.setText(mValues.get(position).getmFname() + " " + mValues.get(position).getmLname());
+        holder.mPhoneTextView.setText(mValues.get(position).getmPhone());
+        holder.mRateTextView.setText(mValues.get(position).getmRating());
 
 
-        holder.mDistanceTextView.setText(mValues.get(position).getDistance() + " mi");
+        holder.mDistanceTextView.setText(mValues.get(position).getmDistance() + " mi");
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

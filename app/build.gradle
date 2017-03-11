@@ -27,12 +27,19 @@ android {
             signingConfig signingConfigs.config
         }
     }
+
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+    }
 }
 repositories {
     maven {
         url 'https://oss.sonatype.org/content/repositories/snapshots'
     }
 }
+
+
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
