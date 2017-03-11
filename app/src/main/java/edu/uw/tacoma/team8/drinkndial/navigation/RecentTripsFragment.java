@@ -214,7 +214,7 @@ public class RecentTripsFragment extends Fragment {
                 return;
             }
 
-            mTripList = new ArrayList<Trips>();
+            List<Trips> mTripList = new ArrayList<Trips>();
             try {
                 JSONArray arr = new JSONArray(result);
                 for (int i = 0; i < arr.length(); i++) {
@@ -228,8 +228,8 @@ public class RecentTripsFragment extends Fragment {
                     mTripList.add(trips);
                 }
             } catch (JSONException e) {
-                e.getMessage();
-                Toast.makeText(getActivity().getApplicationContext(), result, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), "No recent trips made!",
+                        Toast.LENGTH_LONG).show();
             }
 
 

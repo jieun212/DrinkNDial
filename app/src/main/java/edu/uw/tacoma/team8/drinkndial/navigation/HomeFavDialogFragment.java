@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.widget.Toast;
 
 import com.seatgeek.placesautocomplete.PlacesAutocompleteTextView;
 
@@ -32,6 +33,8 @@ public class HomeFavDialogFragment extends DialogFragment {
     private String mFave;
     private PlacesAutocompleteTextView mEditDestination;
     private SharedPreferences mSharedPreferences;
+
+
 
     /**
      * When we construct the HomeFavDialogFragment object in GmapsDisplayFragment class,
@@ -73,11 +76,19 @@ public class HomeFavDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.homeLocation, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mEditDestination.setText(mHome);
+                        if(mEditDestination.getText().toString().equals("")) {
+                            Toast.makeText(getActivity(), "You need to set a home location first!",
+                                    Toast.LENGTH_LONG).show();
+                        }
                     }
                 })
                 .setNegativeButton(R.string.favLocation, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mEditDestination.setText(mFave);
+                        if(mEditDestination.getText().toString().equals("")) {
+                            Toast.makeText(getActivity(), "You need to set a favorite location first!",
+                                    Toast.LENGTH_LONG).show();
+                        }
                     }
                 })
                 .setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {

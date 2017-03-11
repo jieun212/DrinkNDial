@@ -68,6 +68,7 @@ public class LogOutFragment extends DialogFragment {
                         }
                         Intent i = new Intent(getActivity(), SignInActivity.class);
                         startActivity(i);
+                        getActivity().finish();
 
                     }
 

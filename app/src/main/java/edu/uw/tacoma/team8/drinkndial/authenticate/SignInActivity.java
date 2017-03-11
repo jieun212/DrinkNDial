@@ -297,6 +297,15 @@ public class SignInActivity extends AppCompatActivity implements
                 .commit();
     }
 
+    @Override
+    public void onBackPressed() {
+        if(mRegisterFragment.isAdded()) {
+            getSupportFragmentManager().beginTransaction().remove(mRegisterFragment).commit();
+        } else {
+            finish();
+        }
+    }
+
     /**
      * If user is logged in, go to Navigation activith
      *
