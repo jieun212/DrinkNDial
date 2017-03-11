@@ -318,7 +318,6 @@ public class NavigationActivity extends AppCompatActivity implements
     public void onListFragmentInteraction(Driver driver) {
         Intent i = new Intent(this, ConfirmationActivity.class);
         i.putExtra("useremail", mUserEmail);
-        Log.i("navi-empty???", mUserEmail);
         i.putExtra("username", mUserName);
         i.putExtra("userphone", mUserPhone);
         i.putExtra("drivername", driver.getFname() + " " + driver.getLname());

@@ -9,9 +9,6 @@ import java.io.Serializable;
  */
 public class User implements Serializable {
 
-    /** Column names of dnd_user table on DB */
-    public static final String EMAIL = "email", FNAME = "fname", LNAME = "lname", PW = "pw", PHONE = "phone";
-
     /** An email address */
     private String mEmail;
 
@@ -45,6 +42,13 @@ public class User implements Serializable {
         this.mPhone = phone;
     }
 
+    public String getEmail() {
+        return mEmail;
+    }
+
+    public void setEmail(String mEmail) {
+        this.mEmail = mEmail;
+    }
 
     /**
      * Get first name.
@@ -55,6 +59,14 @@ public class User implements Serializable {
         return mFname;
     }
 
+    public void setFname(String mFname) {
+        this.mFname = mFname;
+    }
+
+
+    public void setLname(String mLname) {
+        this.mLname = mLname;
+      
     /**
      * Get last name.
      *
@@ -80,6 +92,7 @@ public class User implements Serializable {
      */
     public void setEmail(String email) {
         this.mEmail = email;
+
     }
 
     /**
@@ -91,6 +104,10 @@ public class User implements Serializable {
         return mPw;
     }
 
+    public void setPw(String mPw) {
+        this.mPw = mPw;
+    }
+      
     /**
      * Get phone number.
      *
@@ -99,7 +116,7 @@ public class User implements Serializable {
     public String getPhone() {
         return mPhone;
     }
-
+      
     /**
      * Set phone number with given phone number.
      *
@@ -108,6 +125,4 @@ public class User implements Serializable {
     public void setPhone(String phone) {
         this.mPhone = phone;
     }
-
-
 }

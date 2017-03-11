@@ -11,14 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="55dp"
-        android:hint="Where do you want to be picked up?"
+        android:hint="Enter your pick up location"
         app:pacv_googleMapsApiKey="@string/google_maps_key" />
 
     <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
         android:id="@+id/destination_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Where do you want to go?"
+        android:hint="Click here for quick options! Or enter a destination"
         app:pacv_googleMapsApiKey="@string/google_maps_key" />
 
     <LinearLayout
