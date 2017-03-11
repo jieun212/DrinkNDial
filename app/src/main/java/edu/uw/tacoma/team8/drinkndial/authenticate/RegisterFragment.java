@@ -162,8 +162,4 @@ public class RegisterFragment extends Fragment {
         void addUser(User user);
     }
 
-
-
-
-
 }

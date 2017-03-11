@@ -42,13 +42,6 @@ public class User implements Serializable {
         this.mPhone = phone;
     }
 
-    public String getEmail() {
-        return mEmail;
-    }
-
-    public void setEmail(String mEmail) {
-        this.mEmail = mEmail;
-    }
 
     /**
      * Get first name.
@@ -66,6 +59,7 @@ public class User implements Serializable {
 
     public void setLname(String mLname) {
         this.mLname = mLname;
+    }
       
     /**
      * Get last name.

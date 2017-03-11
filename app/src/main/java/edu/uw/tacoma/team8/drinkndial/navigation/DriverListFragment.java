@@ -185,7 +185,7 @@ public class DriverListFragment extends Fragment {
             }
 
 
-            mDriverList = new ArrayList<Driver>();
+            List<Driver> mDriverList = new ArrayList<Driver>();
 
             try {
                 JSONArray arr = new JSONArray(result);

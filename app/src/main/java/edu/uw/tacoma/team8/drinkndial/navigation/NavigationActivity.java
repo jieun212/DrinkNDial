@@ -320,8 +320,8 @@ public class NavigationActivity extends AppCompatActivity implements
         i.putExtra("useremail", mUserEmail);
         i.putExtra("username", mUserName);
         i.putExtra("userphone", mUserPhone);
-        i.putExtra("drivername", driver.getFname() + " " + driver.getLname());
-        i.putExtra("driverphone", driver.getPhone());
+        i.putExtra("drivername", driver.getmFname() + " " + driver.getmLname());
+        i.putExtra("driverphone", driver.getmPhone());
         i.putExtra("fare", GmapsDisplayFragment.getFare());
         i.putExtra("from", GmapsDisplayFragment.getOrigin());
         i.putExtra("to", GmapsDisplayFragment.getmDestination());
