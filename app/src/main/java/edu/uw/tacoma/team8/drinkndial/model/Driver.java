@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
+ * A Driver class contains id, first name, last name, phone number, rating, langitude, and latitude.
+ *
  * Created by leejieun on 3/5/17.
  */
 
@@ -27,14 +29,37 @@ public class Driver {
 
     public static final Pattern RATING_PATTERN = Pattern.compile("^[1-5]$");
 
+    /** Column names of dnd_driver table on DB */
+    public static final String DRIVER_ID = "driverid",
+            FIRST_NAME = "fname",
+            LAST_NAME = "lname",
+            PHONE = "phone",
+            RATING = "rating",
+            LONGITUDE = "longitude",
+            LATITUDE = "latitude";
 
+    /** A driver's id */
     private String mId;
+
+    /** A first name */
     private String mFname;
+
+    /** A last name */
     private String mLname;
+
+    /** A phone number */
     private String mPhone;
+
+    /** A rating */
     private String mRating;
+
+    /** A longitude */
     private String mLongitude;
+
+    /** A latitude */
     private String mLatitude;
+
+    /** A distance */
     private double mDistance;
 
 
@@ -198,6 +223,7 @@ public class Driver {
 
     public double getmDistance() {
         return mDistance;
+
     }
 
     public void setmDistance(double mDistance) {

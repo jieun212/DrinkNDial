@@ -13,24 +13,22 @@ import android.widget.TextView;
 import edu.uw.tacoma.team8.drinkndial.R;
 
 /**
- * A simple {@link Fragment} subclass.
+ *
+ * It is a simple {@link Fragment} subclass for setting of user.
+ * When user presses setting navigation item on navigation drawer, this fragment is created.
  *
  * @author Jieun Lee (jieun212@uw.edu)
+ * @author Lovejit Hari
  * @version 02/14/2017
  */
 public class SettingsFragment extends Fragment {
 
-    private TextView mNameTextView;
-    private TextView mPhoneTextView;
-    private TextView mEmailTextView;
-    private TextView mMileTextView;
-    private String mUserEamil;
-    private SharedPreferences mSharedPreferences;
-
+    /**
+     * Required empty public constructor
+     */
     public SettingsFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,14 +41,14 @@ public class SettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_setting_main, container, false);
 
-        mNameTextView = (TextView) v.findViewById(R.id.setting_user_name);
-        mPhoneTextView = (TextView) v.findViewById(R.id.setting_user_phone);
-        mEmailTextView = (TextView) v.findViewById(R.id.setting_user_email);
+        TextView mNameTextView = (TextView) v.findViewById(R.id.setting_user_name);
+        TextView mPhoneTextView = (TextView) v.findViewById(R.id.setting_user_phone);
+        TextView mEmailTextView = (TextView) v.findViewById(R.id.setting_user_email);
 
         String homeAddress = getArguments().getString("homeaddress");
         String favoriteAddress = getArguments().getString("favoriteaddress");
 
-        mUserEamil = getArguments().getString("useremail");
+        String mUserEamil = getArguments().getString("useremail");
         mNameTextView.setText(getArguments().getString("username"));
         mPhoneTextView.setText(getArguments().getString("userphone"));
         mEmailTextView.setText(mUserEamil);
@@ -63,7 +61,7 @@ public class SettingsFragment extends Fragment {
             addHomeBtn.setText(homeAddress);
 
         } else if (addHomeBtn.getText() == null || addHomeBtn.getText().toString().length() < 1) {
-            addHomeBtn.setText("Add Home");
+            addHomeBtn.setText(R.string.setting_add_home);
         }
         addHomeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +75,7 @@ public class SettingsFragment extends Fragment {
         if (favoriteAddress != null && favoriteAddress.length() > 0) {
             addLocationBtn.setText(favoriteAddress);
         } else if (addLocationBtn.getText() == null || addLocationBtn.getText().toString().length() < 1) {
-            addLocationBtn.setText("Add Favorite Location");
+            addLocationBtn.setText(R.string.setting_add_location);
         }
         addLocationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,18 +83,21 @@ public class SettingsFragment extends Fragment {
                 ((NavigationActivity) getActivity()).goAddLocation();
             }
         });
-        mSharedPreferences = getContext().getSharedPreferences(getString(R.string.SETTINGS_PREFS),
+
+
+        SharedPreferences mSharedPreferences = getContext()
+                .getSharedPreferences(getString(R.string.SETTINGS_PREFS),
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = mSharedPreferences.edit();
         edit.clear();
         edit.putString("home", homeAddress);
         edit.putString("fave", favoriteAddress);
         edit.putString("recipientmail", mUserEamil);
-        edit.commit();
+        edit.apply();
 
 
         // Mile preference
-        mMileTextView = (TextView) v.findViewById(R.id.preference_miles);
+        TextView mMileTextView = (TextView) v.findViewById(R.id.preference_miles_text_view);
         mMileTextView.setText(getArguments().getString("mile"));
         Button editPreferButton = (Button) v.findViewById(R.id.mile_edit_button);
         editPreferButton.setOnClickListener(new View.OnClickListener() {

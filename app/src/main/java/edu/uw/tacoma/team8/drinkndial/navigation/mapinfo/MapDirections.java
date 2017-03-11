@@ -35,7 +35,6 @@ public class MapDirections {
     private MapDirectionListener mListener;
     private String mOrigin;
     private String mDestination;
-    private String mCurrLocation;
 
     /**
      * Constructs an object that has a MapDirectionListener and 2 strings, one represents the
@@ -51,26 +50,14 @@ public class MapDirections {
         this.mDestination = destination;
     }
 
-    /**
-     * @param listener Interface
-     * @param location Current Location
-     */
-    public void MapLocation(MapDirectionListener listener, String location) {
-
-        this.mListener = listener;
-        this.mCurrLocation = location;
-
-    }
-
 
     /**
      * Executes the findDirectionsStart() method as well as executing the createUrl() method
      *
-     * @throws UnsupportedEncodingException
      */
     public void execute() throws UnsupportedEncodingException {
         mListener.findDirectionsStart();
-        new DownloadRawData().execute(createUrl());
+        new DownloadRawDataAsynkTask().execute(createUrl());
     }
 
     /**
@@ -81,7 +68,6 @@ public class MapDirections {
      * and the key is the credentials required to access the directions.
      *
      * @return the url
-     * @throws UnsupportedEncodingException
      */
     private String createUrl() throws UnsupportedEncodingException {
         String urlOrigin = URLEncoder.encode(mOrigin, "utf-8");
@@ -90,7 +76,7 @@ public class MapDirections {
         return DIRECTION_URL_API + "origin=" + urlOrigin + "&destination=" + urlDestination + "&key=" + GOOGLE_API_KEY;
     }
 
-    private class DownloadRawData extends AsyncTask<String, Void, String> {
+    private class DownloadRawDataAsynkTask extends AsyncTask<String, Void, String> {
 
         /**
          * Reads through the json object provided by the url

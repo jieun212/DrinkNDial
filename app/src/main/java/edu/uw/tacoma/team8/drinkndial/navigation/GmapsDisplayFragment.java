@@ -55,8 +55,10 @@ import edu.uw.tacoma.team8.drinkndial.navigation.mapinfo.MapRoute;
  * @author Lovejit Hari
  * @version 3/8/2017
  */
-public class GmapsDisplay extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener, MapDirectionListener {
+public class GmapsDisplayFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener,
+        MapDirectionListener {
 
 
     //Strings that need to be removed from dropping a pin/getting current location and setting the text
@@ -104,8 +106,8 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
     //Permsissions number = 99
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
-    public GmapsDisplay() {
-        // Required empty public constructor
+    public GmapsDisplayFragment() {
+        //() Required empty public constructor
     }
 
     /**
@@ -551,8 +553,6 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
         }
     }
 
-//**********************************************EMPTY****************************************************
-
     /**
      * empty
      *
@@ -572,8 +572,6 @@ public class GmapsDisplay extends Fragment implements OnMapReadyCallback, Google
     public void onConnectionSuspended(int i) {
         //empty, required through implemented methods
     }
-
-//**********************************************EMPTY****************************************************
 
 
 }

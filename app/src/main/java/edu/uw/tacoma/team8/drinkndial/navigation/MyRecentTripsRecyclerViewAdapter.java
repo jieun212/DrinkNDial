@@ -1,13 +1,17 @@
 package edu.uw.tacoma.team8.drinkndial.navigation;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import edu.uw.tacoma.team8.drinkndial.R;
 import edu.uw.tacoma.team8.drinkndial.model.Trips;
@@ -26,15 +30,18 @@ public class MyRecentTripsRecyclerViewAdapter extends RecyclerView.Adapter<MyRec
     //our recent trip listener
     private final RecentTripsFragment.RecentTripsListInteractionListener mListener;
 
+    private Geocoder mGeocoder;
+
     /**
      * Constructs an object that initializes the items and the listener
      *
      * @param items    adapter
      * @param listener Recent trips
      */
-    public MyRecentTripsRecyclerViewAdapter(List<Trips> items, RecentTripsFragment.RecentTripsListInteractionListener listener) {
+    public MyRecentTripsRecyclerViewAdapter(List<Trips> items, RecentTripsFragment.RecentTripsListInteractionListener listener, Geocoder geocoder) {
         mValues = items;
         mListener = listener;
+        mGeocoder = geocoder;
     }
 
     /**
@@ -61,15 +68,55 @@ public class MyRecentTripsRecyclerViewAdapter extends RecyclerView.Adapter<MyRec
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
 
-        if (holder.mItem == null) {
-            Log.i("ITS NULL!!!!!!!", "null");
+        String from = mValues.get(position).getmStartAddress();
+        String to = mValues.get(position).getmEndAddress();
 
+        // source from:
+        // http://stackoverflow.com/questions/14613442/java-check-if-last-characters-in-a-string-are-numeric
+        Pattern p = Pattern.compile(".*[0-9]+$");
+        Matcher fromMatcher = p.matcher(from);
+        Matcher toMatcher = p.matcher(to);
+
+
+        List<Address> addresses;
+
+
+        String strLatitude;
+        String strLongitude;
+        double latitude;
+        double longitude;
+
+        if(fromMatcher.matches()) { // is latitude and longitude
+            strLatitude = from.substring(0, from.indexOf(','));
+            strLongitude = from.substring(from.indexOf(',')+1, from.length());
+
+            latitude = Double.parseDouble(strLatitude);
+            longitude = Double.parseDouble(strLongitude);
+            try {
+                addresses = mGeocoder.getFromLocation(latitude, longitude, 1);
+                Address addr = addresses.get(0);
+                from = addr.getAddressLine(0) + ", " + addr.getLocality() + ", " + addr.getAdminArea();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
+        if(toMatcher.matches()) { // is latitude and longitude
+            strLatitude = to.substring(0, to.indexOf(','));
+            strLongitude = to.substring(to.indexOf(',')+1, to.length());
 
-        String from = "From: " + mValues.get(position).getmStartAddress();
-        String to = "To: " + mValues.get(position).getmEndAddress();
-        Log.i("mItem", from);
+            latitude = Double.parseDouble(strLatitude);
+            longitude = Double.parseDouble(strLongitude);
+
+            try {
+                addresses = mGeocoder.getFromLocation(latitude, longitude, 1);
+                Address addr = addresses.get(0);
+                to = addr.getAddressLine(0) + ", " + addr.getLocality() + ", " + addr.getAdminArea();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
 
         holder.mFromView.setText(from);
         holder.mToView.setText(to);

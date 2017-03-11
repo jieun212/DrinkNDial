@@ -24,7 +24,7 @@
 
 
         <EditText
-            android:id="@+id/preference_miles"
+            android:id="@+id/preference_miles_edit_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="2"

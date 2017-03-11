@@ -4,6 +4,7 @@ package edu.uw.tacoma.team8.drinkndial.navigation;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -14,7 +15,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -44,43 +44,54 @@ import edu.uw.tacoma.team8.drinkndial.model.Location;
 import edu.uw.tacoma.team8.drinkndial.model.Trips;
 
 /**
- * The NavigationActivity
+ * The NavigationActivity starts when user is logged in.
+ * It is a fragment container and include navigation action bar.
+ * It adds GmapsDisplayFragment fragment when it start.
+ * When an item on navigation drawer is selected, it adds the corresponding fragment.
+ * It finishes when user is logged out.
  *
  * @author Lovejit Hari
  * @author Jieun Lee
- * @version 3/5/2017
+ * @version 3/9/2017
  */
-
-
 public class NavigationActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         DriverListFragment.OnListFragmentInteractionListener,
         RecentTripsFragment.RecentTripsListInteractionListener {
 
-    /**
-     * An URL for getting locations
-     */
-
+    /** An URL for getting locations */
     private final static String GET_LOCATIONS_URL
             = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndGetLocation.php?";
 
+    /** An URL for getting user's prefer mile to get drivers */
     private final static String GET_PREFER_MILE_URL
             = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndGetPreference.php?";
 
-
+    /** A MILE_CODE for sending data to another activity */
     public static final int MILE_CODE = 2001;
 
-    private TextView mUserNameTextView;
-    private TextView mUserPhoneTextView;
-    private TextView mUserEmailTextView;
-
+    /** A user's email */
     private String mUserEmail;
+
+    /** A user's name */
     private String mUserName;
+
+    /** A user's phone */
     private String mUserPhone;
+
+    /** A user's prefer mile */
     private String mPreferMile;
+
+    /** A user's home location */
     private Location mHomeLocation;
+
+    /** A user's favorite location */
     private Location mFavoriteLocation;
-    private GmapsDisplay mGmapFragment;
+
+    /** A GmapsDisplayFragment */
+    private GmapsDisplayFragment mGmapFragment;
+
+
 
     /**
      * Initializes a drawer, action bar and sets the map
@@ -115,9 +126,9 @@ public class NavigationActivity extends AppCompatActivity implements
         View header = navigationView.getHeaderView(0);
 
         // navigation header user information
-        mUserNameTextView = (TextView) header.findViewById(R.id.nav_user_name);
-        mUserEmailTextView = (TextView) header.findViewById(R.id.nav_user_email);
-        mUserPhoneTextView = (TextView) header.findViewById(R.id.nav_user_phone);
+        TextView mUserNameTextView = (TextView) header.findViewById(R.id.nav_user_name);
+        TextView mUserEmailTextView = (TextView) header.findViewById(R.id.nav_user_email);
+        TextView mUserPhoneTextView = (TextView) header.findViewById(R.id.nav_user_phone);
 
         // get user's information from SignInActivity
         Intent i = getIntent();
@@ -128,12 +139,12 @@ public class NavigationActivity extends AppCompatActivity implements
 
         // get User's saved locations
         String getLocationUrl = buildGetLocationURL();
-        GetLocationTask getLocationTask = new GetLocationTask();
+        GetLocationAsyncTask getLocationTask = new GetLocationAsyncTask();
         getLocationTask.execute(getLocationUrl);
 
         // get User's prefer mile
         String getMileUrl = buildGetPreferMileURL();
-        GetPreferMileTask getPreferMileTask = new GetPreferMileTask();
+        GetPreferMileAsyncTask getPreferMileTask = new GetPreferMileAsyncTask();
         getPreferMileTask.execute(getMileUrl);
 
         // set text for navigation header
@@ -143,7 +154,7 @@ public class NavigationActivity extends AppCompatActivity implements
 
         // add Google map display fragment to navigation container fragment
 
-        mGmapFragment = new GmapsDisplay();
+        mGmapFragment = new GmapsDisplayFragment();
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.nav_frag_container, mGmapFragment)
@@ -168,41 +179,6 @@ public class NavigationActivity extends AppCompatActivity implements
 
     }
 
-    /**
-     * creates an options menu, subject to change
-     *
-     * @param menu menu
-     * @return boolean
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.navigation, menu);
-        return true;
-    }
-
-    /**
-     * Determines the behavior of what happens when the menu items
-     * are selected from the menu.
-     *
-     * @param item in the menu button
-     * @return boolean
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
 
     /**
      * This method determines what will happen when you click on these items
@@ -212,7 +188,7 @@ public class NavigationActivity extends AppCompatActivity implements
      * @return boolean
      */
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         int id = item.getItemId();
 
@@ -236,7 +212,7 @@ public class NavigationActivity extends AppCompatActivity implements
             bundle.putString("mile", mPreferMile);
 
             String url = buildGetLocationURL();
-            GetLocationTask task = new GetLocationTask();
+            GetLocationAsyncTask task = new GetLocationAsyncTask();
             task.execute(url);
 
 
@@ -263,7 +239,7 @@ public class NavigationActivity extends AppCompatActivity implements
 
         } else if (id == R.id.logout_menuitem) {
             Bundle bundle = new Bundle();
-            if (mUserPhoneTextView.getText().length() < 1) {
+            if (mUserPhone.length() < 1) {
                 bundle.putString("login", "fb");
             } else {
                 bundle.putString("login", "custom");
@@ -342,15 +318,14 @@ public class NavigationActivity extends AppCompatActivity implements
     public void onListFragmentInteraction(Driver driver) {
         Intent i = new Intent(this, ConfirmationActivity.class);
         i.putExtra("useremail", mUserEmail);
-        Log.i("navi-empty???", mUserEmail);
         i.putExtra("username", mUserName);
         i.putExtra("userphone", mUserPhone);
-        i.putExtra("drivername", driver.getmFname() + " " + driver.getmLname());
-        i.putExtra("driverphone", driver.getmPhone());
-        i.putExtra("fare", GmapsDisplay.getFare());
-        i.putExtra("from", GmapsDisplay.getOrigin());
-        i.putExtra("to", GmapsDisplay.getmDestination());
-        i.putExtra("dist", GmapsDisplay.getDistance());
+        i.putExtra("drivername", driver.getFname() + " " + driver.getLname());
+        i.putExtra("driverphone", driver.getPhone());
+        i.putExtra("fare", GmapsDisplayFragment.getFare());
+        i.putExtra("from", GmapsDisplayFragment.getOrigin());
+        i.putExtra("to", GmapsDisplayFragment.getmDestination());
+        i.putExtra("dist", GmapsDisplayFragment.getDistance());
 
         startActivityForResult(i, MILE_CODE);
     }
@@ -361,7 +336,8 @@ public class NavigationActivity extends AppCompatActivity implements
     }
 
 
-    /********************************************************************************************************************
+    /*
+     *******************************************************************************************************************
      *                                                FOR "Retrieving locations"
      *******************************************************************************************************************/
 
@@ -393,7 +369,7 @@ public class NavigationActivity extends AppCompatActivity implements
         return sb.toString();
     }
 
-    private class GetLocationTask extends AsyncTask<String, Void, String> {
+    private class GetLocationAsyncTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... urls) {
@@ -430,7 +406,6 @@ public class NavigationActivity extends AppCompatActivity implements
 
 
             // parses location json and get the saved list
-
             try {
                 JSONArray arr = new JSONArray(result);
 
@@ -458,12 +433,14 @@ public class NavigationActivity extends AppCompatActivity implements
                     }
                 }
             } catch (JSONException e) {
+                Log.i("GetLocationTask-post", e.toString());
             }
         }
     }
 
 
-    /********************************************************************************************************************
+    /*
+     *******************************************************************************************************************
      *                                                FOR "Retrieving prefer mile"
      *******************************************************************************************************************/
 
@@ -489,7 +466,7 @@ public class NavigationActivity extends AppCompatActivity implements
     }
 
 
-    private class GetPreferMileTask extends AsyncTask<String, Void, String> {
+    private class GetPreferMileAsyncTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... urls) {

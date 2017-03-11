@@ -26,11 +26,20 @@ import javax.mail.internet.MimeMessage;
  * @version 3/9/2017
  */
 public class GMailSender extends javax.mail.Authenticator {
+
+    /** A mail host */
     private String mailhost = "smtp.gmail.com";
+
+    /** A user' email */
     private String user;
+
+    /** A user's password */
     private String password;
+
+    /** A Session */
     private Session session;
 
+    /** A Security to add provider */
     static {
         Security.addProvider(new edu.uw.tacoma.team8.drinkndial.confirm.JSSEProvider());
     }

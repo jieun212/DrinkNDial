@@ -7,7 +7,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -31,23 +30,31 @@ import edu.uw.tacoma.team8.drinkndial.R;
 import edu.uw.tacoma.team8.drinkndial.model.Driver;
 
 /**
- * A fragment representing a list of Items.
+ * DriverListFragment is a fragment that is representing a list of Drivers.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * NavigationActivity containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
+ *
+ * @version 03/05/2017
+ * @author  Jieun Lee (jieun212@uw.edu)
  */
 public class DriverListFragment extends Fragment {
 
-    private static final String DRIVER_URL
+    /** An URL to get drivers */
+    private static final String GET_DRIVER_URL
             = "http://cssgate.insttech.washington.edu/~jieun212/Android/dndGetDriver.php?";
 
-
-    private int mColumnCount = 1;
+    /** An OnListFragmentInteractionListener */
     private OnListFragmentInteractionListener mListener;
+
+    /** A RecyclerView */
     private RecyclerView mRecyclerView;
+
+    /** A user's Location */
     private Location mUserLocation;
+
+    /** A user's Prefer mile to find drivers*/
     private double mUserPrefer;
-    private List<Driver> mDriverList;
 
     public final String DRIVER_ID = "driverid",
             FIRST_NAME = "fname",
@@ -84,13 +91,9 @@ public class DriverListFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             mRecyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            DownloadDriverTask task = new DownloadDriverTask();
-            task.execute(new String[]{DRIVER_URL});
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+            DownloadDriverAsyncTask task = new DownloadDriverAsyncTask();
+            task.execute(GET_DRIVER_URL);
         }
 
 
@@ -98,8 +101,8 @@ public class DriverListFragment extends Fragment {
                 getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            DownloadDriverTask task = new DownloadDriverTask();
-            task.execute(new String[]{DRIVER_URL});
+            DownloadDriverAsyncTask task = new DownloadDriverAsyncTask();
+            task.execute(GET_DRIVER_URL);
 
         } else {
             Toast.makeText(view.getContext(),
@@ -139,11 +142,14 @@ public class DriverListFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnListFragmentInteractionListener {
+    interface OnListFragmentInteractionListener {
         void onListFragmentInteraction(Driver driver);
     }
 
-    private class DownloadDriverTask extends AsyncTask<String, Void, String> {
+    /**
+     * Inner class to download drivers
+     */
+    private class DownloadDriverAsyncTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... urls) {
@@ -155,7 +161,7 @@ public class DriverListFragment extends Fragment {
                     urlConnection = (HttpURLConnection) urlObject.openConnection();
                     InputStream content = urlConnection.getInputStream();
                     BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
-                    String s = "";
+                    String s;
                     while ((s = buffer.readLine()) != null) {
                         response += s;
                     }
@@ -178,6 +184,7 @@ public class DriverListFragment extends Fragment {
                 return;
             }
 
+
             mDriverList = new ArrayList<Driver>();
 
             try {
@@ -199,7 +206,8 @@ public class DriverListFragment extends Fragment {
                         .show();
             }
 
-            List<Driver> validDrivers = new ArrayList<Driver>();
+            List<Driver> validDrivers = new ArrayList<>();
+
             for (int i = 0; i < mDriverList.size(); i++) {
 
                 Location driverLocation = new Location("");
@@ -207,7 +215,8 @@ public class DriverListFragment extends Fragment {
                 driverLocation.setLatitude(Double.valueOf(mDriverList.get(i).getmLatitude()));
 
                 float distanceInMeter = mUserLocation.distanceTo(driverLocation);
-                double distanceInMile = Math.round(distanceInMeter * 0.0621371) / 100;
+                double mile = Math.round(distanceInMeter * 0.000621371192 * 100);
+                double distanceInMile =  mile / 100;
 
                 if (mUserPrefer >= distanceInMile) {
                     mDriverList.get(i).setmDistance(distanceInMile);
